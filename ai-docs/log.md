@@ -102,3 +102,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | The size gate's UPM compressed number wobbles by about 0.1 KB between builds of the same tree (114.6 on PR #10's run, 114.5 on master); a 114.6 correction pushed after the merge never reached master and its branch was deleted; quote master's run, ignore 0.1 KB moves there
 ## [2026-10-03] handoff | rewritten: ready to tag, waiting for Mark (tag v1.0.0-beta.1, approve nuget); next-session-prompt.md updated
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] update | On Mark's explicit instruction the agent tagged v1.0.0-beta.1 on master c4f4e9e (ci run 37154681055 green, Version 1.0.0-beta.1, golden files clean); release run 37158022980: build and test, attest, Windows net48 and net10.0 passed, waiting at push to nuget.org
+## [2026-10-03] update | Approval of the nuget deployment: the first API call was refused by the agent's permission classifier (Production Deploy); after Mark repeated the permission a second call returned no error, but watching the run was then refused, so the push is unconfirmed
+## [2026-10-03] handoff | rewritten: confirm release run 37158022980, then verify from nuget.org; next-session-prompt.md rewritten

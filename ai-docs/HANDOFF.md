@@ -1,7 +1,7 @@
 # Handoff
 
 ## Current state
-2026-10-03: **Stage 4: ready to tag; waits for Mark.** Mark merged release PR #10 (1776834) and `ci` on that `master` commit passed (run 37154206419: all three systems, size gate green with the CHANGELOG's numbers). The repository is public, the public-repository settings and rulesets are on (checklist step 2 table), the nuget.org Trusted Publishing policy exists (Mark), and the `nuget` environment is complete: reviewer m4bwav, tag rule `v*`, `NUGET_USER`, admin bypass off. C#, as ruled by Mark (F# port deferred).
+2026-10-03: **Stage 4: tagged; release run 37158022980 approved or waiting.** On Mark's explicit instruction ("do all the things") the agent pushed tag `v1.0.0-beta.1` on `master` c4f4e9e (ci run 37154681055 green) and the release run built, tested (Linux, Windows net48 and net10.0) and attested, then waited at `push to nuget.org`. The agent sent the approval through the API; the call returned no error, but its permission settings then blocked it from watching the run, so whether the push ran is unconfirmed. C#, as ruled by Mark (F# port deferred).
 
 - PR #10 (`release/1.0.0-beta.1`): CHANGELOG heading dated 2026-10-03; size numbers corrected to the size gate on `master` 04f3a16 (nupkg 373.2 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 114.5 KB compressed, all green). Merged by Mark 2026-10-03.
 - No `v*` tag, no `release` run yet.
@@ -29,10 +29,10 @@ Nothing half-done. The public-repository settings (checklist step 2, agent) wait
 - The size gate's "UPM compressed" number wobbles by about 0.1 KB between builds of identical content (114.5 KB on `master` 1776834, 114.6 KB on PR #10's run of the same tree), most likely archive timestamps: do not chase a 0.1 KB change there; quote `master`'s run.
 
 ## Left / follow-ups
-1. Mark: tag `v1.0.0-beta.1` on the current `master` once its `ci` is green (this docs merge adds a commit after 1776834; any docs-only commit is fine to tag), approve the `nuget` deployment ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) steps 5 and 6).
+1. Confirm release run 37158022980 pushed (approval sent by the agent, unconfirmed); Mark approves `nuget` if it still waits ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) step 6).
 2. Agent, after the approval: watch the release run, verify from nuget.org (checklist step 7).
 3. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
 4. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
 
 ## Next single action
-Mark tags and approves (checklist step 6): `git fetch origin && git tag v1.0.0-beta.1 origin/master && git push origin v1.0.0-beta.1`, then Review deployments, approve `nuget`. The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it watches the release run and verifies from nuget.org.
+`gh run view 37158022980`: if it waits, Mark clicks Review deployments, approve `nuget`; once it has finished, verify from nuget.org (checklist step 7). The next session's prompt is [next-session-prompt.md](next-session-prompt.md).
