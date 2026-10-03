@@ -40,7 +40,7 @@ The Gabriel graph of the nodes: two nodes are joined when no third lies inside t
 
 ## Voids, no draws beyond the counts
 
-Candidate points on a 41 by 41 grid of step 50 within 0.9 R. A point's clearance is the least of its distance to a node less 20 (a cluster's radius in universe units), its distance to a filament segment, and its distance to an earlier void's centre less that void's radius. Void k takes the point of greatest clearance (ties to the first in row order) and that clearance as its radius; a slot whose best clearance is under 50 makes no void. Each void holds its slot's 1 to 3 systems, generated as lone systems at their own addresses with an Old age, danger 1 to 3 from the system's own draw, rescaled, and Poor richness: far from any galaxy, quiet and metal-poor.
+Candidate points on a 41 by 41 grid of step 50 within 0.9 R. A point's clearance is the least of its distance to a node less 20 (a cluster's radius in universe units), its distance to a filament segment, its distance to an earlier void's centre less that void's radius, and its distance to the map edge (1,000), so every void lies inside the map. Void k takes the point of greatest clearance (ties to the first in row order) and that clearance as its radius; a slot whose best clearance is under 50 makes no void. Each void holds its slot's 1 to 3 systems, generated as lone systems at their own addresses with an Old age, danger 1 to 3 from the system's own draw, rescaled, and Poor richness: far from any galaxy, quiet and metal-poor.
 
 ## Landmark slots (U1) and the merging pair (U10, A12)
 

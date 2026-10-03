@@ -70,6 +70,12 @@ namespace UniverseGeneration
 
         /// <summary>A satellite's link to its host. Ends at the edge facing the other galaxy.</summary>
         Tether,
+
+        /// <summary>A filament of the cosmic web, to a galaxy of another cluster in the universe. Ends at the edge facing it.</summary>
+        Filament,
+
+        /// <summary>The tidal link between the two galaxies of a merging pair. Ends at the edge facing the other galaxy.</summary>
+        Tidal,
     }
 
     /// <summary>
@@ -206,6 +212,25 @@ namespace UniverseGeneration
 
         /// <summary>The index of the system in this galaxy where it opens.</summary>
         public int System { get; init; }
+
+        /// <summary>For a filament, the index in the universe of the cluster it leads to; -1 for a link inside the cluster.</summary>
+        public int Cluster { get; init; } = -1;
+    }
+
+    /// <summary>The universe's sky landmark as one galaxy sees it (plan A13).</summary>
+    public sealed record SkyLandmark
+    {
+        /// <summary>The landmark galaxy's name.</summary>
+        public string Name { get; init; } = "";
+
+        /// <summary>The landmark galaxy's address.</summary>
+        public string Address { get; init; } = "";
+
+        /// <summary>Its direction on the universe map, in whole degrees counter-clockwise from +x (0 to 359).</summary>
+        public int Bearing { get; init; }
+
+        /// <summary>How far away it is, in light-years, to the nearest thousand.</summary>
+        public long LightYears { get; init; }
     }
 
     /// <summary>A cluster's galaxies, each generated with its context on first read and kept.</summary>

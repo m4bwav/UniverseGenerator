@@ -75,6 +75,52 @@ namespace UniverseGeneration.Tests
         }
 
         [Test]
+        public void Every_object_in_a_universe_regenerates_alone_from_its_address()
+        {
+            var objects = 0;
+            foreach (var (seed, options) in new[]
+            {
+                ("hu0", Preset.Default),
+                ("hu1", Preset.Plausible with { Epoch = Epoch.Old, Systems = 20 }),
+            })
+            {
+                var universe = Universe.Generate(seed, options);
+                Assert.That(UniverseJson.Text((Universe)Universe.At(universe.Address, options)), Is.EqualTo(UniverseJson.Text(universe)), universe.Address);
+                foreach (var cluster in universe.Clusters)
+                {
+                    Assert.That(ClusterJson.Text((GalaxyCluster)Universe.At(cluster.Address, options)), Is.EqualTo(ClusterJson.Text(cluster)), cluster.Address);
+                    foreach (var galaxy in cluster.Galaxies)
+                    {
+                        Assert.That(UniverseJson.GalaxyText((Galaxy)Universe.At(galaxy.Address, options)), Is.EqualTo(UniverseJson.GalaxyText(galaxy)), galaxy.Address);
+                        objects++;
+                    }
+
+                    var smallest = cluster.Galaxies.OrderBy(g => g.Map.Count).First();
+                    objects += CheckSystem(smallest.System(smallest.Map.Count - 1), options);
+                }
+
+                // Every object of the merging pair's frontier system, and of every void.
+                var pair = universe.Cluster(universe.Merger.Cluster).Galaxy(0);
+                objects += CheckSystem(pair.System(pair.Gates.Single(g => g.Tier == LinkTier.Tidal).System), options);
+                foreach (var hole in universe.Voids)
+                {
+                    var again = (CosmicVoid)Universe.At(hole.Address, options);
+                    Assert.That((again.Name, again.X, again.Y, again.Radius, again.Systems.Count), Is.EqualTo((hole.Name, hole.X, hole.Y, hole.Radius, hole.Systems.Count)));
+                    foreach (var system in hole.Systems)
+                    {
+                        objects += CheckSystem(system, options);
+                    }
+                }
+            }
+
+            TestContext.Out.WriteLine($"{objects} objects of universes regenerated from their addresses");
+            var e = Assert.Throws<ArgumentException>(() => Universe.At("v1-x/universe/galaxy/0"));
+            Assert.That(e!.Message, Does.StartWith("Below v1-x/universe comes a cluster or void; the address has \"galaxy\"."));
+            e = Assert.Throws<ArgumentException>(() => Universe.At("v1-x/universe/void/9"));
+            Assert.That(e!.Message, Does.Contain("the address asks for void 9."));
+        }
+
+        [Test]
         public void Every_object_in_a_lone_system_regenerates_alone_from_its_address()
         {
             foreach (var seed in SystemJson.Seeds(300))

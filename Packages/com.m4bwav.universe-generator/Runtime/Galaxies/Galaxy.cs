@@ -60,6 +60,9 @@ namespace UniverseGeneration
         /// <summary>Its links to other galaxies of its cluster, in the cluster's link order; empty for a galaxy alone.</summary>
         public IReadOnlyList<GalaxyGate> Gates { get; init; } = Array.Empty<GalaxyGate>();
 
+        /// <summary>Where the universe's sky landmark appears from here; null for a galaxy outside a universe, and for the landmark itself.</summary>
+        public SkyLandmark? Landmark { get; init; }
+
         /// <summary>The shape the map was drawn with (never <see cref="GalaxyShape.Auto"/>).</summary>
         public GalaxyShape Shape { get; init; }
 
@@ -179,6 +182,11 @@ namespace UniverseGeneration
     /// <summary>Builds a galaxy record from its layout, and gives each system its context (plan D17).</summary>
     internal static class GalaxyGenerator
     {
+        /// <summary>The reach of a merging pair's tidal frontier around its tidal link, in game units.</summary>
+        public const double FrontierRadius = 300;
+
+        public const string FrontierTheme = "tidal frontier";
+
         public static Galaxy Generate(Address address, GeneratorOptions options, GalaxyContext context)
         {
             var seed = address.ObjectSeed;
@@ -192,46 +200,12 @@ namespace UniverseGeneration
                 regions[r] = new GalaxyRegion { Index = r, Name = name, Age = age, Theme = theme, Centre = centre };
             }
 
-            // The skeleton pass: each system's region age and danger come from the map, and its name, drawn from its own
-            // stream for its star's class, is redrawn from the same stream until no earlier system has it.
-            var map = new MapEntry[n];
-            var contexts = new SystemContext[n];
-            var names = new HashSet<string>(StringComparer.Ordinal);
-            var richness = context.Richness == GalaxyRichness.Rich ? 160 : context.Richness == GalaxyRichness.Poor ? 50 : 100;
-            for (var i = 0; i < n; i++)
-            {
-                var systemSeed = GalaxyLayout.SystemSeed(seed, i);
-                var age = regions[layout.Region[i]].Age;
-                var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
-                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i);
-                contexts[i] = new SystemContext(name, age, layout.Danger[i], richness);
-                map[i] = new MapEntry
-                {
-                    Index = i,
-                    Address = address.Child("system", i).ToString(),
-                    Name = name,
-                    X = layout.X[i],
-                    Y = layout.Y[i],
-                    StarClass = star.Class,
-                    Region = layout.Region[i],
-                    Hops = layout.Hops[i],
-                    Danger = layout.Danger[i],
-                    Chokepoint = layout.Chokepoint[i],
-                };
-            }
-
-            var lanes = new Lane[layout.Lanes.Count];
-            for (var l = 0; l < lanes.Length; l++)
-            {
-                var (a, b, bridge) = layout.Lanes[l];
-                lanes[l] = new Lane { A = a, B = b, Bridge = bridge };
-            }
-
             // Cluster links open at the core (gates) or at the system farthest out towards the other galaxy.
             var gates = new GalaxyGate[context.Links.Count];
+            var frontier = -1;
             for (var k = 0; k < gates.Length; k++)
             {
-                var (other, otherName, tier, dx, dy) = context.Links[k];
+                var (other, otherName, tier, dx, dy, cluster) = context.Links[k];
                 var system = layout.Core;
                 if (tier != LinkTier.Gate)
                 {
@@ -247,7 +221,65 @@ namespace UniverseGeneration
                     }
                 }
 
-                gates[k] = new GalaxyGate { Galaxy = other, Name = otherName, Tier = tier, System = system };
+                gates[k] = new GalaxyGate { Galaxy = other, Name = otherName, Tier = tier, System = system, Cluster = cluster };
+                if (tier == LinkTier.Tidal && context.Frontier)
+                {
+                    frontier = system;
+                }
+            }
+
+            // A merging pair's tidal frontier (plan A12): lawless, 2 more danger within 300 units of the tidal link, and
+            // its region themed for it. Values only; no stream draws differently.
+            var danger = layout.Danger;
+            if (frontier >= 0)
+            {
+                danger = (int[])layout.Danger.Clone();
+                for (var i = 0; i < n; i++)
+                {
+                    double fx = layout.X[i] - layout.X[frontier], fy = layout.Y[i] - layout.Y[frontier];
+                    if (fx * fx + fy * fy <= FrontierRadius * FrontierRadius)
+                    {
+                        danger[i] = Math.Min(10, danger[i] + 2);
+                    }
+                }
+
+                var r = layout.Region[frontier];
+                regions[r] = regions[r] with { Theme = FrontierTheme };
+            }
+
+            // The skeleton pass: each system's region age and danger come from the map, and its name, drawn from its own
+            // stream for its star's class, is redrawn from the same stream until no earlier system has it.
+            var map = new MapEntry[n];
+            var contexts = new SystemContext[n];
+            var names = new HashSet<string>(StringComparer.Ordinal);
+            var richness = context.Richness == GalaxyRichness.Rich ? 160 : context.Richness == GalaxyRichness.Poor ? 50 : 100;
+            for (var i = 0; i < n; i++)
+            {
+                var systemSeed = GalaxyLayout.SystemSeed(seed, i);
+                var age = regions[layout.Region[i]].Age;
+                var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
+                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i);
+                contexts[i] = new SystemContext(name, age, danger[i], richness);
+                map[i] = new MapEntry
+                {
+                    Index = i,
+                    Address = address.Child("system", i).ToString(),
+                    Name = name,
+                    X = layout.X[i],
+                    Y = layout.Y[i],
+                    StarClass = star.Class,
+                    Region = layout.Region[i],
+                    Hops = layout.Hops[i],
+                    Danger = danger[i],
+                    Chokepoint = layout.Chokepoint[i],
+                };
+            }
+
+            var lanes = new Lane[layout.Lanes.Count];
+            for (var l = 0; l < lanes.Length; l++)
+            {
+                var (a, b, bridge) = layout.Lanes[l];
+                lanes[l] = new Lane { A = a, B = b, Bridge = bridge };
             }
 
             var type = context.Type ?? GalaxyTypes.Derive(layout.Shape, layout.Pitch, layout.Ellipse);
@@ -262,6 +294,7 @@ namespace UniverseGeneration
                 CoreActivity = context.CoreActivity,
                 CoreHazardRadius = ClusterGenerator.HazardRadius(context.CoreActivity),
                 Gates = gates,
+                Landmark = context.Landmark,
                 Shape = layout.Shape,
                 Arms = layout.Shape == GalaxyShape.Spiral || layout.Shape == GalaxyShape.Barred ? layout.Arms : 0,
                 Radius = GalaxyLayout.Radius,

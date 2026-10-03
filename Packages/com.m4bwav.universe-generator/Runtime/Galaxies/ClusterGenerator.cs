@@ -32,9 +32,66 @@ namespace UniverseGeneration
 
         public GalaxyLayout.LayoutTuning Tuning { get; init; } = GalaxyLayout.LayoutTuning.None;
 
-        /// <summary>The cluster links from this galaxy, with the direction to the other galaxy on the cluster map.</summary>
-        public IReadOnlyList<(int Other, string Name, LinkTier Tier, double Dx, double Dy)> Links { get; init; } =
-            Array.Empty<(int, string, LinkTier, double, double)>();
+        /// <summary>
+        /// The links from this galaxy, with the direction to the other galaxy on the map they cross; Cluster is the other
+        /// galaxy's cluster in the universe for a filament, -1 inside the cluster.
+        /// </summary>
+        public IReadOnlyList<(int Other, string Name, LinkTier Tier, double Dx, double Dy, int Cluster)> Links { get; init; } =
+            Array.Empty<(int, string, LinkTier, double, double, int)>();
+
+        /// <summary>Half of a merging pair: the systems near the tidal link become a lawless frontier (plan A12).</summary>
+        public bool Frontier { get; init; }
+
+        /// <summary>Where the universe's sky landmark appears from this galaxy (plan A13); null alone.</summary>
+        public SkyLandmark? Landmark { get; init; }
+    }
+
+    /// <summary>
+    /// What a universe decides for one of its clusters (plan U1, U7, U10, U11); <see cref="Alone"/> leaves a lone cluster
+    /// exactly as it was. Every field changes only values, never draws.
+    /// </summary>
+    internal sealed record ClusterContext
+    {
+        public static readonly ClusterContext Alone = new ClusterContext();
+
+        public ClusterKind? Kind { get; init; }
+
+        public StellarAge? Age { get; init; }
+
+        public string? Name { get; init; }
+
+        /// <summary>Galaxy 0 is the home spiral: its core is quiet.</summary>
+        public bool Home { get; init; }
+
+        /// <summary>Galaxy 0, the central giant, is the dying giant: old and quiet.</summary>
+        public bool Dying { get; init; }
+
+        /// <summary>The first member is the ring galaxy.</summary>
+        public bool Ring { get; init; }
+
+        /// <summary>Galaxy 1 holds the distant quasar.</summary>
+        public bool Quasar { get; init; }
+
+        /// <summary>Galaxies 0 and 1 are a merging pair: touching, young, bursting with stars, joined by a tidal link.</summary>
+        public bool Merging { get; init; }
+
+        /// <summary>Filament ends: the galaxy each opens in, the cluster and galaxy it leads to, that galaxy's name, and the direction on the universe map.</summary>
+        public IReadOnlyList<(int Galaxy, int OtherCluster, int OtherGalaxy, string Name, double Dx, double Dy)> Filaments { get; init; } =
+            Array.Empty<(int, int, int, string, double, double)>();
+
+        /// <summary>The cluster's centre on the universe map.</summary>
+        public double X { get; init; }
+
+        public double Y { get; init; }
+
+        /// <summary>The sky landmark's name, address and position on the universe map; null address alone.</summary>
+        public string? LandmarkName { get; init; }
+
+        public string? LandmarkAddress { get; init; }
+
+        public double LandmarkX { get; init; }
+
+        public double LandmarkY { get; init; }
     }
 
     /// <summary>Galaxy type codes (plan idea U6): what each means for the map and in words.</summary>
@@ -156,6 +213,9 @@ namespace UniverseGeneration
             "Solace", "Tethys", "Thule", "Umbra", "Vesper", "Wyvern", "Zephyr", "Zenith",
         };
 
+        /// <summary>The name roots of clusters and galaxies, which a universe also draws its clusters' names from.</summary>
+        public static IReadOnlyList<string> Roots => s_roots;
+
         private static readonly string[] s_numerals = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII" };
 
         private static readonly StellarAge[] s_ages = { StellarAge.Young, StellarAge.Mature, StellarAge.Old };
@@ -191,6 +251,12 @@ namespace UniverseGeneration
         private static readonly int[] s_giantCores = { 50, 30, 20 };
         private static readonly int[] s_memberCores = { 85, 13, 2 };
 
+        // A merging pair's regions are mostly young: the collision sets off a burst of star birth.
+        private static readonly int[] s_starburstRegions = { 70, 25, 5 };
+
+        /// <summary>A cluster unit on the universe map: 2,000 light-years over 100,000.</summary>
+        public const double UniverseScale = 0.02;
+
         private sealed class Draft
         {
             public GalaxyRole Role;
@@ -212,20 +278,47 @@ namespace UniverseGeneration
             public CoreActivity Core;
         }
 
-        public static GalaxyCluster Generate(Address address, GeneratorOptions options)
+        public static GalaxyCluster Generate(Address address, GeneratorOptions options) =>
+            Generate(address, options, ClusterContext.Alone);
+
+        public static GalaxyCluster Generate(Address address, GeneratorOptions options, ClusterContext context)
         {
             var seed = address.ObjectSeed;
             var kindStream = Seeds.Stream(seed, "kind");
             var rolledKind = kindStream.Weighted(s_kindWeights) == 0 ? ClusterKind.Group : ClusterKind.Cluster;
-            var kind = options.ClusterKind == ClusterKind.Auto ? rolledKind : options.ClusterKind;
-            var age = s_ages[kindStream.Weighted(s_ageWeights)];
+            var kind = context.Kind ?? (options.ClusterKind == ClusterKind.Auto ? rolledKind : options.ClusterKind);
+            var drawnAge = s_ages[kindStream.Weighted(s_ageWeights)];
+            var age = context.Age ?? (options.Epoch == Epoch.Auto ? drawnAge : AgeOf(options.Epoch));
+            var merging = context.Merging && kind == ClusterKind.Group;
 
             var g = Members(Seeds.Stream(seed, "members"), kind, options.Systems);
-            Place(Seeds.Stream(seed, "layout"), g, kind);
+            Place(Seeds.Stream(seed, "layout"), g, kind, merging);
             Types(Seeds.Stream(seed, "types"), g, kind, options.Systems);
+            if (context.Ring)
+            {
+                var first = g.FindIndex(d => d.Role == GalaxyRole.Member);
+                if (first >= 0)
+                {
+                    g[first].Type = "Ring";
+                    g[first].Shape = GalaxyShape.Ring;
+                }
+            }
+
             Traits(Seeds.Stream(seed, "traits"), g, age);
-            var clusterName = Names(Seeds.Stream(seed, "names"), g, kind);
+            Slots(g, context, merging);
+            var drawnName = Names(Seeds.Stream(seed, "names"), g, kind);
+            var clusterName = context.Name ?? drawnName;
             var links = Network(g, kind);
+            if (merging)
+            {
+                for (var k = 0; k < links.Length; k++)
+                {
+                    if (links[k].A == 0 && links[k].B == 1)
+                    {
+                        links[k] = links[k] with { Tier = LinkTier.Tidal };
+                    }
+                }
+            }
 
             var map = new ClusterEntry[g.Count];
             var contexts = new GalaxyContext[g.Count];
@@ -250,15 +343,25 @@ namespace UniverseGeneration
                     CoreActivity = d.Core,
                 };
 
-                var ends = new List<(int, string, LinkTier, double, double)>();
+                var ends = new List<(int, string, LinkTier, double, double, int)>();
                 foreach (var l in links)
                 {
                     if (l.A == i || l.B == i)
                     {
                         var other = l.A == i ? l.B : l.A;
-                        ends.Add((other, g[other].Name, l.Tier, g[other].X - d.X, g[other].Y - d.Y));
+                        ends.Add((other, g[other].Name, l.Tier, g[other].X - d.X, g[other].Y - d.Y, -1));
                     }
                 }
+
+                foreach (var f in context.Filaments)
+                {
+                    if (f.Galaxy == i)
+                    {
+                        ends.Add((f.OtherGalaxy, f.Name, LinkTier.Filament, f.Dx, f.Dy, f.OtherCluster));
+                    }
+                }
+
+                var pair = merging && i < 2;
 
                 contexts[i] = new GalaxyContext
                 {
@@ -271,12 +374,14 @@ namespace UniverseGeneration
                     CoreActivity = d.Core,
                     Host = d.Host >= 0 ? g[d.Host].Name : null,
                     Links = ends,
+                    Frontier = pair,
+                    Landmark = Landmark(context, address.Child("galaxy", i).ToString(), d),
                     Tuning = new GalaxyLayout.LayoutTuning
                     {
                         PitchLow = d.PitchLow,
                         PitchHigh = d.PitchHigh,
                         Ellipse = d.Ellipse,
-                        AgeWeights = d.Age == StellarAge.Young ? s_youngRegions : d.Age == StellarAge.Old ? s_oldRegions : s_matureRegions,
+                        AgeWeights = pair ? s_starburstRegions : d.Age == StellarAge.Young ? s_youngRegions : d.Age == StellarAge.Old ? s_oldRegions : s_matureRegions,
                         CoreHazardRadius = HazardRadius(d.Core),
                         CoreDanger = d.Core == CoreActivity.Quasar ? 3 : d.Core == CoreActivity.Seyfert ? 2 : 0,
                     },
@@ -293,6 +398,55 @@ namespace UniverseGeneration
                 Map = map,
                 Links = links,
                 Galaxies = new LazyGalaxies(address, contexts, options),
+            };
+        }
+
+        public static StellarAge AgeOf(Epoch epoch) =>
+            epoch == Epoch.Young ? StellarAge.Young : epoch == Epoch.Old ? StellarAge.Old : StellarAge.Mature;
+
+        /// <summary>The universe's landmark slots (plan U1, U10): values only, after every draw.</summary>
+        private static void Slots(List<Draft> g, ClusterContext context, bool merging)
+        {
+            if (context.Home || context.Dying)
+            {
+                g[0].Core = CoreActivity.Quiet;
+            }
+
+            if (context.Dying)
+            {
+                g[0].Age = StellarAge.Old;
+            }
+
+            if (context.Quasar && g.Count > 1)
+            {
+                g[1].Core = CoreActivity.Quasar;
+            }
+
+            if (merging)
+            {
+                g[0].Age = StellarAge.Young;
+                g[1].Age = StellarAge.Young;
+            }
+        }
+
+        /// <summary>Where the sky landmark lies from a galaxy, on the universe map; null alone or for the landmark itself.</summary>
+        private static SkyLandmark? Landmark(ClusterContext context, string address, Draft d)
+        {
+            if (context.LandmarkAddress == null || context.LandmarkAddress == address)
+            {
+                return null;
+            }
+
+            var x = context.X + d.X * UniverseScale;
+            var y = context.Y + d.Y * UniverseScale;
+            double dx = context.LandmarkX - x, dy = context.LandmarkY - y;
+            var degrees = (int)DMath.Round(DMath.Atan2(dy, dx) * 180 / DMath.PI, 0);
+            return new SkyLandmark
+            {
+                Name = context.LandmarkName ?? "",
+                Address = context.LandmarkAddress,
+                Bearing = (degrees + 360) % 360,
+                LightYears = (long)DMath.Round(Math.Sqrt(dx * dx + dy * dy) * Distances.UniverseUnitLightYears / 1000, 0) * 1000,
             };
         }
 
@@ -376,7 +530,7 @@ namespace UniverseGeneration
         private static bool GrowsSpirals(int baseSystems) => 2 * baseSystems >= FirstSpiralCount;
 
         /// <summary>Positions on the cluster map, without overlaps; spacing relaxes by a tenth after 200 refusals.</summary>
-        private static void Place(Pcg32 rng, List<Draft> g, ClusterKind kind)
+        private static void Place(Pcg32 rng, List<Draft> g, ClusterKind kind, bool merging)
         {
             var placed = new List<int>();
             if (kind == ClusterKind.Group)
@@ -384,6 +538,12 @@ namespace UniverseGeneration
                 // The two big spirals on a random axis, either side of the centre.
                 var axis = rng.Range(0, 2 * DMath.PI);
                 var half = rng.Range(250.0, 400.0);
+                if (merging)
+                {
+                    // A merging pair: the two discs touch.
+                    half = DMath.Round((g[0].Room + g[1].Room) / 2, 3);
+                }
+
                 double c = DMath.Cos(axis), s = DMath.Sin(axis);
                 Set(g[0], half * c, half * s);
                 Set(g[1], -half * c, -half * s);

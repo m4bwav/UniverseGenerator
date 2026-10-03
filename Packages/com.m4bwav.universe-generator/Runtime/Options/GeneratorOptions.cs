@@ -14,6 +14,22 @@ namespace UniverseGeneration
         Plausible,
     }
 
+    /// <summary>The age of a universe, which every cluster in it takes as its own.</summary>
+    public enum Epoch
+    {
+        /// <summary>Drawn from the seed: young three times in ten, mature 45 in a hundred, old a quarter.</summary>
+        Auto,
+
+        /// <summary>A young universe: more small groups, young spirals and twice the quasars.</summary>
+        Young,
+
+        /// <summary>A middle-aged universe, like ours.</summary>
+        Mature,
+
+        /// <summary>An old universe: more rich clusters, old galaxies and few quasars.</summary>
+        Old,
+    }
+
     /// <summary>
     /// Every setting of the generator, as an immutable record: start from a <see cref="Preset"/> and change what you
     /// need with <c>with</c>, for example <c>Preset.SpaceOpera with { Weirdness = 10 }</c>. Each level reads the
@@ -45,6 +61,9 @@ namespace UniverseGeneration
         /// <summary>Whether a galaxy cluster is a small group or a rich cluster; <see cref="ClusterKind.Auto"/> draws one.</summary>
         public ClusterKind ClusterKind { get; init; } = ClusterKind.Auto;
 
+        /// <summary>The age of a universe or of a cluster generated alone; <see cref="Epoch.Auto"/> draws one.</summary>
+        public Epoch Epoch { get; init; } = Epoch.Auto;
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
@@ -58,6 +77,11 @@ namespace UniverseGeneration
             if (ClusterKind < ClusterKind.Auto || ClusterKind > ClusterKind.Cluster)
             {
                 throw new ArgumentException($"{nameof(ClusterKind)} must be Auto, Group or Cluster; you asked for {(int)ClusterKind}.", nameof(ClusterKind));
+            }
+
+            if (Epoch < Epoch.Auto || Epoch > Epoch.Old)
+            {
+                throw new ArgumentException($"{nameof(Epoch)} must be Auto, Young, Mature or Old; you asked for {(int)Epoch}.", nameof(Epoch));
             }
 
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)
