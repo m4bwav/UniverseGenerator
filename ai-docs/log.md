@@ -53,3 +53,10 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] update | Universe note: tuning while coding, statistics, open for tuning; plan Stage 3 checklist (universe done; galaxy extras and the star-name entry point owed) and next action (galaxy extras); PR #1 description
 ## [2026-10-03] handoff | rewritten: galaxy extras next
 ## [2026-10-03] index | rebuilt (13 entries)
+## [2026-10-03] add | notes/2026-10-03-galaxy-extras-design.md: the galaxy extras designed before coding (factions over lanes, points of interest with placement rules and a precursor trail, hazard areas, a monument per region, beacons per galaxy; each on its own stream of the galaxy seed, never changing the map)
+## [2026-10-03] add | Galaxy extras (b8dc686): galaxy.Factions with MapEntry.Faction and Contested, PointsOfInterest, Hazards, Monuments, Beacons; galaxy-extras.json golden identical on net10.0 and net48, the seven others unchanged; hierarchy tests compare the extras; 163 tests; size gate green (DLL 497.0 KB, nupkg 368.5 KB)
+## [2026-10-03] decision | Faction reach scales with the map's depth over 10 hops (a 5-hop reach left bubbles on 2,000-system maps); the first beacon sits at a bright star when the map has one (92% of beacons were artificial); extras never change danger, which feeds every system's context
+## [2026-10-03] add | StarName (958960b): public StarName.Generate(seed) and Generate(seed, count, starClass, options) for the website's star name tool, on their own seeds (root starname); star-name.json golden; 166 tests; size gate green (DLL 499.0 KB, nupkg 370.7 KB)
+## [2026-10-03] update | Extras note: built, statistics, open for tuning, StarName; galaxy level note (extras done); plan Stage 3 checklist (extras and StarName done) and next action (README, CHANGELOG, samples, Stop 2); PR #1 description
+## [2026-10-03] handoff | rewritten: README, CHANGELOG, samples and Stop 2 next; next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (14 entries)

@@ -13,28 +13,33 @@ summary: "paste into a fresh session to continue the run; every session rewrites
 Paste the block below into a fresh session to continue the run. Every session rewrites this file before it stops
 (AGENTS.md, "Document for handoff"), so the chain continues: the prompt it writes ends with the same instruction.
 
-Written 2026-10-03, after the universe level (8a42448).
+Written 2026-10-03, after the galaxy extras (b8dc686) and StarName (958960b).
 
 ```
 Continue the UniverseGenerator run (C#; the F# port is deferred). Start by reading
-D:\m4bwa\Claude\Projects\Ai\labs\UniverseGenerator\ai-docs\HANDOFF.md, then AGENTS.md, the 1.0 plan it links,
-and ai-docs/notes/2026-10-02-galaxy-level-design.md in full (what the galaxy level still lacks); the improvement
-ideas note only for the factions, points of interest, hazards, monuments and beacons rows (D24); the cluster and
-universe notes only where a galaxy's context matters. Work on branch stage3-core (draft PR #1).
+D:\m4bwa\Claude\Projects\Ai\labs\UniverseGenerator\ai-docs\HANDOFF.md, then AGENTS.md, and in the 1.0 plan it links
+only the README's first example, the API section, the feature matrix's short form, the release ritual and the Stage 3
+checklist. For Stop 2 read only the "Open for tuning" sections of the notes the handoff lists (galaxy, planet, moon and
+belt, cluster, universe, galaxy extras). Work on branch stage3-core (draft PR #1).
 
-Next step: the galaxy extras, the last code of Stage 3, as the handoff's "Next single action" describes: factions
-over lanes, points of interest, hazards, D24 monuments per region and beacons per galaxy. Write a short design note
-first, then code. Every new value comes from new streams of the galaxy's or system's seed, so tests/Golden/v1/core.json,
-system.json, galaxy.json, planet.json, moon-belt.json, cluster.json and universe.json stay exactly as they are. Add a
-new golden file for the extras, property and distribution tests, and make sure Universe.At still returns equal objects
-(extend the hierarchy tests if the extras add addressable objects). If time remains, add a public star-name entry
-point (StarNames is internal) for the website's star name tool, without changing any seed's output.
+Next step: the last of Stage 3 before review. Write the README (the plan's first example first, as it runs today,
+then the feature matrix's short form, then short sections on clusters and universes, the galaxy extras, StarName,
+Universe.At and the seed promise), the CHANGELOG (an Unreleased 1.0.0-beta.1 entry with the size numbers from the
+size gate), and samples (a small console sample for NuGet and the UPM package's Samples~ folder, both built or
+checked by a test so they cannot rot). Check every code line in the README against the real API by running it.
+No Runtime behaviour changes in this step: if the README shows that an API is awkward, write it down for Stop 2
+instead of changing it.
 
-Commit per step, keep CI green on the self-hosted runner, keep the size gate green (warn me at yellow), and update
-the handoff, log, plan, index and PR #1 description before you stop. Do not change an existing golden file; if a
-change would, stop and ask. If the extras run long, say so: any of them can move to 1.1 without seed changes. After
-the extras, the session after yours writes the README, CHANGELOG and samples and prepares Stop 2 with the
-seed-changing questions listed in the handoff.
+Then prepare Stop 2: a short note listing the seed-changing questions from the handoff and the notes' "Open for
+tuning" sections, each with the current value, the alternative and what it would move (which golden files), plus
+the non-seed questions; put the same list in PR #1's description. Then mark PR #1 ready for review, assign it to
+m4bwav with the needs-review label (gh pr edit 1 --add-assignee m4bwav --add-label needs-review), and stop for Mark.
+
+Commit per step, keep CI green on the self-hosted runner, keep the size gate green (warn me at yellow; the README
+ships inside the nupkg, so watch its size), and update the handoff, log, plan, index and PR #1 description before
+you stop. Never change a golden file in tests/Golden/v1/ (core, system, galaxy, planet, moon-belt, cluster,
+universe, galaxy-extras, star-name); if anything would, stop and ask. If the Unity compile check, scale tests or
+BenchmarkDotNet would take long, list them for Stop 2 rather than starting them.
 
 Before you stop, rewrite ai-docs/next-session-prompt.md with the prompt for the session after yours, in this same
 form: what to read first (only what that step needs), the next step and its limits, the commit, CI, size-gate and

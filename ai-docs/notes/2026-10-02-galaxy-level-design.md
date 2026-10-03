@@ -64,8 +64,8 @@ For each system in index order: its seed is `Child(galaxy, "system", i)`, the sa
 
 ## Still to do in the galaxy level
 
-- Factions grown over lanes (idea 22) and points of interest with placement rules (idea 23), each on its own stream, so they can come later in 1.0 without changing any seed's map.
-- Hazards; a monument per region and a few beacons per galaxy (D24); gate requirements on links (A9).
+- Done 2026-10-03 (b8dc686): factions over lanes, points of interest, hazards, a monument per region and beacons, each on its own stream; see [the galaxy extras note](2026-10-03-galaxy-extras-design.md).
+- Gate requirements on links (A9): 1.1, no seed change.
 - The colliding-pair shape (idea 7, with U10). If it joins `Auto`'s tables, that changes seeds and must happen before 1.0.0-beta.1; as an explicit shape only, any time.
 - Region themes do not yet steer the systems' tags or landmarks; doing that changes system output, so it is a before-beta decision too.
 - 2,000-system maps take 210 ms: a Delaunay triangulation would cut the candidate pairs to about 3n, if a larger cap is ever wanted.
