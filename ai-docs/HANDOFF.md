@@ -9,6 +9,8 @@
 - Golden files in `tests/Golden/v1/` unchanged.
 - The package-modernize templates hold only the tag ruleset (`templates/rulesets/tags-admins-only.json`); the `master` ruleset must be written from the checklist's description.
 
+Checked again 2026-10-03 (later session): unchanged, still private, runner `universe` registered and online, no environments, no `v*` tag, no `release` run.
+
 ## In progress
 Nothing half-done. The public-repository settings (checklist step 2, agent) wait for the repository to be public.
 
