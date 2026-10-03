@@ -1,0 +1,23 @@
+{
+  "name": "com.m4bwav.universe-generator",
+  "version": "1.0.0-beta.1",
+  "displayName": "Universe Generator",
+  "description": "Seeded universe, galaxy, star system, planet and moon generator for games and fiction. One seed gives the same galaxy on every platform: names, star types, planets, lanes, regions, danger and story tags, as plain C# data with no engine dependencies.",
+  "unity": "6000.0",
+  "license": "MIT",
+  "author": {
+    "name": "Mark Rogers",
+    "url": "https://github.com/m4bwav"
+  },
+  "keywords": [
+    "procedural-generation",
+    "galaxy-generator",
+    "star-system",
+    "planet-generator",
+    "seeded",
+    "space"
+  ],
+  "documentationUrl": "https://github.com/m4bwav/UniverseGenerator#readme",
+  "changelogUrl": "https://github.com/m4bwav/UniverseGenerator/blob/master/CHANGELOG.md",
+  "licensesUrl": "https://github.com/m4bwav/UniverseGenerator/blob/master/LICENSE"
+}
