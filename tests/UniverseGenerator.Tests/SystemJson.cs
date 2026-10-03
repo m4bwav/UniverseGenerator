@@ -32,17 +32,7 @@ namespace UniverseGeneration.Tests
             w.Name("planets").BeginArray();
             foreach (var p in s.Planets)
             {
-                w.BeginObject();
-                w.Name("address").String(p.Address).Name("name").String(p.Name).Name("kind").String(p.Kind.ToString()).Name("zone").String(p.Zone.ToString());
-                w.Name("orbit").Number(p.Orbit, 4).Name("period").Number(p.Period, 2).Name("mass").Number(p.Mass, 3).Name("radius").Number(p.Radius, 3);
-                w.Name("rings").Bool(p.Rings).Name("descriptor").String(p.Descriptor);
-                w.Name("moons").BeginArray();
-                foreach (var m in p.Moons)
-                {
-                    w.BeginObject().Name("name").String(m.Name).Name("kind").String(m.Kind.ToString()).Name("orbit").Number(m.Orbit, 2).Name("radius").Number(m.Radius, 0).EndObject();
-                }
-
-                w.EndArray().EndObject();
+                Planet(w, p);
             }
 
             w.EndArray();
@@ -92,6 +82,28 @@ namespace UniverseGeneration.Tests
         {
             var w = new JsonWriter(indented: false);
             Write(w, s);
+            return w.ToString();
+        }
+
+        public static void Planet(JsonWriter w, Planet p)
+        {
+            w.BeginObject();
+            w.Name("address").String(p.Address).Name("name").String(p.Name).Name("kind").String(p.Kind.ToString()).Name("zone").String(p.Zone.ToString());
+            w.Name("orbit").Number(p.Orbit, 4).Name("period").Number(p.Period, 2).Name("mass").Number(p.Mass, 3).Name("radius").Number(p.Radius, 3);
+            w.Name("rings").Bool(p.Rings).Name("descriptor").String(p.Descriptor);
+            w.Name("moons").BeginArray();
+            foreach (var m in p.Moons)
+            {
+                w.BeginObject().Name("name").String(m.Name).Name("kind").String(m.Kind.ToString()).Name("orbit").Number(m.Orbit, 2).Name("radius").Number(m.Radius, 0).EndObject();
+            }
+
+            w.EndArray().EndObject();
+        }
+
+        public static string Text(Planet p)
+        {
+            var w = new JsonWriter(indented: false);
+            Planet(w, p);
             return w.ToString();
         }
 
