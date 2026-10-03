@@ -38,3 +38,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] handoff | rewritten: galaxy cluster level next
 ## [2026-10-03] index | rebuilt (10 entries)
 ## [2026-10-03] index | rebuilt (11 entries)
+## [2026-10-03] add | notes/2026-10-03-galaxy-cluster-level-design.md: the galaxy cluster level designed before coding (groups and clusters, type codes driving the shape, age and richness, active cores, satellites, gates, a wormhole ring and tethers; a galaxy alone keeps its output)
+## [2026-10-03] add | Galaxy cluster level (64e90de): GalaxyCluster.Generate, groups and clusters, type codes driving the shape, age and richness, active cores, satellites, gates, wormhole ring and tethers, galaxy.Gates; Universe.At reaches clusters; cluster.json golden identical on net10.0 and net48, the other five unchanged; 144 tests; size gate green (DLL 435.0 KB, nupkg 308.5 KB)
+## [2026-10-03] decision | Cluster spirals under 80 systems grow to 80 when Systems is at least 40 (else S0), placed with room for it, because the S0 rule alone erased the morphology and density relation at the default 60; a lone galaxy is Mature, Normal and Quiet and reads its type from its shape, so its map never moves
+## [2026-10-03] update | Cluster note: tuning while coding, statistics, open for tuning; plan Stage 3 checklist and next action (universe level)
+## [2026-10-03] handoff | rewritten: universe level next
+## [2026-10-03] index | rebuilt (11 entries)
