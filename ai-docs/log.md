@@ -70,3 +70,10 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] update | Stop 2 note (Ruled section), plan (Stop 2 checked, Stage 4 gains the history scan and release.yml, next action Stage 4 preparation); release.yml found missing although AGENTS.md describes it
 ## [2026-10-03] handoff | rewritten: Stage 3 merged, Stage 4 preparation next; next-session-prompt.md rewritten (history scan, release.yml, Mark's checklist)
 ## [2026-10-03] index | rebuilt (15 entries)
+## [2026-10-03] add | History scan (9586a58): gitleaks 8.30.1 (official release, sha256 checked, run from scratch) over every ref and the working tree, no leaks; scripts/history-scan.py regex pass: no secret, LAN address, internal host or private name; old commits keep local paths and Mark's second commit address, already public in other m4bwav repos, so no rewrite; current tree fixed (next-session prompt, runner folder to the private sidecar); notes/2026-10-03-history-scan.md
+## [2026-10-03] add | release.yml (23ecbaf): from the package-modernize template; tag v* checks, Linux and Windows tests, package check (now scripts/check-package.sh, shared with ci.yml), size gate, attestation, publish job gated by the nuget environment through Trusted Publishing, GitHub Release; actionlint, shellcheck, zizmor clean; not run
+## [2026-10-03] add | notes/2026-10-03-stage-4-checklist.md: Mark's Stage 4 steps; nuget.org Trusted Publishing doc (updated 2026-09-01) matches the plan; package ID UniverseGenerator free; CI must leave the self-hosted runner before the repository goes public
+## [2026-10-03] decision | No history rewrite before going public: every history finding (local paths, second author address) is already public in other m4bwav repositories and none is a secret; the private name list for the scan lives in the private sidecar, never in the repository
+## [2026-10-03] handoff | rewritten: Stage 4 prepared, waiting for Mark's review of stage4-prep; next-session-prompt.md rewritten (checklist agent steps)
+## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] index | rebuilt (17 entries)

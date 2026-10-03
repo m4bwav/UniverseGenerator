@@ -1,17 +1,16 @@
 # Handoff
 
 ## Current state
-2026-10-03: **Stage 3 merged and Stop 2 ruled.** Mark merged PR #1 into `master` (merge commit 32df421, 16:46 UTC) without leaving rulings, so every Stop 2 question keeps its current value ([the note's "Ruled" section](notes/2026-10-03-stop-2-questions.md)). No rule or golden file changed. C#, as ruled by Mark (F# port deferred; the 1.0 plan's "Deferred: F# and Fable" keeps the facts).
+2026-10-03: **Stage 4 prepared, waiting for Mark.** Branch `stage4-prep` (pull request for Mark) holds three commits: the history scan ([note](notes/2026-10-03-history-scan.md), `scripts/history-scan.py`), `release.yml` with `scripts/check-package.sh`, and [Mark's Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md). C#, as ruled by Mark (F# port deferred).
 
-- On `master`: the core and all six levels, galaxy extras, `StarName`, `Universe.At`, README, samples, CHANGELOG `[1.0.0-beta.1] - Unreleased`; golden files `core`, `system`, `galaxy`, `planet`, `moon-belt`, `cluster`, `universe`, `galaxy-extras`, `star-name` in `tests/Golden/v1/`, identical on net10.0 and net48. 170 tests. `ci` green on `master` after the merge. `<Version>` and `package.json` are already 1.0.0-beta.1.
-- Size gate green: nupkg 373.5 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 116.0 KB compressed, 35 Runtime files.
-- Still open for 1.0.0 (not the beta): N1, the feature-matrix rows marked 1.0 that are not built (build them or move them to 1.x via `kb/features/status.json`); N2's API additions (additive, any 1.x minor).
-- `release.yml` does not exist yet, though AGENTS.md describes it.
-- Level records: [universe](notes/2026-10-03-universe-level-design.md), [cluster](notes/2026-10-03-galaxy-cluster-level-design.md), [moons and belts](notes/2026-10-03-moon-and-belt-level-design.md), [planet](notes/2026-10-02-planet-level-design.md), [galaxy](notes/2026-10-02-galaxy-level-design.md), [galaxy extras](notes/2026-10-03-galaxy-extras-design.md), [star system](notes/2026-10-02-star-system-level-design.md).
-- CI: self-hosted runner `universe` (on the maintainer's PC; its folder is in the private sidecar); `RUNS_ON="ubuntu-latest"` moves jobs to hosted runners. Branch protection is unavailable while the repository is private on the free plan.
+- Scan: no secret in any commit (gitleaks 8.30.1 over every ref and the working tree, plus the regex pass). Old commits keep local paths and Mark's second commit address; all already public in other m4bwav repositories, so no history rewrite. The current tree is clean; the runner's folder moved to the private sidecar. Private name list for `--names-file`: in the private sidecar.
+- `release.yml`: from the package-modernize template; tag v* on a `master` commit with `ci` passed, build, tests (Linux net10.0; Windows net48 and net10.0), package check, size gate, attestation, publish job gated by the `nuget` environment through Trusted Publishing, then the GitHub Release. Linted clean, never run. Hosted runners: the repository must be public first.
+- nuget.org Trusted Publishing doc (updated 2026-09-01) matches the plan; package ID `UniverseGenerator` is free; the repository is private with no environments and no Actions variables.
+- On `master` since Stage 3: every level, 170 tests (net10.0 and net48), golden files in `tests/Golden/v1/` unchanged. Size gate green: nupkg 373.5 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 115.4 KB compressed, 35 Runtime files.
+- CI: self-hosted runner `universe` on Mark's PC (its folder in the private sidecar); `RUNS_ON` moves the jobs to hosted runners and must be set before the repository goes public (checklist step 2).
 
 ## In progress
-Nothing half-done. The branch `stage3-core` is merged and can be deleted.
+The `stage4-prep` pull request, waiting for Mark's review. Nothing else half-done. The branch `stage3-core` is merged and can be deleted.
 
 ## Dead ends hit
 - Unity's Mono evaluates float expressions in double precision; a .NET replay of Unity code must model that (kb/rules/determinism.md).
@@ -27,12 +26,13 @@ Nothing half-done. The branch `stage3-core` is merged and can be deleted.
 - Bash heredocs with apostrophes fail here; write Python scripts with the Write tool, or use the Edit tool. A Python `str.replace` that ends before a `;` leaves the `;` behind: re-read the line after a scripted edit.
 - The analyzers reject constant array arguments (CA1861) and `new T[0]` (CA1825).
 - `dotnet test --filter "FullyQualifiedName~Universe"` matches every test (the namespace is `UniverseGeneration`); filter on `Tests.UniverseTests`.
+- The history scan reads a diff line's leading `+` as part of an email (`+@AGENTS.md`) and the `everlast-vault` skill name as a vault path: `scripts/history-scan.py` requires an alphanumeric local part and a path separator after the vault name.
 
 ## Left / follow-ups
-1. Stage 4 preparation (an agent): the history scan for secrets, private names and local paths (N8), `release.yml` with Trusted Publishing behind the `nuget` environment, a checklist for Mark. One pull request, waiting for Mark.
-2. Stage 4 (Mark): make the repository public, the nuget.org Trusted Publishing policy, the `nuget` environment's reviewer, tag `v1.0.0-beta.1`, approve the deployment.
+1. Mark: review and merge `stage4-prep`, then the [Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) (CI off the runner, public, Trusted Publishing policy, `nuget` environment, tag after green, approve).
+2. Agent steps in that checklist: re-run the scan on the final `master`; `RUNS_ON` and a pull request for the hosted Windows, Linux and macOS matrix (plan D9); the public-repository settings and rulesets; the dated CHANGELOG pull request; verification from nuget.org.
 3. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
 4. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
 
 ## Next single action
-Prepare Stage 4: the history scan, `release.yml` and Mark's checklist, in one pull request. The prompt that starts that session is [next-session-prompt.md](next-session-prompt.md).
+Mark reviews the `stage4-prep` pull request. The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it checks how far Mark got and does the checklist's agent steps up to the tag.

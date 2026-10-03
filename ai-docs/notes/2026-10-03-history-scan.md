@@ -13,7 +13,7 @@ summary: "read before making the repository public, or to re-run the scan: no se
 
 Plan item N8 and AGENTS.md ("Before this repository goes public, scan the whole history"). Run on 2026-10-03 on branch `stage4-prep` (off `master` at 73d07ec): every ref, local and remote (`master`, `stage3-core`, `origin/docs/stop-2-ruled`), 32 commits.
 
-## Verdict
+## Summary
 
 **No secret anywhere in the history, and the current tree is clean.** Nothing needs rotating. The history keeps a few local paths and a second author address of Mark's; each is already public in other m4bwav repositories, so going public exposes nothing new and no history rewrite is needed (history was not rewritten and nothing was force-pushed). Mark makes the final call in the [Stage 4 checklist](2026-10-03-stage-4-checklist.md).
 
@@ -25,7 +25,7 @@ Plan item N8 and AGENTS.md ("Before this repository goes public, scan the whole 
 | gitleaks 8.30.1 | `gitleaks dir --redact .`: the working tree | no leaks |
 | `scripts/history-scan.py` (stdlib Python, committed with this note) | the patch of every commit on every ref, merges against each parent (`git log -p --all -m`); every commit's author, committer and message; the tracked files at HEAD | history: 5 findings below; current tree: 0 |
 
-The regex pass looks for local paths (user profile, the maintainer's drive, the runner folder), the vault path, LAN addresses, internal hostnames, email addresses other than the public author one (`m4bwav@gmail.com`), secret-shaped assignments, private key blocks, known token prefixes (GitHub, npm, nuget.org, AWS, OpenAI-style, Slack, Google), connection strings, and a list of private names kept in the private sidecar (`--names-file`, never committed). Its patterns were probed with a right and a wrong example of each kind before the run.
+The regex pass looks for local paths (user profile, the maintainer's drive, the runner folder), the vault path, LAN addresses, internal hostnames, email addresses other than the public author address on the commits, secret-shaped assignments, private key blocks, known token prefixes (GitHub, npm, nuget.org, AWS, OpenAI-style, Slack, Google), connection strings, and a list of private names kept in the private sidecar (`--names-file`, never committed). Its patterns were probed with a right and a wrong example of each kind before the run.
 
 ## Findings in history (each kind, commit and file; values are not repeated here)
 

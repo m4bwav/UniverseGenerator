@@ -13,48 +13,45 @@ summary: "paste into a fresh session to continue the run; every session rewrites
 Paste the block below into a fresh session to continue the run. Every session rewrites this file before it stops
 (AGENTS.md, "Document for handoff"), so the chain continues: the prompt it writes ends with the same instruction.
 
-Written 2026-10-03, after Stop 2 was ruled (Mark merged PR #1 into master, 32df421, with no rulings: every question
-keeps its current value). Use it to prepare Stage 4.
+Written 2026-10-03, after Stage 4 was prepared (branch `stage4-prep`, a pull request waiting for Mark). Use it once
+Mark has merged that pull request or started the Stage 4 checklist.
 
 ```
-Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 3 is merged into master (PR #1, 32df421)
-and Stop 2 is ruled: every question keeps its current value, and no golden file changed. Now prepare Stage 4, the
-NuGet release. In the UniverseGenerator clone, start by reading
-ai-docs/HANDOFF.md, then AGENTS.md, then the 1.0 plan's
-"Stage 4", "Security" and "Build and package specifics" sections only
-(ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md). For the release workflow, read the package-modernize
-skill's NuGet reference on Trusted Publishing and release.yml (the skill's private overlay holds the maintainer's
-identities). Re-check any nuget.org or GitHub Actions fact older than three months against the official docs before
-using it (AGENTS.md, "Research beats recall").
+Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 4 was prepared on 2026-10-03: the
+stage4-prep pull request holds the history scan, release.yml and Mark's Stage 4 checklist. In the UniverseGenerator
+clone, read ai-docs/HANDOFF.md, then AGENTS.md, then ai-docs/notes/2026-10-03-stage-4-checklist.md in full and
+ai-docs/notes/2026-10-03-history-scan.md's "Re-run before going public" section. Nothing else unless a step needs
+it. Re-check any nuget.org or GitHub Actions fact older than three months against the official docs before using it
+(AGENTS.md, "Research beats recall").
 
-Next step, on a new branch stage4-prep off origin/master, in one pull request:
-1. The history scan (N8): every commit on every branch (git log -p --all) for secrets (API keys, tokens,
-   connection strings, private keys), private names (people other than Mark, internal hosts, LAN addresses such as
-   192.168.*, the vault path), email addresses other than the public author one, and local paths (the maintainer's drives and
-   user profile, the runner's folder). Use gitleaks if it installs cleanly (say what you installed), plus
-   a stdlib Python regex pass for the names and paths. Write the report to ai-docs/notes/<date>-history-scan.md:
-   each finding as commit, file and kind, never the secret's value. Fix what is in the current tree in this
-   branch (move anything private to the everlast private sidecar with everlast.py note --private). Do not rewrite
-   history or force-push.
-2. release.yml (it does not exist yet, though AGENTS.md describes it): on a pushed tag v*, restore, build, test
-   and pack, then a publish job that waits at the GitHub environment nuget and pushes to nuget.org through
-   Trusted Publishing (OIDC login, no API key anywhere). Lint it (actionlint if available). Do not push a tag
-   and do not run it.
-3. A Stage 4 checklist note for Mark (ai-docs/notes/<date>-stage-4-checklist.md): make the repository public
-   once the scan is clean, create the nuget.org Trusted Publishing policy (owner, repository, workflow file,
-   environment; a policy that can publish a new package), create the nuget environment with himself as the
-   required reviewer, then tag v1.0.0-beta.1 after ci is green and approve the deployment; then verify on nuget.org
-   (flat container, registration listed).
+First find out how far Mark got, and say so: is stage4-prep merged (gh pr list --state all), is the repository
+public, does the nuget environment exist, is the Actions variable RUNS_ON set, is there a v* tag. Then do the
+checklist's steps marked (agent), in its order, only as far as Mark's steps before them are done:
+1. Re-run the history scan on the final master (gitleaks and scripts/history-scan.py with the private names file
+   from the everlast private sidecar); add the result to the scan note.
+2. Before the repository is public: with Mark's go-ahead, set RUNS_ON to "ubuntu-latest" (with the quotes) and
+   check that ci still passes on hosted runners. Then, in a pull request, ci.yml's build job becomes the
+   package-modernize template's Windows, Linux and macOS matrix on hosted runners (plan D9), keeping every check the
+   current job runs (golden check, format, audit, net48 on Windows, console sample, .meta check, package check,
+   size gate).
+3. Once Mark has made it public: secret scanning and push protection, private vulnerability reporting, workflow
+   permissions read, the master ruleset (required check ci) and the admins-only v* tag ruleset, from the
+   package-modernize rulesets templates. The nuget environment only if Mark asks you to create it.
+4. The release pull request: date the CHANGELOG heading for 1.0.0-beta.1 and check its size numbers against the
+   size gate.
+5. After Mark has tagged and approved: verify on nuget.org as the checklist's step 7 says, and record it.
 
-Commit per step. No Runtime change is expected: tests/Golden/v1/ must not change (git status shows nothing there),
-the tests stay green on net10.0 and net48, CI stays green on the self-hosted runner, and the size gate stays green
-(warn me at yellow). Do not tag, publish, merge a non-docs pull request or make the repository public: those wait
-for Mark. Open the pull request, assign it to m4bwav with the needs-review label, and give me its URL.
+Commit per step, each pull request for Mark (assign m4bwav, label needs-review; a docs-only one you may merge
+yourself once its checks pass). No Runtime change is expected: tests/Golden/v1/ must not change (git status shows
+nothing there), the tests stay green on net10.0 and net48, CI stays green, and the size gate stays green (warn me at
+yellow). Never tag, publish, approve a deployment, make the repository public or merge a non-docs pull request:
+those wait for Mark. No local path, LAN address or private name in any committed file (run
+scripts/history-scan.py before each commit).
 
-Stop and ask at once if the scan finds a live secret (it must be rotated before anything else), if anything
-would need a history rewrite, or if the current Trusted Publishing docs differ from the plan in a way that changes
-what Mark has to set up. When the three steps are done, update the handoff, log, plan (Stage 4 checklist, next
-action) and index, and stop for Mark.
+Stop and ask at once if the re-run scan finds anything new, if ci fails on hosted runners in a way that needs a
+Runtime or golden change, if the release run fails, or if a nuget.org or GitHub fact differs from the checklist in a
+way that changes what Mark has to do. When you reach a step that waits for Mark, update the handoff, log, plan
+(Stage 4 checklist, next action) and index, and stop for him.
 
 Before you stop, rewrite ai-docs/next-session-prompt.md with the prompt for the session after yours, in this same
 form: what to read first (only what that step needs), the next step and its limits, the commit, CI, size-gate and

@@ -11,6 +11,8 @@ summary: "Mark's steps for Stage 4, in order: merge stage4-prep, re-run the scan
 
 # Stage 4 checklist
 
+## Summary
+
 What Mark does to release UniverseGenerator 1.0.0-beta.1 to nuget.org, in order. Steps marked **(agent)** a session can do when Mark says so; everything else needs his hands or his accounts. Checked on 2026-10-03: the package ID `UniverseGenerator` is free on nuget.org (flat container 404, search 0 hits); the repository is private, with no environments and no Actions variables; the nuget.org Trusted Publishing doc (updated 2026-09-01) matches the plan and the package-modernize template, so nothing below differs from what the plan expected.
 
 ## 1. Merge the preparation
