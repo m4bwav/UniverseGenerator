@@ -87,7 +87,7 @@ gh secret set NUGET_USER --env nuget -R m4bwav/UniverseGenerator    # paste the 
 
 ## 5. The release commit
 
-- [ ] **(agent)** PR #10 opened 2026-10-03 (`release/1.0.0-beta.1`, waits for Mark): heading dated 2026-10-03; size numbers checked against the size gate on `master` 04f3a16 (ci run 37151962628): nupkg 373.5 to 373.2 KB and Unity compressed 116.0 to 114.5 KB corrected, the rest unchanged, all green. A small pull request: the CHANGELOG heading `## [1.0.0-beta.1] - <date>` (it says "Unreleased" now; `release.yml` accepts that for a prerelease, but the release ritual dates it) with the size numbers checked again; `<Version>` stays `1.0.0-beta.1` (already set, and `package.json` matches). Merge after `ci` is green, then wait for `ci` green on `master`.
+- [x] **(agent)** PR #10 (`release/1.0.0-beta.1`), merged by Mark 2026-10-03 (1776834; `ci` green on that `master` commit, run 37154206419, size gate matching the CHANGELOG; the compressed Unity number wobbles by about 0.1 KB between builds): heading dated 2026-10-03; size numbers checked against the size gate on `master` 04f3a16 (ci run 37151962628): nupkg 373.5 to 373.2 KB and Unity compressed 116.0 to 114.5 KB corrected, the rest unchanged, all green. A small pull request: the CHANGELOG heading `## [1.0.0-beta.1] - <date>` (it says "Unreleased" now; `release.yml` accepts that for a prerelease, but the release ritual dates it) with the size numbers checked again; `<Version>` stays `1.0.0-beta.1` (already set, and `package.json` matches). Merge after `ci` is green, then wait for `ci` green on `master`.
 
 ## 6. Tag and approve
 

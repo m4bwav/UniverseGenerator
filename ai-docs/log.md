@@ -98,3 +98,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] add | Release PR #10 (release/1.0.0-beta.1): CHANGELOG heading dated 2026-10-03; size numbers checked against the size gate on master 04f3a16 (ci run 37151962628): nupkg 373.5 to 373.2 KB and UPM compressed 116.0 to 114.5 KB corrected, rest unchanged, all green; for Mark
 ## [2026-10-03] handoff | rewritten: waiting for Mark (merge PR #10, tag, approve); next-session-prompt.md rewritten (watch the release run, verify from nuget.org)
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] update | Mark merged release PR #10 (1776834); ci on that master commit green on all three systems (run 37154206419), size gate matches the CHANGELOG (nupkg 373.2 KB, UPM 114.5 KB compressed)
+## [2026-10-03] learn | The size gate's UPM compressed number wobbles by about 0.1 KB between builds of the same tree (114.6 on PR #10's run, 114.5 on master); a 114.6 correction pushed after the merge never reached master and its branch was deleted; quote master's run, ignore 0.1 KB moves there
+## [2026-10-03] handoff | rewritten: ready to tag, waiting for Mark (tag v1.0.0-beta.1, approve nuget); next-session-prompt.md updated
+## [2026-10-03] index | rebuilt (17 entries)
