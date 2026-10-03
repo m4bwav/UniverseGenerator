@@ -7,7 +7,7 @@
 - AGENTS.md's "What this is" still says nothing is released and the repository is private; a one-line fix is its own pull request for Mark (instruction file, not docs-only).
 
 ## In progress
-Nothing half-done. Waiting for Mark to choose the next step.
+Nothing half-done. Mark chose N1 first (towards 1.0.0), then Stage 5.
 
 ## Dead ends hit
 - Unity's Mono evaluates float expressions in double precision; a .NET replay of Unity code must model that (kb/rules/determinism.md).
@@ -33,4 +33,4 @@ Nothing half-done. Waiting for Mark to choose the next step.
 3. `dotnet add package` refuses `--version` with `--prerelease`; use one or the other (checklist step 7).
 
 ## Next single action
-Mark picks N1 (towards 1.0.0) or Stage 5. The next session's prompt is [next-session-prompt.md](next-session-prompt.md).
+N1 (Mark chose it first, 2026-10-03): show him the unbuilt 1.0 rows with costs and the move-to-1.x recommendation, and build or move what he rules; then the 1.0.0 release pull request. Stage 5 after 1.0.0. The next session's prompt is [next-session-prompt.md](next-session-prompt.md).
