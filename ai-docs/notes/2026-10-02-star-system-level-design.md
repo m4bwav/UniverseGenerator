@@ -6,7 +6,7 @@ date: 2026-10-02
 verified: 2026-10-02
 stale_after: 2027-04-02
 tags: [universegenerator, star-system, design, stars, planets, moons, belts, stations, landmarks, story-tags, names]
-summary: "read before writing or changing the star system level: records, the mass bands that keep spectral classes consistent, two-chain orbits, size classes with the radius valley and hot Neptune desert built in, moons by Hill radius, belts, stations, landmarks, tags and descriptors; nothing here is coded yet"
+summary: "read before writing or changing the star system level: records, the mass bands that keep spectral classes consistent, two-chain orbits, size classes with the radius valley and hot Neptune desert built in, moons by Hill radius, belts, stations, landmarks, tags and descriptors; coded on 2026-10-02 (StarSystemGenerator)"
 ---
 
 # Star system level design
