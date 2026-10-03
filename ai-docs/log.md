@@ -77,3 +77,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] handoff | rewritten: Stage 4 prepared, waiting for Mark's review of stage4-prep; next-session-prompt.md rewritten (checklist agent steps)
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] update | Mark merged stage4-prep (PR #3); repository still private, no nuget environment, no RUNS_ON, no v* tag
+## [2026-10-03] verify | History scan re-run on master 272b0e0 (37 commits): gitleaks 8.30.1 no leaks; history-scan.py only the five known kinds plus removal commits, current 0; the script now skips its own file in history (its patterns matched themselves); PR #4 for Mark
+## [2026-10-03] update | RUNS_ON set to "ubuntu-latest" with Mark's go-ahead; ci on master green on hosted Ubuntu 24.04 (170 tests, size gate green: nupkg 373.2 KB, DLL 499.0 KB)
+## [2026-10-03] add | PR #5: ci.yml build job as the package-modernize NuGet template's hosted matrix plus macOS (plan D9), every check kept, package check and size gate on Linux; 170 tests green on Ubuntu, Windows (net10.0 and net48) and macOS; actionlint 1.7.12, zizmor 1.30.1 clean; the RUNS_ON switch and self-hosted fallback removed
+## [2026-10-03] handoff | rewritten: waiting for Mark (PR #4, PR #5, remove the runner, go public); next-session-prompt.md rewritten (public-repository settings and rulesets, then the release pull request)
+## [2026-10-03] index | rebuilt (17 entries)
