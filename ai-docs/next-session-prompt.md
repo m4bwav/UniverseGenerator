@@ -13,34 +13,48 @@ summary: "paste into a fresh session to continue the run; every session rewrites
 Paste the block below into a fresh session to continue the run. Every session rewrites this file before it stops
 (AGENTS.md, "Document for handoff"), so the chain continues: the prompt it writes ends with the same instruction.
 
-Written 2026-10-03, after README, CHANGELOG and samples (7a3fe40, c14c7ba) and the Stop 2 note. Use it once Mark has
-ruled Stop 2.
+Written 2026-10-03, after Stop 2 was ruled (Mark merged PR #1 into master, 32df421, with no rulings: every question
+keeps its current value). Use it to prepare Stage 4.
 
 ```
-Continue the UniverseGenerator run (C#; the F# port is deferred). Mark has ruled Stop 2: his rulings are in PR #1's
-comments or review (https://github.com/m4bwav/UniverseGenerator/pull/1), or in this message. Start by reading
-D:\m4bwa\Claude\Projects\Ai\labs\UniverseGenerator\ai-docs\HANDOFF.md, then AGENTS.md, then
-ai-docs/notes/2026-10-03-stop-2-questions.md (the questions S1 to S16, E1 to E4 and N1 to N8, with the golden files
-each would move). Read a level note only for a question you are about to change, and only its "Open for tuning"
-part and the section on the rule you touch. Work on branch stage3-core (PR #1). If you cannot find a ruling for a
-question, treat it as "keep the current value"; if a ruling is unclear, stop and ask.
+Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 3 is merged into master (PR #1, 32df421)
+and Stop 2 is ruled: every question keeps its current value, and no golden file changed. Now prepare Stage 4, the
+NuGet release. Start by reading
+D:\m4bwa\Claude\Projects\Ai\labs\UniverseGenerator\ai-docs\HANDOFF.md, then AGENTS.md, then the 1.0 plan's
+"Stage 4", "Security" and "Build and package specifics" sections only
+(ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md). For the release workflow, read the package-modernize
+skill's NuGet reference on Trusted Publishing and release.yml (C:\Users\m4bwa\.package-modernize holds the private
+overlay). Re-check any nuget.org or GitHub Actions fact older than three months against the official docs before
+using it (AGENTS.md, "Research beats recall").
 
-Next step: apply the rulings, one commit per ruling (or per group of rulings that move the same golden files).
-Seed-changing rulings first: change the rule, then delete and rewrite only the golden files the note's "Moves"
-column names for that question (UG_WRITE_GOLDEN=1 dotnet test), and say in the commit message which files changed
-on purpose and why. Before rewriting, run the tests and check that only those files fail; if any other golden file
-in tests/Golden/v1/ would change, stop and ask. Then the extras-only rulings (galaxy-extras.json only). Then the
-non-seed ones: matrix rows moved to 1.x go through kb/features/status.json and python kb/features/build_matrix.py
-(never edit the matrix by hand); API additions (for example StarSystem.Planet(int) or a typed Universe.At) must not
-change any output. Update the level notes' statistics and "Open for tuning" parts, the README and its examples
-(change samples/ConsoleSample/Examples.cs first, then copy into the README; SampleTests checks them), and the
-CHANGELOG entry if a size number changes.
+Next step, on a new branch stage4-prep off origin/master, in one pull request:
+1. The history scan (N8): every commit on every branch (git log -p --all) for secrets (API keys, tokens,
+   connection strings, private keys), private names (people other than Mark, internal hosts, LAN addresses such as
+   192.168.*, the vault path), email addresses other than the public author one, and local paths (D:\m4bwa,
+   C:\Users\m4bwa, D:\actions-runner-universe). Use gitleaks if it installs cleanly (say what you installed), plus
+   a stdlib Python regex pass for the names and paths. Write the report to ai-docs/notes/<date>-history-scan.md:
+   each finding as commit, file and kind, never the secret's value. Fix what is in the current tree in this
+   branch (move anything private to the everlast private sidecar with everlast.py note --private). Do not rewrite
+   history or force-push.
+2. release.yml (it does not exist yet, though AGENTS.md describes it): on a pushed tag v*, restore, build, test
+   and pack, then a publish job that waits at the GitHub environment nuget and pushes to nuget.org through
+   Trusted Publishing (OIDC login, no API key anywhere). Lint it (actionlint if available). Do not push a tag
+   and do not run it.
+3. A Stage 4 checklist note for Mark (ai-docs/notes/<date>-stage-4-checklist.md): make the repository public
+   once the scan is clean, create the nuget.org Trusted Publishing policy (owner, repository, workflow file,
+   environment; a policy that can publish a new package), create the nuget environment with himself as the
+   required reviewer, then tag v1.0.0-beta.1 after ci is green and approve the deployment; then verify on nuget.org
+   (flat container, registration listed).
 
-Commit per step, keep CI green on the self-hosted runner, keep the size gate green (warn me at yellow; the README
-ships inside the nupkg). Do not start the Unity compile check, scale tests or BenchmarkDotNet unless a ruling asks
-for them. Do not merge PR #1, tag, publish or make the repository public: those wait for Mark (Stage 4). When the
-rulings are applied, update the handoff, log, plan (Stage 3 checklist, Stop 2 ruled, next action), index and PR #1
-description (what changed per ruling), keep PR #1 assigned to m4bwav with the needs-review label, and stop for Mark.
+Commit per step. No Runtime change is expected: tests/Golden/v1/ must not change (git status shows nothing there),
+the tests stay green on net10.0 and net48, CI stays green on the self-hosted runner, and the size gate stays green
+(warn me at yellow). Do not tag, publish, merge a non-docs pull request or make the repository public: those wait
+for Mark. Open the pull request, assign it to m4bwav with the needs-review label, and give me its URL.
+
+Stop and ask at once if the scan finds a live secret (it must be rotated before anything else), if anything
+would need a history rewrite, or if the current Trusted Publishing docs differ from the plan in a way that changes
+what Mark has to set up. When the three steps are done, update the handoff, log, plan (Stage 4 checklist, next
+action) and index, and stop for Mark.
 
 Before you stop, rewrite ai-docs/next-session-prompt.md with the prompt for the session after yours, in this same
 form: what to read first (only what that step needs), the next step and its limits, the commit, CI, size-gate and

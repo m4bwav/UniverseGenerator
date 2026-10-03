@@ -66,3 +66,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] add | notes/2026-10-03-stop-2-questions.md: S1 to S16 seed-changing (golden files each moves), E1 to E4 extras-only, N1 to N8 non-seed (13 matrix rows marked 1.0 not built, awkward APIs, CI and test items); same list in PR #1's description; PR #1 ready for review, assigned to m4bwav with needs-review
 ## [2026-10-03] handoff | rewritten: waiting for Mark at Stop 2; next-session-prompt.md rewritten (apply the rulings)
 ## [2026-10-03] index | rebuilt (15 entries)
+## [2026-10-03] decision | Stop 2 ruled: Mark merged PR #1 into master (32df421) with no rulings left; by the session prompt's rule every S, E and N item keeps its current value, no rule or golden file changed; N1 (matrix rows marked 1.0 not built) and N2 (API additions) stay open for 1.0.0
+## [2026-10-03] update | Stop 2 note (Ruled section), plan (Stop 2 checked, Stage 4 gains the history scan and release.yml, next action Stage 4 preparation); release.yml found missing although AGENTS.md describes it
+## [2026-10-03] handoff | rewritten: Stage 3 merged, Stage 4 preparation next; next-session-prompt.md rewritten (history scan, release.yml, Mark's checklist)
+## [2026-10-03] index | rebuilt (15 entries)
