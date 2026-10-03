@@ -19,7 +19,7 @@ UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, plane
 - **Releases follow one ritual.** CHANGELOG with the date and the size numbers, `<Version>` set, merged, `ci` green on `master`, then tag `v<version>` and push it. Tag only after green.
 - **Knowledge base.** Research goes into `kb/` (reports in `kb/sources/` with a "feature keys" column, statuses in `kb/features/status.json`), and `python kb/features/build_matrix.py` regenerates the feature matrix; never edit the matrix by hand. The wiki publishes the public parts.
 - **Research beats recall.** Re-verify any version or registry fact older than three months.
-- **Document for handoff.** Anything learned, decided or built goes into `ai-docs/` before you finish; rewrite `ai-docs/HANDOFF.md` when work is left unfinished.
+- **Document for handoff.** Anything learned, decided or built goes into `ai-docs/` before you finish; rewrite `ai-docs/HANDOFF.md` when work is left unfinished. Before stopping, also rewrite `ai-docs/next-session-prompt.md`: the prompt that starts the next session (what to read first, the next step and its limits, the rules, when to stop and ask), ending with this same instruction to rewrite the file, so every session hands the next one its prompt; give the prompt in your final message too.
 - **No AI attribution anywhere.**
 - **Line endings.** Files are LF; count byte 13 after writing on Windows.
 - **Before this repository goes public,** scan the whole history for secrets, private names and local paths.

@@ -44,3 +44,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] update | Cluster note: tuning while coding, statistics, open for tuning; plan Stage 3 checklist and next action (universe level)
 ## [2026-10-03] handoff | rewritten: universe level next
 ## [2026-10-03] index | rebuilt (11 entries)
+## [2026-10-03] decision | Every session ends by rewriting ai-docs/next-session-prompt.md, a prompt for the next session that ends with the same instruction (Mark, 2026-10-03: chained fresh sessions cost less than one long one); rule in AGENTS.md
+## [2026-10-03] index | rebuilt (12 entries)
+## [2026-10-03] index | rebuilt (12 entries)
