@@ -83,3 +83,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] add | PR #5: ci.yml build job as the package-modernize NuGet template's hosted matrix plus macOS (plan D9), every check kept, package check and size gate on Linux; 170 tests green on Ubuntu, Windows (net10.0 and net48) and macOS; actionlint 1.7.12, zizmor 1.30.1 clean; the RUNS_ON switch and self-hosted fallback removed
 ## [2026-10-03] handoff | rewritten: waiting for Mark (PR #4, PR #5, remove the runner, go public); next-session-prompt.md rewritten (public-repository settings and rulesets, then the release pull request)
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] update | Mark merged PR #4 (scan re-run), PR #5 (hosted matrix) and PR #6; repository still private, runner universe still registered and online, no nuget environment, no v* tag
+## [2026-10-03] verify | ci on master 558c544 (run 37145366186) green on ubuntu-24.04, windows-latest and macos-latest: 170 tests each on net10.0, net48 on Windows, package check and size gate on Linux (nupkg 373.2 KB, DLL 499.0 KB, green)
+## [2026-10-03] update | Actions variable RUNS_ON deleted (no workflow reads it since PR #5); variables read back empty; checklist step 2 split: CI off the PC done, runner removal left for Mark
+## [2026-10-03] handoff | rewritten: waiting for Mark (remove the runner, go public); next-session-prompt.md rewritten (public-repository settings and rulesets, then the release pull request)
+## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] index | rebuilt (17 entries)

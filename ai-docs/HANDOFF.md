@@ -1,16 +1,16 @@
 # Handoff
 
 ## Current state
-2026-10-03: **Stage 4 under way, waiting for Mark.** `stage4-prep` is merged (PR #3). The repository is still private; no `nuget` environment, no `v*` tag. C#, as ruled by Mark (F# port deferred).
+2026-10-03: **Stage 4 under way, waiting for Mark.** PR #3 (`stage4-prep`), PR #4 (scan re-run) and PR #5 (hosted matrix) are merged. The repository is still private; the self-hosted runner `universe` is still registered (online, unused); no `nuget` environment, no `v*` tag. C#, as ruled by Mark (F# port deferred).
 
-- Scan re-run on the final `master` (272b0e0): clean, nothing new. gitleaks 8.30.1 no leaks; `scripts/history-scan.py` only the five known kinds plus their removal commits, current tree 0. The script's own patterns matched themselves in history; it now skips itself there too. PR #4 (scan note and that script fix), waiting for Mark.
-- `RUNS_ON` set to `"ubuntu-latest"` with Mark's go-ahead; `ci` on `master` passed on hosted Ubuntu 24.04 (run 37139764461).
-- PR #5: `ci.yml`'s build job is the template's matrix on `ubuntu-24.04`, `windows-latest`, `macos-latest`, every check kept (package check and size gate on Linux, as in `release.yml`); 170 tests green on each, net48 on Windows; actionlint 1.7.12 and zizmor 1.30.1 clean. Once merged, `RUNS_ON` is unread and can be deleted, and the runner `universe` removed.
-- On `master`: every level, 170 tests (net10.0 and net48), golden files in `tests/Golden/v1/` unchanged. Size gate green (hosted run: nupkg 373.2 KB, DLL 499.0 KB).
+- `ci` on `master` 558c544 (run 37145366186) passed on the hosted matrix: `ubuntu-24.04`, `windows-latest`, `macos-latest`, 170 tests each on net10.0, net48 on Windows; package check and size gate on Linux, green (nupkg 373.2 KB, DLL 499.0 KB).
+- The Actions variable `RUNS_ON` is deleted (no workflow reads it since PR #5); the repository has no Actions variables.
+- Scan: clean on 272b0e0 (PR #4); `scripts/history-scan.py` skips its own file in both passes.
+- Golden files in `tests/Golden/v1/` unchanged.
 - The package-modernize templates hold only the tag ruleset (`templates/rulesets/tags-admins-only.json`); the `master` ruleset must be written from the checklist's description.
 
 ## In progress
-PR #4 and PR #5 wait for Mark's review. Nothing else half-done.
+Nothing half-done. The public-repository settings (checklist step 2, agent) wait for the repository to be public.
 
 ## Dead ends hit
 - Unity's Mono evaluates float expressions in double precision; a .NET replay of Unity code must model that (kb/rules/determinism.md).
@@ -30,11 +30,11 @@ PR #4 and PR #5 wait for Mark's review. Nothing else half-done.
 - `scripts/history-scan.py` matched its own regex text in history (a connection-string prefix, the overlay folder name) once it was committed; it skips its own file in both passes now. Writing a pattern's literal into a note trips the current-tree pass too: describe it in words.
 
 ## Left / follow-ups
-1. Mark: merge PR #4 and PR #5; remove the runner `universe` and stop its scheduled task; make the repository public; the Trusted Publishing policy and the `nuget` environment ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) steps 2 to 4).
-2. Agent, once public: secret scanning and push protection, private vulnerability reporting, workflow permissions read, the `master` ruleset (required check `ci`) and the `v*` tag ruleset; delete the `RUNS_ON` variable after PR #5 is merged.
+1. Mark: remove the runner `universe` and stop its scheduled task; make the repository public; the Trusted Publishing policy and the `nuget` environment ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) steps 2 to 4).
+2. Agent, once public: secret scanning and push protection, private vulnerability reporting, workflow permissions read, the `master` ruleset (required check `ci`) and the `v*` tag ruleset; check first which of these the free plan allows on a public repository.
 3. Agent, after the policy and the environment: the release pull request (dated CHANGELOG heading, size numbers checked). Then Mark tags and approves; then the agent verifies from nuget.org (checklist step 7).
 4. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
 5. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
 
 ## Next single action
-Mark reviews PR #4 and PR #5, removes the runner and makes the repository public. The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it checks how far Mark got, then does the public-repository settings and the release pull request.
+Mark removes the runner `universe` and makes the repository public. The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it checks how far Mark got, then does the public-repository settings and the release pull request.
