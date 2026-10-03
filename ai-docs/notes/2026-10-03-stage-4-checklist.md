@@ -54,7 +54,7 @@ The `master` ruleset as sent (the templates have no branch ruleset file):
 
 ## 3. nuget.org Trusted Publishing policy
 
-- [ ] nuget.org, your user name, **Trusted Publishing**, add a policy:
+- [x] nuget.org, your user name, **Trusted Publishing**, add a policy (Mark said it was done, 2026-10-03; an agent cannot read it back, so the first release run is the test):
 
 | Field | Value |
 |---|---|
@@ -72,7 +72,8 @@ The `master` ruleset as sent (the templates have no branch ruleset file):
 
 Needs the repository public (required reviewers are not available on private repositories on the free plan).
 
-- [ ] Settings, Environments, New environment `nuget`: required reviewer **m4bwav**; Deployment branches and tags: "Selected branches and tags", rule `v*` of type tag; environment secret `NUGET_USER` = your nuget.org **profile name** (not your email). Or let an agent run it:
+- [x] Done 2026-10-03: Mark created the environment, the agent added the reviewer and the tag rule with the commands below, Mark set `NUGET_USER` (the agent's secret write was refused by its permission settings) and turned off "Allow administrators to bypass configured protection rules". Read back: `required_reviewers` m4bwav, `branch_policy` with `v* tag`, secret `NUGET_USER` present, `can_admins_bypass` false. The profile name is the nuget.org owner of Mark's other six packages.
+- Settings, Environments, New environment `nuget`: required reviewer **m4bwav**; Deployment branches and tags: "Selected branches and tags", rule `v*` of type tag; environment secret `NUGET_USER` = your nuget.org **profile name** (not your email). Or let an agent run it:
 
 ```
 gh api -X PUT repos/m4bwav/UniverseGenerator/environments/nuget --input - <<'JSON'
@@ -86,7 +87,7 @@ gh secret set NUGET_USER --env nuget -R m4bwav/UniverseGenerator    # paste the 
 
 ## 5. The release commit
 
-- [ ] **(agent)** A small pull request: the CHANGELOG heading `## [1.0.0-beta.1] - <date>` (it says "Unreleased" now; `release.yml` accepts that for a prerelease, but the release ritual dates it) with the size numbers checked again; `<Version>` stays `1.0.0-beta.1` (already set, and `package.json` matches). Merge after `ci` is green, then wait for `ci` green on `master`.
+- [ ] **(agent)** PR #10 opened 2026-10-03 (`release/1.0.0-beta.1`, waits for Mark): heading dated 2026-10-03; size numbers checked against the size gate on `master` 04f3a16 (ci run 37151962628): nupkg 373.5 to 373.2 KB and Unity compressed 116.0 to 114.5 KB corrected, the rest unchanged, all green. A small pull request: the CHANGELOG heading `## [1.0.0-beta.1] - <date>` (it says "Unreleased" now; `release.yml` accepts that for a prerelease, but the release ritual dates it) with the size numbers checked again; `<Version>` stays `1.0.0-beta.1` (already set, and `package.json` matches). Merge after `ci` is green, then wait for `ci` green on `master`.
 
 ## 6. Tag and approve
 

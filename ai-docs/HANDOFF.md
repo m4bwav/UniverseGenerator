@@ -1,11 +1,10 @@
 # Handoff
 
 ## Current state
-2026-10-03: **Stage 4 under way, waiting for Mark (Trusted Publishing policy and `nuget` environment).** The repository is **public** since 2026-10-03 (Mark removed the runner `universe`; the agent ran the visibility command at his request). C#, as ruled by Mark (F# port deferred).
+2026-10-03: **Stage 4: release PR #10 waits for Mark.** The repository is public, the public-repository settings and rulesets are on (checklist step 2 table), the nuget.org Trusted Publishing policy exists (Mark), and the `nuget` environment is complete: reviewer m4bwav, tag rule `v*`, `NUGET_USER`, admin bypass off. C#, as ruled by Mark (F# port deferred).
 
-- Public-repository settings on, read back (checklist step 2 table): secret scanning, push protection, private vulnerability reporting, workflow token read with no pull request approval, ruleset `master` (deletion and force-push blocked, required check `ci`, admin bypass), ruleset `Tags only by admins` (all tags, from the package-modernize template).
-- `ci` on `master` 558c544 passed on hosted `ubuntu-24.04`, `windows-latest`, `macos-latest` (170 tests each, net48 on Windows, size gate green: nupkg 373.2 KB, DLL 499.0 KB). No Actions variables, no self-hosted runner.
-- No `nuget` environment, no `v*` tag, no `release` run.
+- PR #10 (`release/1.0.0-beta.1`): CHANGELOG heading dated 2026-10-03; size numbers corrected to the size gate on `master` 04f3a16 (nupkg 373.2 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 114.5 KB compressed, all green). Not docs-only, so Mark merges; the `master` ruleset needs `ci` green.
+- No `v*` tag, no `release` run yet.
 - Golden files in `tests/Golden/v1/` unchanged.
 
 ## In progress
@@ -29,10 +28,10 @@ Nothing half-done. The public-repository settings (checklist step 2, agent) wait
 - `scripts/history-scan.py` matched its own regex text in history (a connection-string prefix, the overlay folder name) once it was committed; it skips its own file in both passes now. Writing a pattern's literal into a note trips the current-tree pass too: describe it in words.
 
 ## Left / follow-ups
-1. Mark: the Trusted Publishing policy and the `nuget` environment ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) steps 3 and 4; an agent can create the environment if he asks).
-2. Agent, after the policy and the environment: the release pull request (dated CHANGELOG heading, size numbers checked). Then Mark tags and approves; then the agent verifies from nuget.org (checklist step 7).
+1. Mark: merge PR #10, wait for `ci` green on `master`, tag `v1.0.0-beta.1`, approve the `nuget` deployment ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) steps 5 and 6).
+2. Agent, after the approval: watch the release run, verify from nuget.org (checklist step 7).
 3. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
 4. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
 
 ## Next single action
-Mark adds the nuget.org Trusted Publishing policy and the `nuget` environment (checklist steps 3 and 4). The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it checks how far Mark got, then opens the release pull request.
+Mark merges the release PR #10, tags `v1.0.0-beta.1` after `ci` is green on `master`, and approves the deployment. The next session's prompt is [next-session-prompt.md](next-session-prompt.md): it checks how far Mark got, then watches the release run and verifies from nuget.org.
