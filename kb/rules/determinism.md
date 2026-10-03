@@ -23,18 +23,6 @@ What makes "the same seed gives the same output everywhere" (plan decisions D3, 
 6. **A fixed number of draws per object, per stream.** An optional feature draws from its own stream, so switching it on or off moves nothing else.
 7. **Seed identity = (seed text, generator version).** Seed strings carry the version (`v1-...`); a change to what a seed produces adds a generator version and keeps the old one selectable (D4). Golden files per version, never regenerated.
 
-## Under Fable (JavaScript), plan D26 and D27
-
-The package is F# compiled to .NET and, by Fable, to JavaScript; the same golden files must pass in Node. JavaScript numbers are IEEE doubles, so rules 4 and 5 hold there as they stand (V8 and SpiderMonkey's `Math.exp` and `Math.sin` differ from each other, which is one more reason for DMath). What differs:
-
-- **64-bit integers are BigInt and wrap exactly**: "Since Fable 4.0.5, int64, uint64 are represented using native JS BigInt" (fable.io, JavaScript compatibility, read 2026-10-02). PCG32, SplitMix64 and FNV-1a stay in `uint64`.
-- **32-bit integers do not wrap**: int32 and uint32 compile to JS numbers, with "underlying 52 bit precision, without expected truncation to 32 bits on overflow" (same page). An int32 sum or product that overflows on .NET gives a different value in JS. Keep every int32 small by construction, and do wrapping work in uint64.
-- **No float32**: JS has no single-precision arithmetic.
-- **No BitConverter in DMath**: build powers of two from a table and find a double's exponent by halving and doubling (exact), so DMath needs no bit reinterpretation that Fable may not support.
-- **No sprintf or printf in the library**: reflection on .NET, a large formatting runtime in JS. Format numbers through the JSON writer's integer route.
-- **Strings**: UTF-16 code units on both, so FNV-1a's hand-made UTF-8 encoding gives the same bytes; compare ordinally, never by culture.
-- **Speed**: BigInt arithmetic is slower than native integers; the Stage 3 spike times 10,000 draws, and PCG32 on 32-bit halves is the fallback.
-
 ## Measured traps (2026-10-02, SpaceDeckBuilder2 capture)
 
 - **Unity's Editor Mono evaluates float expressions in double precision.** `Mathf.Lerp(a, b, t)` written as `a + (b - a) * Clamp01(t)` in single precision differed from Unity 6000.6.0f1 (Mono 6.13) in the last bit in 1,188 values; computing in double and rounding once matched all 200 systems. IL2CPP is expected to round per operation, so an Editor and a player build can disagree. Never let a float expression's result decide anything or reach output unrounded.

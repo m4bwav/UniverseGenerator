@@ -13,3 +13,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-02] add | notes/2026-10-02-star-system-level-design.md: the star system level design worked out before the switch
 ## [2026-10-02] handoff | rewritten for the F# switch
 ## [2026-10-02] index | rebuilt (7 entries)
+## [2026-10-02] decision | Mark: forget F# and Fable for now, keep C#; maybe port later. Plan's D26 to D31 removed; the assessment kept as "Deferred: F# and Fable" in the 1.0 plan

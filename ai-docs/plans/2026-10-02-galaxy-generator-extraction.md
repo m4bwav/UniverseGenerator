@@ -21,16 +21,13 @@ Once the run creates the new repository, it copies this plan into that repositor
 
 **Outcome so far (2026-10-02):** Stages 0, 1 and 2 done; Stop 1 ruled the same day (every recommendation stands; the name is UniverseGenerator). The Stage 2 plan is [2026-10-02-universegenerator-1.0-plan.md](2026-10-02-universegenerator-1.0-plan.md) (decisions D1 to D25, the Stage 1 idea table, effort per level, the README's first example). Stage 0 record: [../notes/2026-10-02-galaxy-stage0-survey-and-capture.md](../notes/2026-10-02-galaxy-stage0-survey-and-capture.md). The research is a knowledge base at [../../kb/INDEX.md](../../kb/INDEX.md) (Mark, 2026-10-02: "The AI should store a knowledge base in md files and/or the repo wiki"). Corrections to the survey below: the game never regenerates a galaxy from a seed (saves hold copies and no seed), the repository pins Unity 6000.6.0f1 while the open Editor has a local 6000.6.4f1 upgrade, and a local clone of the game exists (not where the prompt looked).
 
-**Language change (2026-10-02, after Stop 1):** Mark moved the package to F# compiled by Fable, so one source also ships to npm. The 1.0 plan's D26 to D31 carry the change and override this file's D8, D11 and D19 where they differ (source layout, the lab page in the browser, FSharp.Core in the size budget); a Fable spike opens Stage 3 as the gate.
-
 ## Goal
 
 Turn the galaxy and star-system generator from SpaceDeckBuilder2 into the best seeded space generator anyone can install, and keep it easy for a newcomer. It covers every level, from a small universe down to planets and moons. It is released as:
-1. a public, MIT-licensed .NET library on nuget.org, written in F# (D26 of the 1.0 plan) and usable from C#;
-2. the same source compiled by Fable as an npm package for JavaScript and TypeScript;
-3. the same library as a Unity package on OpenUPM;
-4. a page on Mark's site where anyone can roll a universe, galaxy or system from a seed, share the URL, open any object and download it as JSON;
-5. a blog post about it.
+1. a public, MIT-licensed C# library on nuget.org;
+2. the same source as a Unity package on OpenUPM;
+3. a page on Mark's site where anyone can roll a universe, galaxy or system from a seed, share the URL, open any object and download it as JSON;
+4. a blog post about it.
 
 Every surface links to SpaceDeckBuilder2.
 

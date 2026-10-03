@@ -1,17 +1,17 @@
 ---
-title: "Star system level design for UniverseGenerator 1.0 (worked out 2026-10-02, before the F# switch)"
+title: "Star system level design for UniverseGenerator 1.0 (2026-10-02)"
 kind: note
 status: active
 date: 2026-10-02
 verified: 2026-10-02
 stale_after: 2027-04-02
 tags: [universegenerator, star-system, design, stars, planets, moons, belts, stations, landmarks, story-tags, names]
-summary: "read before writing the star system level (in F# since D26): records, the mass bands that keep spectral classes consistent, two-chain orbits, size classes with the radius valley and hot Neptune desert built in, moons by Hill radius, belts, stations, landmarks, tags and descriptors; nothing here is coded yet"
+summary: "read before writing or changing the star system level: records, the mass bands that keep spectral classes consistent, two-chain orbits, size classes with the radius valley and hot Neptune desert built in, moons by Hill radius, belts, stations, landmarks, tags and descriptors; nothing here is coded yet"
 ---
 
 # Star system level design
 
-Worked out on 2026-10-02 while writing the C# version, which stopped when Mark moved the package to F# and Fable (plan D26). The C# drafts of the options and star records are on branch `stage3-core` (commit after ab6b8b5); this note is the design the F# code should follow. The prototype (`Tests/GalaxyPrototype/SystemProto.cs` on the game repository's capture branch) is the starting point; changes from it are marked.
+Worked out on 2026-10-02 for the C# code on branch `stage3-core`. The prototype (`Tests/GalaxyPrototype/SystemProto.cs` on the game repository's capture branch) is the starting point; changes from it are marked.
 
 ## Context, so a system alone equals the same system in its galaxy
 
@@ -52,6 +52,6 @@ A system's own content comes from its own streams. What depends on its neighbour
 
 ## Names (D20)
 
-From the embedded tables (`scripts/embed-star-tables.py`; in F# it writes string literals the same way): neutron stars `PSR J{hh}{mm}{+-}{dd}{mm}`; black holes `Gaia BH{n}` or `XTE J...`; white dwarfs half `WD {hhmm}{+-}{ddd}`; bright classes (O, B, A, giant, supergiant) 35% proper name, 35% Bayer or Flamsteed, 30% HD or HIP; others 8% proper, 12% designation, the rest HD 25, HIP 15, GJ 15, Kepler 13, TOI 12, Wolf 8, Ross 6, LHS 6. HIP numbers from the gap list (walk the ascending gaps; no 118,218-entry array). Planets `{system} {letter}` with letters in a seeded discovery order. Unique per galaxy by redrawing in the skeleton pass.
+From the embedded tables (`scripts/embed-star-tables.py`): neutron stars `PSR J{hh}{mm}{+-}{dd}{mm}`; black holes `Gaia BH{n}` or `XTE J...`; white dwarfs half `WD {hhmm}{+-}{ddd}`; bright classes (O, B, A, giant, supergiant) 35% proper name, 35% Bayer or Flamsteed, 30% HD or HIP; others 8% proper, 12% designation, the rest HD 25, HIP 15, GJ 15, Kepler 13, TOI 12, Wolf 8, Ross 6, LHS 6. HIP numbers from the gap list (walk the ascending gaps; no 118,218-entry array). Planets `{system} {letter}` with letters in a seeded discovery order. Unique per galaxy by redrawing in the skeleton pass.
 
 Related: builds on [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md); see also [plausibility rules](../../kb/rules/plausibility-rules.md), [design rules](../../kb/rules/design-rules.md).

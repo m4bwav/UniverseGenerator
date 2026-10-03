@@ -4,7 +4,7 @@ Rules for any AI agent (Claude Code, Copilot, Cursor, Codex) working in this rep
 
 ## What this is
 
-UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, as the NuGet package `UniverseGenerator` (namespace `UniverseGeneration`), the npm package `universe-generator` and the Unity package `com.m4bwav.universe-generator` (OpenUPM). Since 2026-10-02 (plan D26) the source is F#: the F# compiler builds the NuGet and Unity DLLs, Fable builds the npm package. The C# core on branch `stage3-core` is the reference for the port until the F# core replaces it. It was extracted from the game SpaceDeckBuilder2. Nothing is released yet; the repository is private until the 1.0 plan's Stage 3 review. The plan is `ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md` (decisions D1 to D25, ruled 2026-10-02); start with `ai-docs/HANDOFF.md`. Why it does what it does: `kb/INDEX.md`.
+UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, as the NuGet package `UniverseGenerator` (namespace `UniverseGeneration`) and the Unity package `com.m4bwav.universe-generator` (OpenUPM), built from one source folder. It was extracted from the game SpaceDeckBuilder2. Nothing is released yet; the repository is private until the 1.0 plan's Stage 3 review. The plan is `ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md` (decisions D1 to D25, ruled 2026-10-02); start with `ai-docs/HANDOFF.md`. Why it does what it does: `kb/INDEX.md`.
 
 ## Rules
 
@@ -13,8 +13,7 @@ UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, plane
 - **Games and fiction first** (D18): story hooks, names, readable maps and gameplay structure lead; astronomy only as far as it keeps descriptions consistent (`kb/rules/plausibility-rules.md`).
 - **Easy start.** `Galaxy.Generate("my-seed")` must keep working with good defaults; presets and options add, never require.
 - **Size budget** (`ai-docs/notes/2026-10-02-package-size-budget.md`): nupkg under 1 MB, compressed data under 500 KB, UPM package under 2 MB unpacked, under 150 Runtime .cs files, under 300 KB added to a WebGL build, a default galaxy under 50 ms. Say so first in the pull request and to the maintainer when a change moves any metric into yellow; never cross red. Larger content goes to the add-on packages (Names, Text, Exports).
-- **Targets.** The F# library compiles as `netstandard2.0` and `net10.0` and with Fable to JavaScript: no net5+ APIs without `#if` or a polyfill, no reflection, no `sprintf`/`printf` in the library, no data parsed in a static constructor. The Unity package ships the netstandard2.0 DLLs with no engine references. Fable rules (D27, `kb/rules/determinism.md`): wrapping integer arithmetic only in `uint64`/`int64`; an `int32` must never overflow (Fable does not wrap it); no `float32`; ordinal string comparison.
-- **F# tooling** (package-modernize references/nuget.md, "F# packages"): FSharp.Core pinned to the lowest version the code needs, Fantomas `--check` (dotnet format does nothing for F#), `--warnon:1182,3390`, the F# analyzers, a C# test project for the C# surface (D29).
+- **Targets.** The Runtime folder compiles as `netstandard2.0` and `net10.0` with LangVersion 9, and in Unity 6 with no engine references: no net5+ APIs without `#if` or a polyfill, no reflection, no data parsed in a static constructor.
 - **Every file under `Packages/com.m4bwav.universe-generator/` has a committed `.meta`, and a GUID never changes.**
 - **Nothing reaches a registry without the maintainer.** No API key anywhere; `release.yml` publishes through nuget.org Trusted Publishing from a job that waits at the `nuget` environment. OpenUPM builds from tags; the maintainer opens its submission.
 - **Releases follow one ritual.** CHANGELOG with the date and the size numbers, `<Version>` set, merged, `ci` green on `master`, then tag `v<version>` and push it. Tag only after green.
@@ -38,7 +37,7 @@ python kb/features/build_matrix.py                  # regenerate the feature mat
 
 ## Layout
 
-- `src/UniverseGenerator/`: the F# source (plan D8 as changed by D26); Fable compiles it into `npm/`; `Packages/com.m4bwav.universe-generator/` is the Unity package, holding the built DLLs under `Runtime/Plugins/`. (Until the F# port lands, the C# core still sits in `Packages/.../Runtime/Core/`.)
+- `Packages/com.m4bwav.universe-generator/Runtime/`: the one source folder (Unity asmdef, noEngineReferences); `src/UniverseGenerator/` compiles it for NuGet (plan D8).
 - `tests/`: unit, golden (`tests/Golden/v1/`), property, distribution, hierarchy and size tests; `tests/Golden/legacy/` holds the game's output before the extraction, a record that no test compares against (D25).
 - `kb/`: the knowledge base. `ai-docs/`: plans, notes, log, handoff.
 
