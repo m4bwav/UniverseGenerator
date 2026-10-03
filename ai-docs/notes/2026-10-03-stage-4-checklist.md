@@ -6,7 +6,7 @@ date: 2026-10-03
 verified: 2026-10-03
 stale_after: 2026-11-03
 tags: [universegenerator, stage-4, release, nuget, trusted-publishing, checklist, public]
-summary: "Mark's steps for Stage 4, in order: merge stage4-prep, re-run the scan, move CI off the self-hosted runner and make the repository public, the nuget.org Trusted Publishing policy (new package allowed), the nuget environment, date the CHANGELOG, tag v1.0.0-beta.1 after ci is green, approve, verify; read before any of them"
+summary: "Mark's steps for Stage 4, in order: merge stage4-prep, re-run the scan, move CI off the self-hosted runner and make the repository public, the nuget.org Trusted Publishing policy (new package allowed), the nuget environment, date the CHANGELOG, tag v1.0.0-beta.1 after ci is green, approve, verify (1.0.0-beta.1 published and verified 2026-10-03, results in step 7); read before any of them or before releasing 1.0.0"
 ---
 
 # Stage 4 checklist
@@ -98,14 +98,29 @@ gh secret set NUGET_USER --env nuget -R m4bwav/UniverseGenerator    # paste the 
 git fetch origin && git tag v1.0.0-beta.1 origin/master && git push origin v1.0.0-beta.1
 ```
 
-- [ ] Run 37158022980: build and test, attest, Windows (net48 and net10.0) all passed, then it waited at `push to nuget.org`. On Mark's explicit instruction the agent sent the approval through the API (`pending_deployments`, state approved); the call returned no error, but the agent's permission settings blocked it from watching the run afterwards, so whether the push ran is unconfirmed. Next: `gh run view 37158022980`; if still waiting, Mark clicks Review deployments.
+- [x] Run 37158022980: build and test, attest, Windows (net48 and net10.0) all passed, then it waited at `push to nuget.org`. On Mark's explicit instruction the agent sent the approval through the API (`pending_deployments`, state approved). Confirmed by the next session (2026-10-03): every job passed, `push to nuget.org (after approval)` in 10 s (Trusted Publishing accepted; the log shows `Created` and "Your package was pushed." for the nupkg and the snupkg), then `GitHub Release` in 6 s.
 - The `release` run checks the tag against `<Version>`, that the commit is on `master` and passed `ci`, builds, tests on Linux and Windows (net48 too), checks the package and the size gate, attests, then waits. Open the run, **Review deployments**, approve `nuget`. Nothing is on nuget.org before that click; after it the push is permanent (unlisting is the only undo).
 
 ## 7. Verify **(agent)**
 
-- [ ] Flat container lists it (usually within 15 minutes): `https://api.nuget.org/v3-flatcontainer/universegenerator/index.json` contains `1.0.0-beta.1`.
-- [ ] Registration says listed (can lag 25 minutes or more): `https://api.nuget.org/v3/registration5-gz-semver2/universegenerator/index.json` has the version with `"listed": true` (gzip; `curl --compressed`).
-- [ ] `dotnet nuget verify` on the downloaded nupkg (repository signature), the snupkg on the symbol server, `gh release view v1.0.0-beta.1` (prerelease, notes, nupkg and snupkg), `gh attestation verify --format json` on the run's artifact, and a fresh net10.0 and net48 console project restoring `1.0.0-beta.1 --prerelease` and printing the README's first example.
+Done 2026-10-03 for 1.0.0-beta.1, about ten minutes after the push; everything matched what this list expects.
+
+- [x] Flat container lists it (usually within 15 minutes): `https://api.nuget.org/v3-flatcontainer/universegenerator/index.json` contains `1.0.0-beta.1`. Read back `{"versions": ["1.0.0-beta.1"]}`.
+- [x] Registration says listed (can lag 25 minutes or more): `https://api.nuget.org/v3/registration5-gz-semver2/universegenerator/index.json` has the version with `"listed": true` (gzip; `curl --compressed`). Read back `1.0.0-beta.1`, listed true.
+- [x] `dotnet nuget verify` on the downloaded nupkg (repository signature), the snupkg on the symbol server, `gh release view v1.0.0-beta.1` (prerelease, notes, nupkg and snupkg), `gh attestation verify --format json` on the run's artifact, and a fresh net10.0 and net48 console project restoring `1.0.0-beta.1 --prerelease` and printing the README's first example.
+
+| Check | Result |
+|---|---|
+| `dotnet nuget verify --all` on the nupkg from the flat container (395,256 bytes) | Repository signature, NuGet.org Repository by Microsoft, certificate valid to 2027-05-18; content hash `t5ipovHk...` |
+| Contents | README.md, `lib/net10.0` and `lib/netstandard2.0` DLL and XML docs; the netstandard2.0 DLL is byte-identical to the one in the run's attested artifact |
+| snupkg | `www.nuget.org/api/v2/symbolpackage/UniverseGenerator/1.0.0-beta.1` redirects (302) to the symbol-packages CDN, which serves it (200, 78,455 bytes) |
+| `gh release view v1.0.0-beta.1` | prerelease, not draft, notes from the CHANGELOG, assets the nupkg and the snupkg |
+| `gh attestation verify` on the run's `release` artifact | nupkg verified: signer `release.yml@refs/tags/v1.0.0-beta.1`, run 37158022980 attempt 1. The snupkg has no attestation (HTTP 404), as designed: `release.yml` attests `artifacts/*.nupkg` only. The nupkg from nuget.org has a different digest (nuget.org adds its repository signature), so verify the run's artifact, not the download |
+| Console projects (dotnet SDK 10.0.401, a scratch folder outside the repository, a `nuget.config` with only nuget.org, an empty `NUGET_PACKAGES` cache) | net10.0 (`dotnet add package UniverseGenerator --prerelease`, resolved 1.0.0-beta.1) and net48 (`--version 1.0.0-beta.1`, a .NET Framework exe) both print the README's first example: 60 lines starting `HD 147927: K star, 6 planets, danger 9`, `HD 165595: M star, 1 planets, danger 6`, `HD 28101: K star, 6 planets, danger 6`, as the README shows; the two outputs are byte-identical |
+
+`dotnet add package` refuses `--version` and `--prerelease` together ("not supported in the same command"): use `--prerelease` alone (latest prerelease) or `--version 1.0.0-beta.1` alone.
+
 - [ ] Then 1.0.0 (after N1, plan "Before 1.0.0") the same way, and `PackageValidationBaselineVersion` 1.0.0 after it.
+- [ ] Optional now that the first push bound the policy: narrow the Trusted Publishing scope to "push only new package versions" (step 3).
 
 Related: builds on [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md) (Stage 4, Security); see also [history scan](2026-10-03-history-scan.md), [package size budget](2026-10-02-package-size-budget.md).

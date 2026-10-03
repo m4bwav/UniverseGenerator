@@ -1,14 +1,13 @@
 # Handoff
 
 ## Current state
-2026-10-03: **Stage 4: tagged; release run 37158022980 approved or waiting.** On Mark's explicit instruction ("do all the things") the agent pushed tag `v1.0.0-beta.1` on `master` c4f4e9e (ci run 37154681055 green) and the release run built, tested (Linux, Windows net48 and net10.0) and attested, then waited at `push to nuget.org`. The agent sent the approval through the API; the call returned no error, but its permission settings then blocked it from watching the run, so whether the push ran is unconfirmed. C#, as ruled by Mark (F# port deferred).
+2026-10-03: **Stage 4: 1.0.0-beta.1 is on nuget.org and verified.** Release run 37158022980 (tag `v1.0.0-beta.1` on `master` c4f4e9e) passed every job: build and test, attest, Windows net48 and net10.0, `push to nuget.org` (Trusted Publishing accepted, nupkg and snupkg pushed) and the GitHub Release. Checklist step 7 passed in full: flat container and registration (listed), repository signature, snupkg on the symbol server, prerelease GitHub Release with both files, nupkg attestation, and fresh net10.0 and net48 consoles printing the README's first example identically ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) step 7). C#, as ruled by Mark (F# port deferred).
 
-- PR #10 (`release/1.0.0-beta.1`): CHANGELOG heading dated 2026-10-03; size numbers corrected to the size gate on `master` 04f3a16 (nupkg 373.2 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 114.5 KB compressed, all green). Merged by Mark 2026-10-03.
-- No `v*` tag, no `release` run yet.
-- Golden files in `tests/Golden/v1/` unchanged.
+- Golden files in `tests/Golden/v1/` unchanged; no Runtime change this session.
+- AGENTS.md's "What this is" still says nothing is released and the repository is private; a one-line fix is its own pull request for Mark (instruction file, not docs-only).
 
 ## In progress
-Nothing half-done. The public-repository settings (checklist step 2, agent) wait for the repository to be public.
+Nothing half-done. Waiting for Mark to choose the next step.
 
 ## Dead ends hit
 - Unity's Mono evaluates float expressions in double precision; a .NET replay of Unity code must model that (kb/rules/determinism.md).
@@ -29,10 +28,9 @@ Nothing half-done. The public-repository settings (checklist step 2, agent) wait
 - The size gate's "UPM compressed" number wobbles by about 0.1 KB between builds of identical content (114.5 KB on `master` 1776834, 114.6 KB on PR #10's run of the same tree), most likely archive timestamps: do not chase a 0.1 KB change there; quote `master`'s run.
 
 ## Left / follow-ups
-1. Confirm release run 37158022980 pushed (approval sent by the agent, unconfirmed); Mark approves `nuget` if it still waits ([Stage 4 checklist](notes/2026-10-03-stage-4-checklist.md) step 6).
-2. Agent, after the approval: watch the release run, verify from nuget.org (checklist step 7).
-3. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
-4. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
+1. Mark chooses: Stage 4's 1.0.0 items (N1 first: build the unbuilt 1.0 matrix rows or move them to 1.x via `kb/features/status.json` and `build_matrix.py`, [Stop 2 note](notes/2026-10-03-stop-2-questions.md); N2 API additions if wanted), then 1.0.0 the same way and `PackageValidationBaselineVersion` 1.0.0; or Stage 5 (the Unity compile check, OpenUPM, then scale tests and BenchmarkDotNet, N7).
+2. Optional for Mark: narrow the Trusted Publishing scope to "push only new package versions" (checklist step 3).
+3. `dotnet add package` refuses `--version` with `--prerelease`; use one or the other (checklist step 7).
 
 ## Next single action
-`gh run view 37158022980`: if it waits, Mark clicks Review deployments, approve `nuget`; once it has finished, verify from nuget.org (checklist step 7). The next session's prompt is [next-session-prompt.md](next-session-prompt.md).
+Mark picks N1 (towards 1.0.0) or Stage 5. The next session's prompt is [next-session-prompt.md](next-session-prompt.md).
