@@ -39,7 +39,7 @@ namespace UniverseGeneration.Tests
             w.Name("belts").BeginArray();
             foreach (var b in s.Belts)
             {
-                w.BeginObject().Name("kind").String(b.Kind.ToString()).Name("inner").Number(b.Inner, 4).Name("outer").Number(b.Outer, 4).EndObject();
+                Belt(w, b);
             }
 
             w.EndArray();
@@ -94,11 +94,17 @@ namespace UniverseGeneration.Tests
             w.Name("moons").BeginArray();
             foreach (var m in p.Moons)
             {
-                w.BeginObject().Name("name").String(m.Name).Name("kind").String(m.Kind.ToString()).Name("orbit").Number(m.Orbit, 2).Name("radius").Number(m.Radius, 0).EndObject();
+                Moon(w, m);
             }
 
             w.EndArray().EndObject();
         }
+
+        public static void Moon(JsonWriter w, Moon m) =>
+            w.BeginObject().Name("name").String(m.Name).Name("kind").String(m.Kind.ToString()).Name("orbit").Number(m.Orbit, 2).Name("radius").Number(m.Radius, 0).EndObject();
+
+        public static void Belt(JsonWriter w, Belt b) =>
+            w.BeginObject().Name("kind").String(b.Kind.ToString()).Name("inner").Number(b.Inner, 4).Name("outer").Number(b.Outer, 4).EndObject();
 
         public static string Text(Planet p)
         {

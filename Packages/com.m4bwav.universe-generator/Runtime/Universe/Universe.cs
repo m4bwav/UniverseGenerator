@@ -14,7 +14,8 @@ namespace UniverseGeneration
         /// <summary>
         /// Regenerates the object at <paramref name="address"/>, such as <c>v1-my-seed/galaxy/system/31/planet/2</c> or
         /// <c>v1-my-seed/planet</c> (a planet generated on its own): a
-        /// <see cref="Galaxy"/>, <see cref="StarSystem"/>, <see cref="Planet"/>, <see cref="Moon"/> or <see cref="Station"/>.
+        /// <see cref="Galaxy"/>, <see cref="StarSystem"/>, <see cref="Planet"/>, <see cref="Moon"/>, <see cref="Station"/> or
+        /// <see cref="Belt"/> (<c>.../system/belt/0</c>).
         /// An address does not carry options, so pass the ones the object was generated with.
         /// </summary>
         /// <exception cref="ArgumentException">The address cannot be read, names a level or object that does not exist, or an option is out of range; the message says which.</exception>
@@ -81,6 +82,10 @@ namespace UniverseGeneration
             {
                 found = Pick(system.Stations, path, step++, "station", where);
             }
+            else if (path[step].Label == "belt")
+            {
+                found = Pick(system.Belts, path, step++, "belt", where);
+            }
             else
             {
                 var planet = Pick(system.Planets, path, step++, "planet", where);
@@ -104,7 +109,7 @@ namespace UniverseGeneration
             var (actual, index) = path[step];
             if (actual != label)
             {
-                var expected = label == "planet" ? "planet or station" : label;
+                var expected = label == "planet" ? "planet, station or belt" : label;
                 throw new ArgumentException($"Below {address} comes a {expected}; the address has \"{actual}\".", nameof(address));
             }
 

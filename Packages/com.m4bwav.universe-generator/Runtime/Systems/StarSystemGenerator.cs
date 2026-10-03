@@ -78,6 +78,11 @@ namespace UniverseGeneration
             }
 
             var belts = Belts(Seeds.Stream(seed, "belts"), planets, frost);
+            for (var k = 0; k < belts.Length; k++)
+            {
+                belts[k] = BeltDetail.Apply(belts[k], k, address, seed, name, light, frost);
+            }
+
             var stations = Stations(Seeds.Stream(seed, "stations"), address, name, planets.Length);
             var landmarks = Story.Landmarks(seed, star, companion, planets, belts, options.Weirdness);
             return new StarSystem
@@ -102,7 +107,8 @@ namespace UniverseGeneration
 
         /// <summary>
         /// A planet from its draft: rings and moons from its <c>moons</c> stream, then the planet level's detail from its
-        /// other streams (<see cref="PlanetDetail"/>). <paramref name="planetSeed"/> is the seed of <paramref name="planetAddress"/>.
+        /// other streams (<see cref="PlanetDetail"/>), then each moon's detail from the moon's own seed
+        /// (<see cref="MoonDetail"/>). <paramref name="planetSeed"/> is the seed of <paramref name="planetAddress"/>.
         /// </summary>
         internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness)
         {
@@ -123,7 +129,8 @@ namespace UniverseGeneration
                 Moons = Moons(moons, d, host.TotalMass, planetAddress, planetName),
                 Descriptor = Story.PlanetDescriptor(d.Kind, d.Zone, rings, host.Star),
             };
-            return PlanetDetail.Apply(planet, host, planetSeed, weirdness);
+            planet = PlanetDetail.Apply(planet, host, planetSeed, weirdness);
+            return planet with { Moons = MoonDetail.ApplyAll(planet, host, planetSeed, weirdness) };
         }
 
         /// <summary>The system's age when no galaxy gives one: Young 30, Mature 45, Old 25 from the <c>age</c> stream.</summary>

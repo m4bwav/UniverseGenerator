@@ -61,7 +61,7 @@ namespace UniverseGeneration.Tests
                     Assert.That(PlanetJson.LoneText((Planet)Universe.At(planet.Address, options)), Is.EqualTo(PlanetJson.LoneText(planet)), planet.Address);
                     foreach (var moon in planet.Moons)
                     {
-                        Assert.That(Universe.At(moon.Address, options), Is.EqualTo(moon), moon.Address);
+                        Assert.That(MoonBeltJson.Text((Moon)Universe.At(moon.Address, options)), Is.EqualTo(MoonBeltJson.Text(moon)), moon.Address);
                     }
                 }
             }
@@ -91,12 +91,15 @@ namespace UniverseGeneration.Tests
             Refused("v1-my-seed/nebula", "\"nebula\" is not a level this package generates");
             Refused("v1-my-seed/galaxy/system/60", "v1-my-seed/galaxy has 60 systems (numbered 0 to 59); the address asks for system 60.");
             Refused("v1-my-seed/galaxy/planet/0", "Below v1-my-seed/galaxy comes a system; the address has \"planet\".");
-            Refused("v1-my-seed/system/moon/0", "Below v1-my-seed/system comes a planet or station; the address has \"moon\".");
+            Refused("v1-my-seed/system/moon/0", "Below v1-my-seed/system comes a planet, station or belt; the address has \"moon\".");
+            Refused("v1-my-seed/system/belt/9", "v1-my-seed/system has ");
             Refused($"v1-my-seed/system/planet/{planets}", $"v1-my-seed/system has {planets} planets");
             Refused("v1-my-seed/system/station/9", "v1-my-seed/system has ");
             Refused("v1-my-seed/system/planet/0/moon/40", "v1-my-seed/system/planet/0 has ");
             var station = SystemJson.Seeds(50).Select(x => StarSystem.Generate(x)).First(x => x.Stations.Count > 0).Stations[0];
             Refused(station.Address + "/moon/0", "Nothing in this package lies below a station");
+            var belt = SystemJson.Seeds(50).Select(x => StarSystem.Generate(x)).First(x => x.Belts.Count > 0).Belts[0];
+            Refused(belt.Address + "/moon/0", "Nothing in this package lies below a belt");
             Refused("v1-my-seed/planet/station/0", "Below v1-my-seed/planet comes a moon; the address has \"station\".");
             var mooned = SystemJson.Seeds(50).Select(x => Planet.Generate(x)).First(x => x.Moons.Count > 0);
             Refused(mooned.Moons[0].Address + "/moon/0", "Nothing in this package lies below a moon");
@@ -128,7 +131,7 @@ namespace UniverseGeneration.Tests
                 Assert.That(PlanetJson.Text(p), Is.EqualTo(PlanetJson.Text(planet)), planet.Address);
                 foreach (var moon in planet.Moons)
                 {
-                    Assert.That(Universe.At(moon.Address, options), Is.EqualTo(moon), moon.Address);
+                    Assert.That(MoonBeltJson.Text((Moon)Universe.At(moon.Address, options)), Is.EqualTo(MoonBeltJson.Text(moon)), moon.Address);
                 }
 
                 count += 1 + planet.Moons.Count;
@@ -139,7 +142,12 @@ namespace UniverseGeneration.Tests
                 Assert.That(Universe.At(station.Address, options), Is.EqualTo(station), station.Address);
             }
 
-            return count + system.Stations.Count;
+            foreach (var belt in system.Belts)
+            {
+                Assert.That(MoonBeltJson.Text((Belt)Universe.At(belt.Address, options)), Is.EqualTo(MoonBeltJson.Text(belt)), belt.Address);
+            }
+
+            return count + system.Stations.Count + system.Belts.Count;
         }
 
         [Test]

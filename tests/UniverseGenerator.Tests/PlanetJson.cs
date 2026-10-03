@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace UniverseGeneration.Tests
 {
     /// <summary>
@@ -13,8 +15,30 @@ namespace UniverseGeneration.Tests
             w.Name("gravity").Number(p.Gravity, 2).Name("escapeVelocity").Number(p.EscapeVelocity, 2).Name("density").Number(p.Density, 2);
             w.Name("insolation").Number(p.Insolation, 4).Name("albedo").Number(p.Albedo, 2);
             w.Name("temperature").Number(p.Temperature, 0).Name("dayTemperature").Number(p.DayTemperature, 0).Name("nightTemperature").Number(p.NightTemperature, 0);
-            var a = p.Atmosphere;
-            w.Name("atmosphere").BeginObject().Name("class").String(a.Class.ToString()).Name("pressure");
+            w.Name("atmosphere");
+            Atmosphere(w, p.Atmosphere);
+            w.Name("water").Number(p.Water, 2).Name("ice").Number(p.Ice, 2);
+            w.Name("rotation").Number(p.Rotation, 1).Name("spin").String(p.Spin.ToString()).Name("tilt").Number(p.Tilt, 1);
+            w.Name("bands");
+            Bands(w, p.Bands);
+            w.Name("biomes");
+            Biomes(w, p.Biomes);
+            w.Name("life").String(p.Life.ToString()).Name("flora").Int(p.Flora).Name("fauna").Int(p.Fauna);
+            w.Name("traits");
+            Strings(w, p.Traits);
+            w.Name("anomaly").String(p.Anomaly);
+            w.Name("resources");
+            Resources(w, p.Resources);
+            w.Name("hazard").Int(p.Hazard).Name("hazards");
+            Strings(w, p.Hazards);
+            w.Name("similarity").Number(p.Similarity, 2).Name("habitability").String(p.Habitability.ToString());
+            w.Name("summary").String(p.Summary);
+            w.EndObject();
+        }
+
+        public static void Atmosphere(JsonWriter w, Atmosphere a)
+        {
+            w.BeginObject().Name("class").String(a.Class.ToString()).Name("pressure");
             if (a.Pressure is null)
             {
                 w.Null();
@@ -32,44 +56,43 @@ namespace UniverseGeneration.Tests
 
             w.EndArray();
             w.Name("lightestGasKept").Number(a.LightestGasKept, 1).Name("breathable").Bool(a.Breathable).Name("why").String(a.Why).EndObject();
-            w.Name("water").Number(p.Water, 2).Name("ice").Number(p.Ice, 2);
-            w.Name("rotation").Number(p.Rotation, 1).Name("spin").String(p.Spin.ToString()).Name("tilt").Number(p.Tilt, 1);
-            w.Name("bands").BeginArray();
-            foreach (var b in p.Bands)
+        }
+
+        public static void Bands(JsonWriter w, IReadOnlyList<ClimateBand> bands)
+        {
+            w.BeginArray();
+            foreach (var b in bands)
             {
                 w.BeginArray().Int(b.From).Int(b.To).Number(b.Share, 4).Number(b.Temperature, 0).String(b.Biome.ToString()).EndArray();
             }
 
             w.EndArray();
-            w.Name("biomes").BeginArray();
-            foreach (var b in p.Biomes)
+        }
+
+        public static void Biomes(JsonWriter w, IReadOnlyList<BiomeShare> biomes)
+        {
+            w.BeginArray();
+            foreach (var b in biomes)
             {
                 w.BeginArray().String(b.Biome.ToString()).Number(b.Share, 2).EndArray();
             }
 
             w.EndArray();
-            w.Name("life").String(p.Life.ToString()).Name("flora").Int(p.Flora).Name("fauna").Int(p.Fauna);
-            w.Name("traits").BeginArray();
-            foreach (var t in p.Traits)
-            {
-                w.String(t);
-            }
+        }
 
-            w.EndArray();
-            w.Name("anomaly").String(p.Anomaly);
-            var r = p.Resources;
-            w.Name("resources").BeginObject().Name("metals").Int(r.Metals).Name("rareElements").Int(r.RareElements).Name("ices").Int(r.Ices)
+        public static void Resources(JsonWriter w, ResourceGrades r) =>
+            w.BeginObject().Name("metals").Int(r.Metals).Name("rareElements").Int(r.RareElements).Name("ices").Int(r.Ices)
                 .Name("gases").Int(r.Gases).Name("organics").Int(r.Organics).EndObject();
-            w.Name("hazard").Int(p.Hazard).Name("hazards").BeginArray();
-            foreach (var h in p.Hazards)
+
+        public static void Strings(JsonWriter w, IReadOnlyList<string> items)
+        {
+            w.BeginArray();
+            foreach (var s in items)
             {
-                w.String(h);
+                w.String(s);
             }
 
             w.EndArray();
-            w.Name("similarity").Number(p.Similarity, 2).Name("habitability").String(p.Habitability.ToString());
-            w.Name("summary").String(p.Summary);
-            w.EndObject();
         }
 
         public static string Text(Planet p)

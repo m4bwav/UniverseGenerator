@@ -183,7 +183,11 @@ namespace UniverseGeneration
         DerelictFleet,
     }
 
-    /// <summary>A moon. Orbit in planet radii, radius in kilometres.</summary>
+    /// <summary>
+    /// A moon. Orbit in planet radii, radius and distance in kilometres, temperatures in kelvin, gravity in g. Every moon
+    /// keeps one face to its planet. The fields after <see cref="Radius"/> are the moon level
+    /// (ai-docs/notes/2026-10-03-moon-and-belt-level-design.md).
+    /// </summary>
     public sealed record Moon
     {
         /// <summary>Where it is, such as <c>v1-my-seed/system/planet/3/moon/0</c>.</summary>
@@ -203,9 +207,122 @@ namespace UniverseGeneration
 
         /// <summary>Radius in kilometres.</summary>
         public double Radius { get; init; }
+
+        /// <summary>One line in plain words, such as "a hazy moon of a ringed gas giant" (plan D23).</summary>
+        public string Descriptor { get; init; } = "";
+
+        /// <summary>Distance from the planet's centre in kilometres.</summary>
+        public double Distance { get; init; }
+
+        /// <summary>The time to circle its planet, in days.</summary>
+        public double Period { get; init; }
+
+        /// <summary>What it is mostly made of.</summary>
+        public Composition Composition { get; init; }
+
+        /// <summary>Mean density in g/cm³ (the Moon 3.34).</summary>
+        public double Density { get; init; }
+
+        /// <summary>Mass in Earths (the Moon 0.0123).</summary>
+        public double Mass { get; init; }
+
+        /// <summary>Surface gravity in g (the Moon 0.165).</summary>
+        public double Gravity { get; init; }
+
+        /// <summary>Escape velocity in km/s.</summary>
+        public double EscapeVelocity { get; init; }
+
+        /// <summary>Starlight received, Earth = 1 (its planet's).</summary>
+        public double Insolation { get; init; }
+
+        /// <summary>The share of starlight reflected, 0 to 1.</summary>
+        public double Albedo { get; init; }
+
+        /// <summary>Heat raised inside it by its planet's tides, in watts per square metre (Io about 2.4, Earth's own heat 0.09).</summary>
+        public double TidalHeating { get; init; }
+
+        /// <summary>Average surface temperature in kelvin.</summary>
+        public double Temperature { get; init; }
+
+        /// <summary>Average day-side temperature in kelvin.</summary>
+        public double DayTemperature { get; init; }
+
+        /// <summary>Average night-side temperature in kelvin.</summary>
+        public double NightTemperature { get; init; }
+
+        /// <summary>Its air.</summary>
+        public Atmosphere Atmosphere { get; init; } = new Atmosphere();
+
+        /// <summary>The share of the surface under liquid water, 0 to 1.</summary>
+        public double Water { get; init; }
+
+        /// <summary>The share of the surface under ice, 0 to 1.</summary>
+        public double Ice { get; init; }
+
+        /// <summary>True when an ocean lies under its ice, like Europa's.</summary>
+        public bool SubsurfaceOcean { get; init; }
+
+        /// <summary>The time to turn once, in hours: its period, since it keeps one face to its planet.</summary>
+        public double Rotation { get; init; }
+
+        /// <summary>Axial tilt to its star in degrees: its planet's, since it circles in the planet's equator.</summary>
+        public double Tilt { get; init; }
+
+        /// <summary>Six bands from equator to pole.</summary>
+        public IReadOnlyList<ClimateBand> Bands { get; init; } = System.Array.Empty<ClimateBand>();
+
+        /// <summary>The surface by biome, largest first.</summary>
+        public IReadOnlyList<BiomeShare> Biomes { get; init; } = System.Array.Empty<BiomeShare>();
+
+        /// <summary>How far life has come.</summary>
+        public LifeLevel Life { get; init; }
+
+        /// <summary>How much plant life, 0 to 5.</summary>
+        public int Flora { get; init; }
+
+        /// <summary>How much animal life, 0 to 5.</summary>
+        public int Fauna { get; init; }
+
+        /// <summary>One or two things that make it memorable, such as "ice geysers", true to its data.</summary>
+        public IReadOnlyList<string> Traits { get; init; } = System.Array.Empty<string>();
+
+        /// <summary>Something no one can explain, or null; the Weirdness option sets how often.</summary>
+        public string? Anomaly { get; init; }
+
+        /// <summary>What can be mined or harvested.</summary>
+        public ResourceGrades Resources { get; init; } = new ResourceGrades();
+
+        /// <summary>How dangerous the surface is: 1 shirt-sleeves, 2 a mask or coat, 3 a pressure suit, 4 heavy protection, 5 lethal.</summary>
+        public int Hazard { get; init; }
+
+        /// <summary>The dangers in words, worst first, such as "the giant's radiation belts".</summary>
+        public IReadOnlyList<string> Hazards { get; init; } = System.Array.Empty<string>();
+
+        /// <summary>The Earth Similarity Index, 0 to 1 (Earth 1).</summary>
+        public double Similarity { get; init; }
+
+        /// <summary>How well people could live there; <see cref="HabitabilityFor"/> asks for another species.</summary>
+        public Habitability Habitability { get; init; }
+
+        /// <summary>A second line of plain words, such as "0.13 g, dense nitrogen air at 1.5 bar, -176 °C, an ocean under the ice, prebiotic chemistry; hazard 3".</summary>
+        public string Summary { get; init; } = "";
+
+        /// <summary>How well <paramref name="species"/> could live here, from its temperature, gravity, pressure and air.</summary>
+        public Habitability HabitabilityFor(Species species)
+        {
+            if (species is null)
+            {
+                throw new System.ArgumentNullException(nameof(species));
+            }
+
+            return PlanetDetail.HabitabilityOf(species, Atmosphere, Temperature, Gravity);
+        }
     }
 
-    /// <summary>A belt of asteroids or icy bodies, from <see cref="Inner"/> to <see cref="Outer"/> au.</summary>
+    /// <summary>
+    /// A belt of asteroids or icy bodies, from <see cref="Inner"/> to <see cref="Outer"/> au. The fields after
+    /// <see cref="Outer"/> are the belt level (ai-docs/notes/2026-10-03-moon-and-belt-level-design.md).
+    /// </summary>
     public sealed record Belt
     {
         /// <summary>Rocky or icy.</summary>
@@ -216,6 +333,49 @@ namespace UniverseGeneration
 
         /// <summary>Outer edge in au.</summary>
         public double Outer { get; init; }
+
+        /// <summary>Where it is, such as <c>v1-my-seed/system/belt/0</c>.</summary>
+        public string Address { get; init; } = "";
+
+        /// <summary>Its position in the system's list of belts, from 0.</summary>
+        public int Index { get; init; }
+
+        /// <summary>Its name, such as "Tau Ceti Belt" or "Tau Ceti Outer Belt".</summary>
+        public string Name { get; init; } = "";
+
+        /// <summary>What its bodies are made of, in whole percent.</summary>
+        public BeltComposition Composition { get; init; } = new BeltComposition();
+
+        /// <summary>Total mass in Earths (the Sun's asteroid belt about 0.0004).</summary>
+        public double Mass { get; init; }
+
+        /// <summary>The radius of its largest body in kilometres (Ceres 470).</summary>
+        public double LargestBody { get; init; }
+
+        /// <summary>The temperature of its bodies at its middle, in kelvin.</summary>
+        public double Temperature { get; init; }
+
+        /// <summary>What can be mined.</summary>
+        public ResourceGrades Resources { get; init; } = new ResourceGrades();
+
+        /// <summary>One line in plain words, such as "65% carbonaceous rock, 25% silicate rock, 10% metal; largest body 470 km in radius; -103 °C; richest in organics".</summary>
+        public string Summary { get; init; } = "";
+    }
+
+    /// <summary>What a belt's bodies are made of, in whole percent summing to 100.</summary>
+    public sealed record BeltComposition
+    {
+        /// <summary>Stony silicate rock (S-type asteroids).</summary>
+        public int Silicate { get; init; }
+
+        /// <summary>Dark carbon-rich rock (C-type asteroids).</summary>
+        public int Carbonaceous { get; init; }
+
+        /// <summary>Iron and nickel (M-type asteroids).</summary>
+        public int Metal { get; init; }
+
+        /// <summary>Water and other ices.</summary>
+        public int Ice { get; init; }
     }
 
     /// <summary>A station.</summary>
