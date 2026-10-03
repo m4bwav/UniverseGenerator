@@ -8,7 +8,7 @@
 - Still open for 1.0.0 (not the beta): N1, the feature-matrix rows marked 1.0 that are not built (build them or move them to 1.x via `kb/features/status.json`); N2's API additions (additive, any 1.x minor).
 - `release.yml` does not exist yet, though AGENTS.md describes it.
 - Level records: [universe](notes/2026-10-03-universe-level-design.md), [cluster](notes/2026-10-03-galaxy-cluster-level-design.md), [moons and belts](notes/2026-10-03-moon-and-belt-level-design.md), [planet](notes/2026-10-02-planet-level-design.md), [galaxy](notes/2026-10-02-galaxy-level-design.md), [galaxy extras](notes/2026-10-03-galaxy-extras-design.md), [star system](notes/2026-10-02-star-system-level-design.md).
-- CI: self-hosted runner `universe` (`D:\actions-runner-universe`, scheduled task at logon); `RUNS_ON="ubuntu-latest"` moves jobs to hosted runners. Branch protection is unavailable while the repository is private on the free plan.
+- CI: self-hosted runner `universe` (on the maintainer's PC; its folder is in the private sidecar); `RUNS_ON="ubuntu-latest"` moves jobs to hosted runners. Branch protection is unavailable while the repository is private on the free plan.
 
 ## In progress
 Nothing half-done. The branch `stage3-core` is merged and can be deleted.

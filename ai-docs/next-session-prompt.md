@@ -19,19 +19,19 @@ keeps its current value). Use it to prepare Stage 4.
 ```
 Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 3 is merged into master (PR #1, 32df421)
 and Stop 2 is ruled: every question keeps its current value, and no golden file changed. Now prepare Stage 4, the
-NuGet release. Start by reading
-D:\m4bwa\Claude\Projects\Ai\labs\UniverseGenerator\ai-docs\HANDOFF.md, then AGENTS.md, then the 1.0 plan's
+NuGet release. In the UniverseGenerator clone, start by reading
+ai-docs/HANDOFF.md, then AGENTS.md, then the 1.0 plan's
 "Stage 4", "Security" and "Build and package specifics" sections only
 (ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md). For the release workflow, read the package-modernize
-skill's NuGet reference on Trusted Publishing and release.yml (C:\Users\m4bwa\.package-modernize holds the private
-overlay). Re-check any nuget.org or GitHub Actions fact older than three months against the official docs before
+skill's NuGet reference on Trusted Publishing and release.yml (the skill's private overlay holds the maintainer's
+identities). Re-check any nuget.org or GitHub Actions fact older than three months against the official docs before
 using it (AGENTS.md, "Research beats recall").
 
 Next step, on a new branch stage4-prep off origin/master, in one pull request:
 1. The history scan (N8): every commit on every branch (git log -p --all) for secrets (API keys, tokens,
    connection strings, private keys), private names (people other than Mark, internal hosts, LAN addresses such as
-   192.168.*, the vault path), email addresses other than the public author one, and local paths (D:\m4bwa,
-   C:\Users\m4bwa, D:\actions-runner-universe). Use gitleaks if it installs cleanly (say what you installed), plus
+   192.168.*, the vault path), email addresses other than the public author one, and local paths (the maintainer's drives and
+   user profile, the runner's folder). Use gitleaks if it installs cleanly (say what you installed), plus
    a stdlib Python regex pass for the names and paths. Write the report to ai-docs/notes/<date>-history-scan.md:
    each finding as commit, file and kind, never the secret's value. Fix what is in the current tree in this
    branch (move anything private to the everlast private sidecar with everlast.py note --private). Do not rewrite
