@@ -13,8 +13,8 @@ namespace UniverseGeneration
     {
         /// <summary>
         /// Regenerates the object at <paramref name="address"/>, such as <c>v1-my-seed/galaxy/system/31/planet/2</c> or
-        /// <c>v1-my-seed/planet</c> (a planet generated on its own): a
-        /// <see cref="Galaxy"/>, <see cref="StarSystem"/>, <see cref="Planet"/>, <see cref="Moon"/>, <see cref="Station"/> or
+        /// <c>v1-my-seed/planet</c> (a planet generated on its own): a <see cref="GalaxyCluster"/> (<c>v1-my-seed/cluster</c>), a
+        /// <see cref="Galaxy"/> (alone, or <c>v1-my-seed/cluster/galaxy/2</c>), <see cref="StarSystem"/>, <see cref="Planet"/>, <see cref="Moon"/>, <see cref="Station"/> or
         /// <see cref="Belt"/> (<c>.../system/belt/0</c>).
         /// An address does not carry options, so pass the ones the object was generated with.
         /// </summary>
@@ -41,8 +41,25 @@ namespace UniverseGeneration
             StarSystem system;
             switch (a.Root)
             {
+                case "cluster":
+                    var cluster = ClusterGenerator.Generate(where, o);
+                    if (path.Count == 0)
+                    {
+                        return cluster;
+                    }
+
+                    var member = Pick(cluster.Galaxies, path, step++, "galaxy", where);
+                    where = where.Child("galaxy", path[0].Index);
+                    if (step == path.Count)
+                    {
+                        return member;
+                    }
+
+                    system = Pick(member.Systems, path, step++, "system", where);
+                    where = where.Child("system", path[1].Index);
+                    break;
                 case "galaxy":
-                    var galaxy = GalaxyGenerator.Generate(where, o);
+                    var galaxy = GalaxyGenerator.Generate(where, o, GalaxyContext.Alone);
                     if (path.Count == 0)
                     {
                         return galaxy;
@@ -69,7 +86,7 @@ namespace UniverseGeneration
 
                     return moon;
                 default:
-                    throw new ArgumentException($"\"{a.Root}\" is not a level this package generates; an address starts from galaxy, system or planet, as in v1-my-seed/galaxy/system/3.", nameof(address));
+                    throw new ArgumentException($"\"{a.Root}\" is not a level this package generates; an address starts from cluster, galaxy, system or planet, as in v1-my-seed/galaxy/system/3.", nameof(address));
             }
 
             if (step == path.Count)
@@ -116,7 +133,8 @@ namespace UniverseGeneration
             if (index >= items.Count)
             {
                 var range = items.Count == 0 ? "none" : $"numbered 0 to {items.Count - 1}";
-                throw new ArgumentException($"{address} has {items.Count} {label}s ({range}); the address asks for {label} {index.ToString(CultureInfo.InvariantCulture)}. Were the same options passed as when it was generated?", nameof(address));
+                var plural = label == "galaxy" ? "galaxies" : label + "s";
+                throw new ArgumentException($"{address} has {items.Count} {plural} ({range}); the address asks for {label} {index.ToString(CultureInfo.InvariantCulture)}. Were the same options passed as when it was generated?", nameof(address));
             }
 
             return items[index];

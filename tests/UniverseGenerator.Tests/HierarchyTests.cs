@@ -40,6 +40,41 @@ namespace UniverseGeneration.Tests
         }
 
         [Test]
+        public void Every_object_in_a_cluster_regenerates_alone_from_its_address()
+        {
+            var objects = 0;
+            foreach (var (seed, options) in new[]
+            {
+                ("hc0", Preset.Default),
+                ("hc1", Preset.Default with { ClusterKind = ClusterKind.Cluster, Systems = 20 }),
+                ("hc/é 2", Preset.Plausible with { ClusterKind = ClusterKind.Group }),
+            })
+            {
+                var cluster = GalaxyCluster.Generate(seed, options);
+                Assert.That(ClusterJson.Text((GalaxyCluster)Universe.At(cluster.Address, options)), Is.EqualTo(ClusterJson.Text(cluster)), cluster.Address);
+                foreach (var galaxy in cluster.Galaxies)
+                {
+                    Assert.That(ClusterJson.GalaxyText((Galaxy)Universe.At(galaxy.Address, options)), Is.EqualTo(ClusterJson.GalaxyText(galaxy)), galaxy.Address);
+                    objects++;
+                }
+
+                // Every object below the smallest galaxy, and one system of every galaxy.
+                var smallest = cluster.Galaxies.OrderBy(g => g.Map.Count).First();
+                foreach (var system in smallest.Systems)
+                {
+                    objects += CheckSystem(system, options);
+                }
+
+                foreach (var galaxy in cluster.Galaxies)
+                {
+                    objects += CheckSystem(galaxy.System(galaxy.Map.Count - 1), options);
+                }
+            }
+
+            TestContext.Out.WriteLine($"{objects} objects of clusters regenerated from their addresses");
+        }
+
+        [Test]
         public void Every_object_in_a_lone_system_regenerates_alone_from_its_address()
         {
             foreach (var seed in SystemJson.Seeds(300))
@@ -105,6 +140,10 @@ namespace UniverseGeneration.Tests
             Refused(mooned.Moons[0].Address + "/moon/0", "Nothing in this package lies below a moon");
             Refused($"{mooned.Address}/moon/{mooned.Moons.Count}", $"{mooned.Address} has {mooned.Moons.Count} moons");
             Refused("v1-my-seed/galaxy", "Systems must be 1 to 2000", Preset.Default with { Systems = 0 });
+            var galaxies = GalaxyCluster.Generate("my-seed").Map.Count;
+            Refused($"v1-my-seed/cluster/galaxy/{galaxies}", $"v1-my-seed/cluster has {galaxies} galaxies (numbered 0 to {galaxies - 1})");
+            Refused("v1-my-seed/cluster/system/0", "Below v1-my-seed/cluster comes a galaxy; the address has \"system\".");
+            Refused("v1-my-seed/cluster/galaxy/0/planet/0", "Below v1-my-seed/cluster/galaxy/0 comes a system; the address has \"planet\".");
             Refused("v1-" + new string('x', 201) + "/system", "A seed must be at most 200 characters");
         }
 

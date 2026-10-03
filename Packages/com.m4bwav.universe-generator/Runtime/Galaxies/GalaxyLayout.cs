@@ -44,6 +44,8 @@ namespace UniverseGeneration
 
         public GalaxyShape Shape;
         public int Arms;
+        public double Pitch;
+        public double Ellipse;
         public readonly List<double> X = new List<double>();
         public readonly List<double> Y = new List<double>();
         public readonly List<(int A, int B, bool Bridge)> Lanes = new List<(int, int, bool)>();
@@ -61,7 +63,14 @@ namespace UniverseGeneration
         /// <summary>The seed of system <paramref name="index"/> of the galaxy whose seed is <paramref name="galaxySeed"/>.</summary>
         public static ulong SystemSeed(ulong galaxySeed, int index) => Seeds.Child(galaxySeed, "system", index);
 
-        public static GalaxyLayout Generate(ulong seed, int systems, GalaxyShape requested)
+        public static GalaxyLayout Generate(ulong seed, int systems, GalaxyShape requested) =>
+            Generate(seed, systems, requested, LayoutTuning.None);
+
+        /// <summary>
+        /// As above, with what a cluster decides for the galaxy. Every stream draws exactly what it draws alone; the tuning
+        /// only changes which values are used, so <see cref="LayoutTuning.None"/> gives the lone galaxy's map.
+        /// </summary>
+        public static GalaxyLayout Generate(ulong seed, int systems, GalaxyShape requested, LayoutTuning tuning)
         {
             var g = new GalaxyLayout();
             var shape = Seeds.Stream(seed, "shape");
@@ -70,6 +79,12 @@ namespace UniverseGeneration
             g.Shape = requested == GalaxyShape.Auto ? rolled : requested;
             g.Arms = shape.Range(2, 4);
             var pitch = shape.Range(0.25, 0.45); // the tangent of the arms' pitch angle
+            if (tuning.PitchHigh > 0)
+            {
+                // The type's band (Sa tight, Sc open): the drawn pitch mapped into it.
+                pitch = tuning.PitchLow + (pitch - 0.25) / 0.2 * (tuning.PitchHigh - tuning.PitchLow);
+            }
+
             var twist = shape.Range(0, 2 * DMath.PI);
             var blobCount = shape.Range(3, 5);
             var blobs = new (double X, double Y, double S)[blobCount];
@@ -79,13 +94,20 @@ namespace UniverseGeneration
             }
 
             var ellipse = shape.Range(0.55, 0.9);
+            if (tuning.Ellipse > 0)
+            {
+                ellipse = tuning.Ellipse;
+            }
+
+            g.Pitch = pitch;
+            g.Ellipse = ellipse;
             var density = new Density(g.Shape, g.Arms, pitch, twist, ellipse, blobs);
 
             var grid = g.Place(Seeds.Stream(seed, "layout"), systems, density);
             g.BuildLanes(Seeds.Stream(seed, "lanes"), grid);
             g.Analyse();
-            g.BuildRegions(Seeds.Stream(seed, "regions"));
-            g.SetDanger(seed);
+            g.BuildRegions(Seeds.Stream(seed, "regions"), tuning.AgeWeights ?? s_ageWeights);
+            g.SetDanger(seed, tuning.CoreHazardRadius, tuning.CoreDanger);
             return g;
         }
 
@@ -303,7 +325,7 @@ namespace UniverseGeneration
             return dist;
         }
 
-        private void BuildRegions(Pcg32 rng)
+        private void BuildRegions(Pcg32 rng, int[] ageWeights)
         {
             var n = Count;
             var k = Math.Min(n, DMath.Clamp(n / 8, 2, 8));
@@ -342,7 +364,7 @@ namespace UniverseGeneration
                 }
                 while (!used.Add(name));
 
-                var age = s_ages[rng.Weighted(s_ageWeights)];
+                var age = s_ages[rng.Weighted(ageWeights)];
                 Regions.Add((name, age, s_themes[rng.NextInt(s_themes.Length)], centre));
             }
 
@@ -362,7 +384,7 @@ namespace UniverseGeneration
             }
         }
 
-        private void SetDanger(ulong seed)
+        private void SetDanger(ulong seed, double hazardRadius, int hazardDanger)
         {
             var maxHops = 1;
             foreach (var h in Hops)
@@ -383,11 +405,35 @@ namespace UniverseGeneration
                 // 1 at the core to 10 at the farthest system, rounded half up on integers, then regional and local noise.
                 var baseDanger = 1 + (18 * Hops[i] + maxHops) / (2 * maxHops);
                 var local = Seeds.Stream(SystemSeed(seed, i), "danger").Range(-1, 1);
-                Danger[i] = DMath.Clamp(baseDanger + regionNoise[Region[i]] + local, 1, 10);
+                // An active core's radiation adds its danger to every system within its hazard radius (plan U8).
+                var core = hazardDanger > 0 && X[i] * X[i] + Y[i] * Y[i] <= hazardRadius * hazardRadius ? hazardDanger : 0;
+                Danger[i] = DMath.Clamp(baseDanger + regionNoise[Region[i]] + local + core, 1, 10);
             }
         }
 
         /// <summary>Relative density in [0, 1] at (x, y), both in units of the radius.</summary>
+        /// <summary>What a galaxy cluster decides for one galaxy's map; <see cref="None"/> changes nothing.</summary>
+        internal sealed record LayoutTuning
+        {
+            public static readonly LayoutTuning None = new LayoutTuning();
+
+            /// <summary>The pitch band of the galaxy's type code; 0 keeps the drawn pitch.</summary>
+            public double PitchLow { get; init; }
+
+            public double PitchHigh { get; init; }
+
+            /// <summary>The axis ratio of an elliptical type code; 0 keeps the drawn one.</summary>
+            public double Ellipse { get; init; }
+
+            /// <summary>Weights of Young, Mature and Old regions; null keeps 30, 45, 25.</summary>
+            public int[]? AgeWeights { get; init; }
+
+            /// <summary>The radius of an active core's radiation, in game units, and the danger it adds inside it.</summary>
+            public double CoreHazardRadius { get; init; }
+
+            public int CoreDanger { get; init; }
+        }
+
         private sealed class Density
         {
             private readonly GalaxyShape _shape;

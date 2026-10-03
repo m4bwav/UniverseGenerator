@@ -42,6 +42,9 @@ namespace UniverseGeneration
         /// <summary>The galaxy's shape; <see cref="GalaxyShape.Auto"/> draws one that reads at the requested count.</summary>
         public GalaxyShape Shape { get; init; } = GalaxyShape.Auto;
 
+        /// <summary>Whether a galaxy cluster is a small group or a rich cluster; <see cref="ClusterKind.Auto"/> draws one.</summary>
+        public ClusterKind ClusterKind { get; init; } = ClusterKind.Auto;
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
@@ -52,6 +55,11 @@ namespace UniverseGeneration
             {
                 throw new ArgumentException($"{nameof(Shape)} must be a GalaxyShape such as Auto or Spiral; you asked for {(int)Shape}.", nameof(Shape));
             }
+            if (ClusterKind < ClusterKind.Auto || ClusterKind > ClusterKind.Cluster)
+            {
+                throw new ArgumentException($"{nameof(ClusterKind)} must be Auto, Group or Cluster; you asked for {(int)ClusterKind}.", nameof(ClusterKind));
+            }
+
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)
             {
                 throw new ArgumentException($"{nameof(StarMix)} must be Game or Plausible; you asked for {(int)StarMix}.", nameof(StarMix));

@@ -8,25 +8,26 @@ namespace UniverseGeneration.Tests
     /// </summary>
     public class GoldenGalaxyTests
     {
+        /// <summary>The galaxies of galaxy.json; cluster.json writes their cluster-level fields.</summary>
+        internal static readonly (string Seed, GeneratorOptions Options)[] Cases =
+        {
+            ("my-seed", Preset.Default),
+            ("42", Preset.Default),
+            ("Andromeda 7", Preset.Default),
+            ("spiral", Preset.Default with { Systems = 120 }),
+            ("bar", Preset.Default with { Systems = 80, Shape = GalaxyShape.Barred }),
+            ("ring", Preset.Plausible with { Systems = 30, Shape = GalaxyShape.Ring }),
+            ("one", Preset.Default with { Systems = 1 }),
+            ("two", Preset.Default with { Systems = 2 }),
+        };
+
         [Test]
         public void Galaxies_match_the_golden_file()
         {
-            var cases = new (string Seed, GeneratorOptions Options)[]
-            {
-                ("my-seed", Preset.Default),
-                ("42", Preset.Default),
-                ("Andromeda 7", Preset.Default),
-                ("spiral", Preset.Default with { Systems = 120 }),
-                ("bar", Preset.Default with { Systems = 80, Shape = GalaxyShape.Barred }),
-                ("ring", Preset.Plausible with { Systems = 30, Shape = GalaxyShape.Ring }),
-                ("one", Preset.Default with { Systems = 1 }),
-                ("two", Preset.Default with { Systems = 2 }),
-            };
-
             var w = new JsonWriter(indented: true);
             w.BeginObject().Name("generatorVersion").Int(GeneratorVersion.Current);
             w.Name("galaxies").BeginArray();
-            foreach (var (seed, options) in cases)
+            foreach (var (seed, options) in Cases)
             {
                 var g = Galaxy.Generate(seed, options);
                 w.BeginObject().Name("galaxy");

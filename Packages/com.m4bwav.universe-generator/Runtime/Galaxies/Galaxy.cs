@@ -36,6 +36,30 @@ namespace UniverseGeneration
         /// <summary>Where it is, such as <c>v1-my-seed/galaxy</c>.</summary>
         public string Address { get; init; } = "";
 
+        /// <summary>Its name, such as "Halcyon Galaxy"; unique within a cluster.</summary>
+        public string Name { get; init; } = "";
+
+        /// <summary>Its type code, such as Sb, SBc, E3, S0, cD, Irr, dSph or Ring (plan U6). Alone, it is read from the shape.</summary>
+        public string Type { get; init; } = "";
+
+        /// <summary>The galaxy in words: "an old giant elliptical galaxy, rich in metals, with a quasar at its core".</summary>
+        public string Descriptor { get; init; } = "";
+
+        /// <summary>How old its stars are overall; old galaxies hold more old regions. Mature for a galaxy alone.</summary>
+        public StellarAge Age { get; init; }
+
+        /// <summary>How rich its stars are in metals: rich galaxies have more giant planets. Normal for a galaxy alone.</summary>
+        public GalaxyRichness Richness { get; init; }
+
+        /// <summary>What its central black hole is doing; Quiet for a galaxy alone.</summary>
+        public CoreActivity CoreActivity { get; init; }
+
+        /// <summary>The radius around the centre, in game units, where an active core's radiation raises danger; 0 when quiet.</summary>
+        public double CoreHazardRadius { get; init; }
+
+        /// <summary>Its links to other galaxies of its cluster, in the cluster's link order; empty for a galaxy alone.</summary>
+        public IReadOnlyList<GalaxyGate> Gates { get; init; } = Array.Empty<GalaxyGate>();
+
         /// <summary>The shape the map was drawn with (never <see cref="GalaxyShape.Auto"/>).</summary>
         public GalaxyShape Shape { get; init; }
 
@@ -78,7 +102,7 @@ namespace UniverseGeneration
         {
             var o = options ?? Preset.Default;
             o.Validate();
-            return GalaxyGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "galaxy"), o);
+            return GalaxyGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "galaxy"), o, GalaxyContext.Alone);
         }
 
         /// <summary>Generates a galaxy from a number; the same as passing the number's digits as text.</summary>
@@ -155,10 +179,10 @@ namespace UniverseGeneration
     /// <summary>Builds a galaxy record from its layout, and gives each system its context (plan D17).</summary>
     internal static class GalaxyGenerator
     {
-        public static Galaxy Generate(Address address, GeneratorOptions options)
+        public static Galaxy Generate(Address address, GeneratorOptions options, GalaxyContext context)
         {
             var seed = address.ObjectSeed;
-            var layout = GalaxyLayout.Generate(seed, options.Systems, options.Shape);
+            var layout = GalaxyLayout.Generate(seed, context.Systems ?? options.Systems, context.Shape ?? options.Shape, context.Tuning);
             var n = layout.Count;
 
             var regions = new GalaxyRegion[layout.Regions.Count];
@@ -173,13 +197,14 @@ namespace UniverseGeneration
             var map = new MapEntry[n];
             var contexts = new SystemContext[n];
             var names = new HashSet<string>(StringComparer.Ordinal);
+            var richness = context.Richness == GalaxyRichness.Rich ? 160 : context.Richness == GalaxyRichness.Poor ? 50 : 100;
             for (var i = 0; i < n; i++)
             {
                 var systemSeed = GalaxyLayout.SystemSeed(seed, i);
                 var age = regions[layout.Region[i]].Age;
                 var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
                 var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i);
-                contexts[i] = new SystemContext(name, age, layout.Danger[i]);
+                contexts[i] = new SystemContext(name, age, layout.Danger[i], richness);
                 map[i] = new MapEntry
                 {
                     Index = i,
@@ -202,9 +227,41 @@ namespace UniverseGeneration
                 lanes[l] = new Lane { A = a, B = b, Bridge = bridge };
             }
 
+            // Cluster links open at the core (gates) or at the system farthest out towards the other galaxy.
+            var gates = new GalaxyGate[context.Links.Count];
+            for (var k = 0; k < gates.Length; k++)
+            {
+                var (other, otherName, tier, dx, dy) = context.Links[k];
+                var system = layout.Core;
+                if (tier != LinkTier.Gate)
+                {
+                    var farthest = double.MinValue;
+                    for (var i = 0; i < n; i++)
+                    {
+                        var reach = layout.X[i] * dx + layout.Y[i] * dy;
+                        if (reach > farthest)
+                        {
+                            farthest = reach;
+                            system = i;
+                        }
+                    }
+                }
+
+                gates[k] = new GalaxyGate { Galaxy = other, Name = otherName, Tier = tier, System = system };
+            }
+
+            var type = context.Type ?? GalaxyTypes.Derive(layout.Shape, layout.Pitch, layout.Ellipse);
             return new Galaxy
             {
                 Address = address.ToString(),
+                Name = context.Name ?? ClusterGenerator.LoneName(Seeds.Stream(seed, "name")),
+                Type = type,
+                Descriptor = GalaxyTypes.Describe(type, context.Age, context.Richness, context.CoreActivity, context.Host),
+                Age = context.Age,
+                Richness = context.Richness,
+                CoreActivity = context.CoreActivity,
+                CoreHazardRadius = ClusterGenerator.HazardRadius(context.CoreActivity),
+                Gates = gates,
                 Shape = layout.Shape,
                 Arms = layout.Shape == GalaxyShape.Spiral || layout.Shape == GalaxyShape.Barred ? layout.Arms : 0,
                 Radius = GalaxyLayout.Radius,

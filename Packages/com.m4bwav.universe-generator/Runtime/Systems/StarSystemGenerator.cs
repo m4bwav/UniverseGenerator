@@ -63,7 +63,7 @@ namespace UniverseGeneration
             var light = Math.Max(star.Luminosity + (close ? companion!.Star.Luminosity : 0), 0.0001);
             var (hzInner, hzOuter, frost) = Zones(light);
 
-            var drafts = Planets(Seeds.Stream(seed, "planets"), star, companion, totalMass, hzInner, hzOuter, frost);
+            var drafts = Planets(Seeds.Stream(seed, "planets"), star, companion, totalMass, hzInner, hzOuter, frost, context.Richness);
             if (drafts.Count > options.MaxPlanetsPerSystem)
             {
                 drafts.RemoveRange(options.MaxPlanetsPerSystem, drafts.Count - options.MaxPlanetsPerSystem);
@@ -148,12 +148,18 @@ namespace UniverseGeneration
             c == StarClass.O || c == StarClass.B || c == StarClass.Giant || c == StarClass.Supergiant || c == StarClass.WhiteDwarf
             || c == StarClass.NeutronStar || c == StarClass.BlackHole;
 
-        private static List<Draft> Planets(Pcg32 rng, Star star, Companion? companion, double totalMass, double hzInner, double hzOuter, double frost)
+        private static List<Draft> Planets(Pcg32 rng, Star star, Companion? companion, double totalMass, double hzInner, double hzOuter, double frost, int richness)
         {
             var (innerMin, innerMax, outerMin, outerMax) = Counts(star.Class);
             var innerCount = rng.Range(innerMin, innerMax);
             var outerCount = rng.Range(outerMin, outerMax);
             var giantWeight = (int)(30 * DMath.Clamp(star.Mass, 0.15, 1.6));
+            // Giant planets follow the metallicity of their galaxy (Fischer and Valenti 2005); 100% leaves the weight as it was.
+            if (richness != 100)
+            {
+                giantWeight = giantWeight * richness / 100;
+            }
+
             // Peas in a pod (Weiss 2018): one typical mass per system for small planets, one for sub-Neptunes.
             var pod = (Rocky: LogUniform(rng, 0.25, 2.2), Gassy: LogUniform(rng, 4.7, 12));
             var noGarden = NoGarden(star.Class);

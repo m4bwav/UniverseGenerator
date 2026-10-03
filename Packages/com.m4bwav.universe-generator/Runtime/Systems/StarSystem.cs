@@ -74,11 +74,12 @@ namespace UniverseGeneration
     {
         public static readonly SystemContext Alone = new SystemContext(null, null, null);
 
-        public SystemContext(string? name, StellarAge? age, int? danger)
+        public SystemContext(string? name, StellarAge? age, int? danger, int richness = 100)
         {
             Name = name;
             Age = age;
             Danger = danger;
+            Richness = richness;
         }
 
         public string? Name { get; }
@@ -86,5 +87,8 @@ namespace UniverseGeneration
         public StellarAge? Age { get; }
 
         public int? Danger { get; }
+
+        /// <summary>The galaxy's metallicity as a percentage of the gas giant weight: 50 poor, 100 normal, 160 rich.</summary>
+        public int Richness { get; }
     }
 }
