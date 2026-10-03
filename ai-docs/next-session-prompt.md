@@ -13,15 +13,14 @@ summary: "paste into a fresh session to continue the run; every session rewrites
 Paste the block below into a fresh session to continue the run. Every session rewrites this file before it stops
 (AGENTS.md, "Document for handoff"), so the chain continues: the prompt it writes ends with the same instruction.
 
-Written 2026-10-03, after the release PR #10 was opened (dated CHANGELOG, size numbers corrected) with the
-Trusted Publishing policy and the nuget environment in place. Use it once Mark has merged PR #10, tagged
-v1.0.0-beta.1 and approved the deployment, or has gone part of the way.
+Written 2026-10-03, after Mark merged the release PR #10 (1776834) and ci passed on that master commit. Use it once
+Mark has tagged v1.0.0-beta.1 and approved the deployment, or has gone part of the way.
 
 ```
 Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 4, 2026-10-03: the repository is public with
 its settings and rulesets on; the nuget.org Trusted Publishing policy exists; the nuget environment has reviewer
 m4bwav, tag rule v*, NUGET_USER and admin bypass off; release PR #10 (CHANGELOG heading dated 2026-10-03, size numbers
-corrected to the size gate: nupkg 373.2 KB, UPM 114.5 KB compressed) was open for Mark. In the UniverseGenerator
+corrected to the size gate) is merged as master 1776834 and ci passed on it; the tag was Mark's next step. In the UniverseGenerator
 clone, read ai-docs/HANDOFF.md, then AGENTS.md, then ai-docs/notes/2026-10-03-stage-4-checklist.md in full. Nothing
 else unless a step needs it. Re-check any nuget.org or GitHub fact older than three months against the official docs
 before using it (AGENTS.md, "Research beats recall").
@@ -30,8 +29,8 @@ First find out how far Mark got, and say so: is PR #10 merged (gh pr view 10 --j
 master commit (gh run list --workflow ci.yml --branch master --limit 1), is there a v1.0.0-beta.1 tag (git ls-remote
 --tags origin), and what the release run did (gh run list --workflow release.yml; gh run view <id> for a waiting,
 failed or finished run). Then, only as far as Mark's steps allow:
-1. If PR #10 is not merged: check its ci is still green and the CHANGELOG still matches master's size gate; if master
-   moved and the numbers changed, correct them on the branch. Then stop for Mark.
+1. If there is no tag yet: check ci is still green on master and stop for Mark (the tag command is in the checklist,
+   step 6). The size gate's "UPM compressed" number wobbles by about 0.1 KB between builds; do not chase that.
 2. If the release run is waiting for approval: tell Mark it is ready (Review deployments, approve nuget) and stop.
 3. Once the release run has finished: verify on nuget.org as the checklist's step 7 says (flat container, registration
    listed, dotnet nuget verify, snupkg, gh release view, gh attestation verify, fresh net10.0 and net48 console
