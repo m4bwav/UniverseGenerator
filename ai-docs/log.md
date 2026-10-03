@@ -14,3 +14,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-02] handoff | rewritten for the F# switch
 ## [2026-10-02] index | rebuilt (7 entries)
 ## [2026-10-02] decision | Mark: forget F# and Fable for now, keep C#; maybe port later. Plan's D26 to D31 removed; the assessment kept as "Deferred: F# and Fable" in the 1.0 plan
+## [2026-10-02] add | Star system level: StarSystem.Generate, stars and companions, two-chain orbits with the radius valley and hot Neptune desert, moons, belts, stations, names from the embedded tables, landmarks, tags, descriptors; system.json golden (18 systems) identical on net10.0 and net48; tuning recorded in the design note; size gate green (DLL 308.5 KB)
+## [2026-10-02] handoff | rewritten: galaxy level next
+## [2026-10-02] index | rebuilt (7 entries)

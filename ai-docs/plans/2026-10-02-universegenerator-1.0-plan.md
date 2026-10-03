@@ -274,7 +274,8 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 ### Stage 3: new repository and 1.0 code
 - [x] Create m4bwav/UniverseGenerator (or the ruled name), private; everlast, AGENTS.md, CLAUDE.md with the AGENTS.md import line; copy this plan, the knowledge base (to `kb/`) and the legacy recordings (to `tests/Golden/legacy/`).
 - [x] Core with its golden test and CI (2026-10-02; branch `stage3-core`, draft PR #1; one branch and pull request for all of Stage 3, a commit per step).
-- [ ] The levels in D14's order, each with its tests; the prototype (`Tests/GalaxyPrototype` on the game repository's capture branch) is the starting point, and the star system design is [the 2026-10-02 note](../notes/2026-10-02-star-system-level-design.md).
+- [x] Star system level (2026-10-02): stars, companions, two-chain orbits, kinds with the exoplanet rules, moons, rings, belts, stations, names from the embedded tables, landmarks, tags, descriptors; property tests over 10,000 seeds, distribution tests, golden `system.json` identical on net10.0 and net48; size gate green (DLL 308.5 KB, nupkg 182.9 KB).
+- [ ] The remaining levels in D14's order (galaxy next), each with its tests; the prototype (`Tests/GalaxyPrototype` on the game repository's capture branch) is the starting point, and the star system design is [the 2026-10-02 note](../notes/2026-10-02-star-system-level-design.md).
 - [ ] Golden seeds v1, property tests, distribution tests against the preset's own targets, hierarchy tests, the Unity compile check, scale tests, BenchmarkDotNet, the D19 size gate.
 - [ ] README (the example above first, then the feature matrix's short form), CHANGELOG, samples. **Stop 2: pull request review.**
 
@@ -334,6 +335,6 @@ Mark asked whether the package could be F# compiled by Fable, so one source also
 
 ## Next single action
 
-The star system level on branch `stage3-core`, from [the design note](../notes/2026-10-02-star-system-level-design.md).
+The galaxy level on branch `stage3-core`: port the prototype's `GalaxyProto.cs` (shapes, spacing, lanes, chokepoints, regions, danger), add the skeleton pass that gives each system its context (name unique in the galaxy, region age, danger), and `Galaxy.Generate`, `galaxy.System(i)` and `Universe.At(address)` with the hierarchy test (a system alone from its address equals the same system in its galaxy).
 
 Related: [the extraction plan](2026-10-02-galaxy-generator-extraction.md), [knowledge base](../../kb/INDEX.md), [Stage 0 note](../notes/2026-10-02-galaxy-stage0-survey-and-capture.md), [size budget](../notes/2026-10-02-package-size-budget.md).

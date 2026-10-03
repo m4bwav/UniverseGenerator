@@ -11,7 +11,9 @@ summary: "read before writing or changing the star system level: records, the ma
 
 # Star system level design
 
-Worked out on 2026-10-02 for the C# code on branch `stage3-core`. The prototype (`Tests/GalaxyPrototype/SystemProto.cs` on the game repository's capture branch) is the starting point; changes from it are marked.
+Worked out on 2026-10-02 and coded the same day on branch `stage3-core` (`Runtime/Stars`, `Runtime/Systems`, `Runtime/Names`); `tests/Golden/v1/system.json` holds 18 systems. **Tuned while coding (these override the lines below):** the habitable zone is the optimistic one, √(L/1.776) to √(L/0.32) (Kopparapu 2013, recent Venus to early Mars), because the conservative zone left living worlds in 3.9% of systems; temperate terrestrial weights are Rocky 22, Ocean 25, Garden 22, Desert 15, Barren 10; the pod mass is two values, rocky log-uniform 0.25 to 2.2 and sub-Neptune 4.7 to 12 (one shared pod pinned many rocky worlds at the 2.8 clamp); gas giant mass is 50 × 80^(u²), skewed to Saturn and Jupiter; an asteroid belt spans 0.87 to 1.15 of the gap's geometric middle (a linear half-width overlapped the inner planet in wide gaps); giants and dwarfs take a zone word only when warm or temperate.
+
+Statistics over 10,000 default systems (`Prints_the_statistics_for_review`): stars M 31.1%, K 20.5%, G 15.5%, F 10%, white dwarf 6.3%, A 6.2%, giant 5.2%, B 2%; 3.6 planets per system (0 in 5.5%); planets gas giant 17%, barren 14.9%, ice giant 13.2%, sub-Neptune 12.8%, dwarf 7.1%, rocky 5.9%, lava 5.4%, desert 5.2%, ice 4.9%, iron 3.8%, ocean 3.1%, garden 2.7%, greenhouse 2.5%, hot Jupiter 1.4%; binaries 36.4%; 0.77 belts and 0.50 stations per system; a living world in 9.1% of systems; outliers 5%. Open for tuning before beta: giants are 30% of planets (real systems have fewer; they read well on a map), and "holy site" (always eligible) is 11% of tags. The prototype (`Tests/GalaxyPrototype/SystemProto.cs` on the game repository's capture branch) is the starting point; changes from it are marked.
 
 ## Context, so a system alone equals the same system in its galaxy
 
