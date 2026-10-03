@@ -33,11 +33,25 @@ namespace UniverseGeneration
         /// <summary>The most planets a system may have (0 to 20).</summary>
         public int MaxPlanetsPerSystem { get; init; } = 12;
 
+        /// <summary>The most systems a galaxy may have; a galaxy has fewer only if its shape cannot hold them all.</summary>
+        public const int MaxSystems = 2000;
+
+        /// <summary>How many systems a galaxy has (1 to <see cref="MaxSystems"/>); 60 reads well on one screen (plan D16).</summary>
+        public int Systems { get; init; } = 60;
+
+        /// <summary>The galaxy's shape; <see cref="GalaxyShape.Auto"/> draws one that reads at the requested count.</summary>
+        public GalaxyShape Shape { get; init; } = GalaxyShape.Auto;
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
             CheckRange(nameof(Weirdness), Weirdness, 0, 100);
             CheckRange(nameof(MaxPlanetsPerSystem), MaxPlanetsPerSystem, 0, 20);
+            CheckRange(nameof(Systems), Systems, 1, MaxSystems);
+            if (Shape < GalaxyShape.Auto || Shape > GalaxyShape.Irregular)
+            {
+                throw new ArgumentException($"{nameof(Shape)} must be a GalaxyShape such as Auto or Spiral; you asked for {(int)Shape}.", nameof(Shape));
+            }
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)
             {
                 throw new ArgumentException($"{nameof(StarMix)} must be Game or Plausible; you asked for {(int)StarMix}.", nameof(StarMix));
