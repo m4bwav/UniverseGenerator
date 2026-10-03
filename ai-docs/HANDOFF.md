@@ -1,17 +1,17 @@
 # Handoff
 
 ## Current state
-2026-10-03: Stage 3 is complete and **waiting for Mark at Stop 2**. Branch `stage3-core`, PR #1 (https://github.com/m4bwav/UniverseGenerator/pull/1), ready for review, assigned to m4bwav with `needs-review`. C#, as ruled by Mark (F# port deferred; the 1.0 plan's "Deferred: F# and Fable" keeps the facts).
+2026-10-03: **Stage 3 merged and Stop 2 ruled.** Mark merged PR #1 into `master` (merge commit 32df421, 16:46 UTC) without leaving rulings, so every Stop 2 question keeps its current value ([the note's "Ruled" section](notes/2026-10-03-stop-2-questions.md)). No rule or golden file changed. C#, as ruled by Mark (F# port deferred; the 1.0 plan's "Deferred: F# and Fable" keeps the facts).
 
-- Done: the core and all six levels, galaxy extras, `StarName`, `Universe.At`; golden files `core`, `system`, `galaxy`, `planet`, `moon-belt`, `cluster`, `universe`, `galaxy-extras`, `star-name` in `tests/Golden/v1/`, identical on net10.0 and net48. 170 tests. CI green on the self-hosted runner.
-- This session (7a3fe40, c14c7ba): README (the plan's first example as it runs, presets and addresses, validation, the feature matrix's short form, clusters and universes, extras, StarName, `Universe.At`, the seed promise, samples); `samples/ConsoleSample` (every README example lives in `Examples.cs`; `SampleTests` checks the README's C# blocks against its `#region readme` blocks in order and runs them on both frameworks; CI runs the sample); the Unity sample `Packages/com.m4bwav.universe-generator/Samples~/GalaxyPrinter` (a MonoBehaviour plus engine-free `GalaxyReport.cs` that the tests compile), listed in `package.json`; CHANGELOG `[1.0.0-beta.1] - Unreleased` with the size numbers. No Runtime change.
-- Size gate green: nupkg 373.5 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 116.0 KB compressed (the gate now counts `Samples~`, which OpenUPM ships), 35 Runtime files, 9,736 lines. README 8.0 KB (+2.8 KB in the nupkg).
-- Stop 2 questions: [notes/2026-10-03-stop-2-questions.md](notes/2026-10-03-stop-2-questions.md), the same list in PR #1's description: S1 to S16 seed-changing (each with the golden files it moves), E1 to E4 changing only `galaxy-extras.json`, N1 to N8 not seed-changing (matrix rows marked 1.0 but not built; awkward APIs the README found; CI and test items).
+- On `master`: the core and all six levels, galaxy extras, `StarName`, `Universe.At`, README, samples, CHANGELOG `[1.0.0-beta.1] - Unreleased`; golden files `core`, `system`, `galaxy`, `planet`, `moon-belt`, `cluster`, `universe`, `galaxy-extras`, `star-name` in `tests/Golden/v1/`, identical on net10.0 and net48. 170 tests. `ci` green on `master` after the merge. `<Version>` and `package.json` are already 1.0.0-beta.1.
+- Size gate green: nupkg 373.5 KB, DLL 499.0 KB, UPM 456.9 KB unpacked and 116.0 KB compressed, 35 Runtime files.
+- Still open for 1.0.0 (not the beta): N1, the feature-matrix rows marked 1.0 that are not built (build them or move them to 1.x via `kb/features/status.json`); N2's API additions (additive, any 1.x minor).
+- `release.yml` does not exist yet, though AGENTS.md describes it.
 - Level records: [universe](notes/2026-10-03-universe-level-design.md), [cluster](notes/2026-10-03-galaxy-cluster-level-design.md), [moons and belts](notes/2026-10-03-moon-and-belt-level-design.md), [planet](notes/2026-10-02-planet-level-design.md), [galaxy](notes/2026-10-02-galaxy-level-design.md), [galaxy extras](notes/2026-10-03-galaxy-extras-design.md), [star system](notes/2026-10-02-star-system-level-design.md).
-- CI: self-hosted runner `universe` (`D:\actions-runner-universe`, scheduled task at logon); `RUNS_ON="ubuntu-latest"` moves jobs to hosted runners.
+- CI: self-hosted runner `universe` (`D:\actions-runner-universe`, scheduled task at logon); `RUNS_ON="ubuntu-latest"` moves jobs to hosted runners. Branch protection is unavailable while the repository is private on the free plan.
 
 ## In progress
-Nothing half-done. Waiting for Mark's Stop 2 rulings.
+Nothing half-done. The branch `stage3-core` is merged and can be deleted.
 
 ## Dead ends hit
 - Unity's Mono evaluates float expressions in double precision; a .NET replay of Unity code must model that (kb/rules/determinism.md).
@@ -29,10 +29,10 @@ Nothing half-done. Waiting for Mark's Stop 2 rulings.
 - `dotnet test --filter "FullyQualifiedName~Universe"` matches every test (the namespace is `UniverseGeneration`); filter on `Tests.UniverseTests`.
 
 ## Left / follow-ups
-1. Mark rules Stop 2 (the note's S, E and N items).
-2. Apply the rulings: seed-changing ones rewrite only the golden files the note names, on purpose, said in the commit message.
-3. Test checklist items not done (N7): the Unity compile check (Stage 5 scratch project), scale tests, BenchmarkDotNet.
-4. Stage 4 needs Mark: the history scan for secrets, private names and local paths, making the repository public, the Trusted Publishing policy.
+1. Stage 4 preparation (an agent): the history scan for secrets, private names and local paths (N8), `release.yml` with Trusted Publishing behind the `nuget` environment, a checklist for Mark. One pull request, waiting for Mark.
+2. Stage 4 (Mark): make the repository public, the nuget.org Trusted Publishing policy, the `nuget` environment's reviewer, tag `v1.0.0-beta.1`, approve the deployment.
+3. Before 1.0.0: N1 (matrix rows) and, if wanted, N2 (API additions).
+4. Stage 5: the Unity compile check, then scale tests and BenchmarkDotNet (N7).
 
 ## Next single action
-Wait for Mark's Stop 2 rulings on PR #1, then apply them. The prompt to start that session is [next-session-prompt.md](next-session-prompt.md).
+Prepare Stage 4: the history scan, `release.yml` and Mark's checklist, in one pull request. The prompt that starts that session is [next-session-prompt.md](next-session-prompt.md).

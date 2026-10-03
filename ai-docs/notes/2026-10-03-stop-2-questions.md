@@ -6,10 +6,21 @@ date: 2026-10-03
 verified: 2026-10-03
 stale_after: 2027-04-03
 tags: [universegenerator, stop-2, review, tuning, seed-promise, golden-files, beta]
-summary: "read at Stop 2 or before changing any tuning before 1.0.0-beta.1: every seed-changing question (current value, alternative, which golden files move), the questions that change only galaxy-extras.json, the non-seed questions (matrix 1.0 rows not built, awkward APIs found by the README, CI and test items), gathered from the level notes' Open for tuning sections"
+summary: "ruled 2026-10-03 (PR #1 merged with no rulings: every question keeps its current value); read before changing any tuning, or before 1.0.0 for the open N1 rows: every seed-changing question (current value, alternative, which golden files move), the questions that change only galaxy-extras.json, the non-seed questions (matrix 1.0 rows not built, awkward APIs found by the README, CI and test items), gathered from the level notes' Open for tuning sections"
 ---
 
 # Stop 2 questions
+
+## Ruled (2026-10-03)
+
+Mark merged PR #1 into `master` on 2026-10-03 at 16:46 UTC (merge commit 32df421). He left no comments or review, and his reply when asked was "I merged the pr". The session prompt's rule for a question with no ruling is "keep the current value", so the outcome is:
+
+- S1 to S16 and E1 to E4 keep their current values. No rule changed, no golden file in `tests/Golden/v1/` changed, and 1.0.0-beta.1 ships the output on `master` as merged.
+- N1: the matrix rows marked 1.0 but not built stay as they are in `kb/features/status.json`. That is still open for 1.0.0, not for the beta. Before 1.0.0, either build them or move them to 1.x through `status.json` and `build_matrix.py`.
+- N2: no API was added. `StarSystem.Planet(int)`, a typed `Universe.At` and a `StarName.Generate(long)` without a count would all be additive, and any of them can land in a 1.x minor without changing output.
+- N3 to N6 stand as written. N7 (Unity compile check, scale tests, BenchmarkDotNet) waits for Stage 5. N8 (the history scan) is the first step of Stage 4.
+
+After the first release tag, any S or E change needs a new generator version (AGENTS.md, the seed promise).
 
 PR #1 (https://github.com/m4bwav/UniverseGenerator/pull/1) holds all of Stage 3. These are the decisions for Mark before 1.0.0-beta.1. After the first release tag, a seed-changing answer needs a new generator version instead, so these are cheapest now. The recommendation comes first in each row. Sources: the "Open for tuning" parts of the [star system](2026-10-02-star-system-level-design.md), [galaxy](2026-10-02-galaxy-level-design.md), [planet](2026-10-02-planet-level-design.md), [moon and belt](2026-10-03-moon-and-belt-level-design.md), [cluster](2026-10-03-galaxy-cluster-level-design.md), [universe](2026-10-03-universe-level-design.md) and [galaxy extras](2026-10-03-galaxy-extras-design.md) notes.
 
