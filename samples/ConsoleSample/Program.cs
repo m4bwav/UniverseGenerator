@@ -1,0 +1,1 @@
+ConsoleSample.Examples.All();

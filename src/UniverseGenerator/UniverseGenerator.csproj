@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- From the package-modernize Library.csproj template. The source is the Unity package's Runtime folder (plan D8):
+       one folder, compiled here for NuGet and by Unity through its asmdef. LangVersion 9 is the newest Unity 6 compiles. -->
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>UniverseGeneration</RootNamespace>
+    <AssemblyName>UniverseGenerator</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RuntimeFolder>$(MSBuildThisFileDirectory)../../Packages/com.m4bwav.universe-generator/Runtime/</RuntimeFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <IsPackable>true</IsPackable>
+    <PackageId>UniverseGenerator</PackageId>
+    <Version>1.0.0-beta.1</Version>
+    <Authors>Mark Rogers</Authors>
+    <Copyright>Copyright (c) 2026 Mark Rogers</Copyright>
+    <Title>UniverseGenerator</Title>
+    <Description>Seeded universe, galaxy, star system, planet and moon generator for games and fiction. One seed gives the same galaxy on every platform and runtime (.NET, .NET Framework, Unity Mono and IL2CPP): names, star types, planets, moons, lanes, regions, danger and story tags, as plain records with no dependencies.</Description>
+    <PackageTags>procedural-generation;galaxy-generator;star-system;planet-generator;universe;seeded;space;games;worldbuilding;unity</PackageTags>
+    <PackageProjectUrl>https://github.com/m4bwav/UniverseGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/m4bwav/UniverseGenerator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>See https://github.com/m4bwav/UniverseGenerator/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <!-- A brand-new package: no PackageValidationBaselineVersion until 1.0.0 is on nuget.org (plan Stage 4). -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(RuntimeFolder)**/*.cs" />
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Include="../../icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

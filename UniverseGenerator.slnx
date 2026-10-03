@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/UniverseGenerator/UniverseGenerator.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/ConsoleSample/ConsoleSample.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/UniverseGenerator.Tests/UniverseGenerator.Tests.csproj" />
+  </Folder>
+</Solution>

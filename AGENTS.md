@@ -8,7 +8,7 @@ UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, plane
 
 ## Rules
 
-- **The seed promise.** From 1.0, a seed and generator version give the same output on every runtime (Windows, Linux, macOS on .NET 10 and .NET Framework 4.8; Unity Mono and IL2CPP) for the whole major version. The golden files in `tests/Golden/v1/` are the proof; never regenerate them to make a test pass. A change that would alter any seed's output adds a generator version and keeps the old one selectable.
+- **The seed promise.** From 1.0, a seed and generator version give the same output on every runtime (Windows, Linux, macOS on .NET 10 and .NET Framework 4.8; Unity Mono and IL2CPP) for the whole major version. The golden files in `tests/Golden/v1/` are the proof; never regenerate them to make a test pass. A change that would alter any seed's output adds a generator version and keeps the old one selectable. Once a golden file is in a release tag, CI refuses any change to it; before the first release (1.0.0-beta.1), a level's golden file may be deleted and rewritten (`UG_WRITE_GOLDEN=1 dotnet test`) only when its output is changed on purpose, said in the commit message. Golden tests write an explicit list of fields per level, so adding a field adds a golden file and never changes an existing one.
 - **Determinism rules** (`kb/rules/determinism.md`): our own PCG32 and SplitMix64 streams, one stream per purpose, derived from the object's address; never `System.Random`, `UnityEngine.Random`, `string.GetHashCode` or `Guid.NewGuid` in generation; decisions on integer draws; maths from + - * / and sqrt only (the `DMath` functions); values rounded before they are stored or written.
 - **Games and fiction first** (D18): story hooks, names, readable maps and gameplay structure lead; astronomy only as far as it keeps descriptions consistent (`kb/rules/plausibility-rules.md`).
 - **Easy start.** `Galaxy.Generate("my-seed")` must keep working with good defaults; presets and options add, never require.
@@ -19,7 +19,7 @@ UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, plane
 - **Releases follow one ritual.** CHANGELOG with the date and the size numbers, `<Version>` set, merged, `ci` green on `master`, then tag `v<version>` and push it. Tag only after green.
 - **Knowledge base.** Research goes into `kb/` (reports in `kb/sources/` with a "feature keys" column, statuses in `kb/features/status.json`), and `python kb/features/build_matrix.py` regenerates the feature matrix; never edit the matrix by hand. The wiki publishes the public parts.
 - **Research beats recall.** Re-verify any version or registry fact older than three months.
-- **Document for handoff.** Anything learned, decided or built goes into `ai-docs/` before you finish; rewrite `ai-docs/HANDOFF.md` when work is left unfinished.
+- **Document for handoff.** Anything learned, decided or built goes into `ai-docs/` before you finish; rewrite `ai-docs/HANDOFF.md` when work is left unfinished. Before stopping, also rewrite `ai-docs/next-session-prompt.md`: the prompt that starts the next session (what to read first, the next step and its limits, the rules, when to stop and ask), ending with this same instruction to rewrite the file, so every session hands the next one its prompt; give the prompt in your final message too.
 - **No AI attribution anywhere.**
 - **Line endings.** Files are LF; count byte 13 after writing on Windows.
 - **Before this repository goes public,** scan the whole history for secrets, private names and local paths.
