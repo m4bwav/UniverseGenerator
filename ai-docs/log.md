@@ -112,3 +112,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] handoff | rewritten: 1.0.0-beta.1 published and verified; waiting for Mark to choose N1 (towards 1.0.0) or Stage 5; next-session-prompt.md rewritten
 ## [2026-10-03] decision | Mark chose N1 first (towards 1.0.0), Stage 5 after 1.0.0; next-session-prompt.md rewritten for N1 (ruling table first, then build or move per row, then the 1.0.0 release pull request)
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] verify | N1 list checked against status.json and the Runtime on master a3bedd9: every listed row unbuilt; four more 1.0 rows only partly built (orbital-elements, galaxy-shapes, constraints, diagnostics' GenerationBudget); cost table in the Stop 2 note
+## [2026-10-03] decision | Mark ruled N1: every unbuilt and partial 1.0 row goes in 1.0.0 (Do all the things), the Unity float adapter included; nothing moves to 1.x. He rejected the effort column in human working days: estimate in agent time
+## [2026-10-03] index | rebuilt (17 entries)

@@ -6,7 +6,7 @@ date: 2026-10-03
 verified: 2026-10-03
 stale_after: 2027-04-03
 tags: [universegenerator, stop-2, review, tuning, seed-promise, golden-files, beta]
-summary: "ruled 2026-10-03 (PR #1 merged with no rulings: every question keeps its current value); read before changing any tuning, or before 1.0.0 for the open N1 rows: every seed-changing question (current value, alternative, which golden files move), the questions that change only galaxy-extras.json, the non-seed questions (matrix 1.0 rows not built, awkward APIs found by the README, CI and test items), gathered from the level notes' Open for tuning sections"
+summary: "ruled 2026-10-03 (PR #1 merged with no rulings: every question keeps its current value; N1 ruled: every unbuilt 1.0 row is built for 1.0.0, with a cost table); read before changing any tuning, or before 1.0.0 for the open N1 rows: every seed-changing question (current value, alternative, which golden files move), the questions that change only galaxy-extras.json, the non-seed questions (matrix 1.0 rows not built, awkward APIs found by the README, CI and test items), gathered from the level notes' Open for tuning sections"
 ---
 
 # Stop 2 questions
@@ -21,6 +21,47 @@ Mark merged PR #1 into `master` on 2026-10-03 at 16:46 UTC (merge commit 32df421
 - N3 to N6 stand as written. N7 (Unity compile check, scale tests, BenchmarkDotNet) waits for Stage 5. N8 (the history scan) is the first step of Stage 4.
 
 After the first release tag, any S or E change needs a new generator version (AGENTS.md, the seed promise).
+
+## N1 ruling table (ruled 2026-10-03: every row in 1.0.0)
+
+**Ruled 2026-10-03:** Mark put every row below in 1.0.0, the four partial rows and the Unity float adapter included ("Do all the things"); nothing moves to 1.x. He also rejected the effort column: it was in human working days, while this run built all six levels in about a day and a half of agent time. Read it as relative size only; at agent pace the whole table is a few sessions. Each row lands as its own additive pull request (or a small group), in the order of the table.
+
+
+Checked against `kb/features/status.json` and the Runtime folder on `master` a3bedd9. The note's list is right: none of its rows has code (no `ToCode`, no Pocket, Roguelike, Cozy or Epic preset, no hook, unit, warning or user-field type, no syllable names, the JSON writer is `internal`, no lane or arm option). `status.json` has 58 rows at "1.0" and most are built; the status words are have (the game does it), 1.0, 1.x and rejected, so built 1.0 rows keep "1.0".
+
+The check found four more 1.0 rows that are only partly built. N1 did not list them:
+
+- `orbital-elements`: `Planet.Period` exists; eccentricity and inclination do not. The matrix marks it seed-changing, but new draws on a new stream name of the planet's seed change nothing else, so it can still be additive (one new golden file).
+- `galaxy-shapes`: five shapes exist; the row's "add cluster, colliding pair, starburst" does not. S1 ruled: colliding pair later, as an explicit `GalaxyShape` only (`Auto` unchanged).
+- `constraints`: only the landmark guarantee ("always at least one"); there is no general "at least one X" option.
+- `diagnostics` also covers D16's `GenerationBudget`, which does not exist; the `MaxSystems` constant (2,000) caps a galaxy instead.
+
+Size now (ci on `master` a3bedd9, run 37159609289): nupkg 373.2 KB, largest DLL 499.0 KB (green under 750 KB), 35 Runtime files, 9,736 lines, all green. The DLL is the metric to watch: building every row below adds roughly 3,000 to 4,500 lines and could take it to about 600 to 700 KB, green but near the yellow line. Building only the "1.0" recommendations adds about 1,000 lines, about 30 to 50 KB.
+
+| Row | What building it takes | Effort | Recommendation |
+|---|---|---|---|
+| `seed-url` | `GeneratorOptions.ToCode()` and `FromCode(string)`: a short text code of the settings that differ from the defaults, plus `Universe.At(address, code)` or a link form (address plus code) so an address can carry its options (fixes N2's third point). One new file in `Options/`, about 150 lines, about 2 KB; tests for round trips and readable errors; README and Examples.cs | half a day | **1.0**: most wanted, small, fixes N2 |
+| `export-json` | Make the per-level JSON public: `ToJson()` on each level (or a `Json` class) with a versioned schema field, written by the existing hand-written `JsonWriter`, no reflection. The test project's seven writers (618 lines) show the shape. 2 to 3 files, about 700 lines, about 6 KB; one new golden file per level for the export format; README and Examples.cs | 1 day | **1.0**: most wanted; the schema becomes a promise, so it needs its own version |
+| Preset `Pocket` | A record in `Preset` with fewer systems and planets (for example 20 systems, 6 planets). 5 lines, one golden file | 1 hour | 1.0 with Epic, or 1.x |
+| Preset `Epic` | A record with many systems (for example 300, inside `MaxSystems`). 5 lines, one golden file | 1 hour | 1.0 with Pocket, or 1.x |
+| Preset `Roguelike` | Needs settings that do not exist yet (more danger, more hazards, fewer safe systems); with today's options it would be only "more weirdness" | 1 hour thin, 1 to 2 days real | **1.x**, with danger and hazard options |
+| Preset `Cozy` | The same: needs fewer hazards and less danger, which no option controls | as Roguelike | **1.x** |
+| `lane-density` | An option for the extra-lane share (today 25%, `LaneExtraPercent`); null keeps the drawn default, so no seed moves. About 30 lines, validation, a golden file for one non-default value | 2 hours | 1.0 (cheap) or 1.x |
+| `spiral-arm-count` option | An `Arms` option (2 to 4, null = drawn); the arm count is drawn whatever the option, so default output is unchanged. About 30 lines, a golden file | 2 hours | 1.0 (cheap) or 1.x |
+| `typed-units` | A `Units` option (game units, AU, light years, parsecs) applied to every distance and size field at every level, or `In(Units)` helpers. Touches most records | 1 to 2 days | **1.x** |
+| `diagnostics` | Typed warnings: `Validate()` returning soft problems and each level reporting trims (a shape that could not hold every system, `GenerationBudget`). A new `Warnings` list per level, about 300 lines | 1 day | **1.x** |
+| `custom-fields` | A user dictionary on each object (`Custom`, since `StarSystem.Tags` already holds story tags). Small alone, useful only with hooks | 2 to 3 hours | **1.x**, with hooks |
+| `hooks-plugins` | Post-processors (`OnSystemGenerated` and so on) that also run when `Universe.At` regenerates an object, so they belong in the options; delegates in an options record break value equality and `ToCode` | 1 to 2 days, with design | **1.x** |
+| `data-tables-editable` | Public table records, JSON tables by id read by a hand-written parser (no reflection, nothing parsed in a static constructor), and a ScriptableObject adapter in the Unity package. The largest row and the biggest size risk | 3 to 5 days | **1.x** |
+| `names-fantasy` | A syllable-set name generator for systems and planets on its own stream, one set in core (about 5 KB), culture sets in the Names add-on | 1 day | **1.x** |
+| Unity float adapter | `Vector2`/`Vector3` helpers in a second asmdef that references UnityEngine, excluded from the NuGet build; it can only be compiled in Unity | half a day, in Stage 5 | **Stage 5** (UPM only; nothing in the NuGet package) |
+| `orbital-elements` (partial) | Eccentricity and inclination on a new stream of the planet's seed; one new golden file | 3 to 4 hours | 1.x |
+| `galaxy-shapes` (partial) | Colliding pair, starburst and cluster as explicit shapes; `Auto` unchanged (S1) | 1 day | **1.x** (S1) |
+| `constraints` (partial) | A general "at least one X" option with a repair pass on its own stream | 1 to 2 days | **1.x** |
+
+Totals, as first written in human working days (relative size only, see the ruling above): everything about 12 to 18; seed-url and export-json about 1.5.
+
+Every row is additive: none changes an existing seed's output or an existing golden file, so any of them can also land in a 1.x minor after 1.0.0.
 
 PR #1 (https://github.com/m4bwav/UniverseGenerator/pull/1) holds all of Stage 3. These are the decisions for Mark before 1.0.0-beta.1. After the first release tag, a seed-changing answer needs a new generator version instead, so these are cheapest now. The recommendation comes first in each row. Sources: the "Open for tuning" parts of the [star system](2026-10-02-star-system-level-design.md), [galaxy](2026-10-02-galaxy-level-design.md), [planet](2026-10-02-planet-level-design.md), [moon and belt](2026-10-03-moon-and-belt-level-design.md), [cluster](2026-10-03-galaxy-cluster-level-design.md), [universe](2026-10-03-universe-level-design.md) and [galaxy extras](2026-10-03-galaxy-extras-design.md) notes.
 
