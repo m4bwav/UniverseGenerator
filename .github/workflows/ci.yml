@@ -90,21 +90,7 @@ jobs:
       - name: Pack
         run: dotnet pack src/UniverseGenerator --no-build -c Release -o artifacts
       - name: The package holds exactly what it should and declares no dependencies
-        run: |
-          nupkg=$(ls artifacts/UniverseGenerator.[0-9]*.nupkg)
-          expected=$'README.md\nUniverseGenerator.nuspec\nicon.png\nlib/net10.0/UniverseGenerator.dll\nlib/net10.0/UniverseGenerator.xml\nlib/netstandard2.0/UniverseGenerator.dll\nlib/netstandard2.0/UniverseGenerator.xml'
-          actual=$(unzip -Z1 "$nupkg" | grep -Ev '^(_rels/|package/|\[Content_Types\])' | LC_ALL=C sort)
-          if [ "$actual" != "$expected" ]; then
-            echo "::error::unexpected package contents"
-            diff <(echo "$expected") <(echo "$actual")
-            exit 1
-          fi
-          nuspec=$(unzip -p "$nupkg" UniverseGenerator.nuspec | tr -d '\r\n')
-          deps=$(echo "$nuspec" | { grep -o '<dependency id="[^"]*"' || true; })
-          if [ -n "$deps" ]; then
-            echo "::error::the package must have no dependencies: $deps"
-            exit 1
-          fi
+        run: bash scripts/check-package.sh artifacts
       - name: Size gate (plan D19)
         run: |
           if command -v python >/dev/null; then py=python; else py=python3; fi
