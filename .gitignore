@@ -1,0 +1,15 @@
+# SDK build output
+bin/
+obj/
+artifacts/
+BenchmarkDotNet.Artifacts/
+
+# IDE and user files
+*.suo
+*.user
+.vs/
+.idea/
+*.DotSettings.user
+
+# Test results and coverage
+TestResults/

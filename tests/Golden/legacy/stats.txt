@@ -1,0 +1,27 @@
+== Galaxies: 100 seeds, 4000 entries; Unity 6000.6.0f1 Mono 6.13.0 (Visual Studio built mono)
+star types: RedDwarf 1608 (40.2%), OrangeDwarf 829 (20.7%), Binary 616 (15.4%), YellowDwarf 476 (11.9%), Multiple 256 (6.4%), WhiteDwarf 112 (2.8%), Neutron 103 (2.6%)
+regions: OuterRim 2031 (50.8%), MidRim 1589 (39.7%), Core 380 (9.5%)
+danger: [(1, 158), (2, 222), (3, 293), (4, 340), (5, 420), (6, 536), (7, 598), (8, 684), (9, 749)]
+centre bodies per system: [(1, 2770), (2, 974), (3, 256)]
+centre body kinds: Star 4231 (77.1%), WhiteDwarf 724 (13.2%), BlackHole 357 (6.5%), NeutronStar 174 (3.2%)
+nearest-neighbour distance (disc radius 1000): min 2.7, p5 34.9, median 133.8, max 610.8; systems with a neighbour under 10: 16 (0.4%), under 25: 88 (2.2%)
+duplicate designations inside a galaxy: 0; across all 4000 entries: 246 repeats of 203 names
+designation families (top 20): HD 718, HIP 406, GJ 351, Kepler 321, TOI 303, 2MASS 236, TYC 166, WASP 130, K2 116, HAT 114, LHS 68, Ross 68, Gaia 58, Wolf 57, WD 50, GRO 43, TrES 25, CoRoT 24, NGTS 22, HATS 21
+examples: HIP 77981; Eta Hydrae; TOI-7157; 4 Scorpii; Kepler-272; TrES-38; 47 Aurigae; Kepler-1981; HIP 29788; Iota Pavonis; HD 130455; Nu Virginis; Matrichakra; K2-34; TYC 1562-10132-1; Kepler-357; 20 Comae Berenices; HIP 67473; HD 114389; 2MASS J09481094+0608037; Kepler-749; HD 73992; 7 Aquarii; Kepler-1031; 9 Puppis
+galaxy entry agrees with its full system (designation and star type): 200 of 200
+
+== Systems: 200 seeds of template home_system
+star types: RedDwarf 77 (38.5%), OrangeDwarf 39 (19.5%), Binary 33 (16.5%), YellowDwarf 26 (13.0%), Multiple 10 (5.0%), Neutron 8 (4.0%), WhiteDwarf 7 (3.5%)
+planets per system: [(3, 56), (4, 45), (5, 50), (6, 49)] mean 4.46
+planet archetypes: barren 294 (33.0%), rocky 254 (28.5%), ice 224 (25.1%), gas 120 (13.5%)
+moons: 0 atmospheres: 0 life: 0 spin non-zero: 0
+orbit ratio (outer/inner neighbour): min 1.09, median 1.46, max 2.91; first orbit 2.00-3.99
+gas giants by orbit index: [(0, 29), (1, 21), (2, 28), (3, 14), (4, 21), (5, 7)]
+red dwarf mass range 0.83-2.49 (Sun = 1); luminosity range all stars 0.50-3.00
+belts per system: [(0, 66), (1, 50), (2, 84)]
+belt types: Ice 67 (30.7%), Rocky 55 (25.2%), Metallic 54 (24.8%), Mixed 42 (19.3%); planets inside a belt's band: 127
+asteroid count range: 66 1080
+stations: 64 in 64 of 200 systems; types TradeHub 16 (25.0%), Industrial 14 (21.9%), Research 13 (20.3%), Mining 9 (14.1%), Military 8 (12.5%), Pirate 4 (6.2%)
+station names distinct: 27 of 64 ; orbiting planet index beyond planet count: 5
+hazards: 0
+systems identical apart from the seed: 0

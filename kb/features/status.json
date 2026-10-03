@@ -1,0 +1,1199 @@
+{
+ "seed-input": {
+  "group": "Seeds and API",
+  "means": "type a seed, get the same result again",
+  "status": "have",
+  "seeds": "-",
+  "package": "core",
+  "size": "0",
+  "why": "the game takes an int seed; 1.0 takes any text"
+ },
+ "seed-url": {
+  "group": "Seeds and API",
+  "means": "seed and options in a shareable URL or code",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "Options.ToCode() / FromCode(); the lab page's addresses (D11, D17)"
+ },
+ "seed-versioned": {
+  "group": "Seeds and API",
+  "means": "seeds carry a generator version so old ones keep working",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "D4: v1-... seeds; rare among libraries, the fix for broken share links (Azgaar, watabou, Dyson Sphere Program)"
+ },
+ "hierarchical-address": {
+  "group": "Seeds and API",
+  "means": "any object regenerates alone from its address",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "D17; prototyped (Seeds.Child)"
+ },
+ "lazy-generation": {
+  "group": "Seeds and API",
+  "means": "objects generated on demand",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "D16: memory follows what the game opens"
+ },
+ "presets": {
+  "group": "Seeds and API",
+  "means": "named one-click presets",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "D15: SpaceOpera, Pocket, Roguelike, Plausible, Cozy, Epic"
+ },
+ "options-sliders": {
+  "group": "Seeds and API",
+  "means": "tunable parameters with ranges",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "5 KB",
+  "why": "D15: every option validated with a readable message"
+ },
+ "data-tables-editable": {
+  "group": "Seeds and API",
+  "means": "users replace or extend the tables",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "D7: C# records plus JSON tables by id; ScriptableObject adapter in the Unity package"
+ },
+ "hooks-plugins": {
+  "group": "Seeds and API",
+  "means": "code hooks and post-processors",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "D7: OnSystemGenerated-style hooks and a per-object Tags dictionary"
+ },
+ "constraints": {
+  "group": "Seeds and API",
+  "means": "\"at least one X\" guarantees",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "landmark guarantee and fair starts need it; deterministic repair pass on its own stream"
+ },
+ "explain-trace": {
+  "group": "Seeds and API",
+  "means": "show why a value is what it is",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "Explain() reads the rules after the fact, so it can come later"
+ },
+ "engine-neutral-data": {
+  "group": "Seeds and API",
+  "means": "plain data usable outside one engine",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "core",
+  "size": "0",
+  "why": "no Unity types; float adapters in the Unity package"
+ },
+ "deterministic-cross-platform": {
+  "group": "Seeds and API",
+  "means": "documented identical output on every OS and runtime",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "4 KB",
+  "why": "D5; golden tests on Windows, Linux, macOS, Mono and IL2CPP; nobody surveyed proves it"
+ },
+ "seed-search": {
+  "group": "Seeds and API",
+  "means": "search seeds for an output that matches a test",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "FindSeeds(predicate); cheap thanks to lazy generation; players already brute-force seeds"
+ },
+ "fill-around-fixed": {
+  "group": "Seeds and API",
+  "means": "pin known facts, generate the rest to match",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "writers start from one imagined world; a separate entry point leaves unpinned output alone"
+ },
+ "detail-levels": {
+  "group": "Seeds and API",
+  "means": "more detail never changes the major bodies",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "falls out of D17's per-purpose streams; Terra Invicta's model"
+ },
+ "overlay-diffs": {
+  "group": "Seeds and API",
+  "means": "player changes stored as a diff over the generated base",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "a game's job, but an Overlay type saves every user writing it"
+ },
+ "time-coordinate": {
+  "group": "Seeds and API",
+  "means": "orbital positions and seasons as functions of time",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "PositionAt(t) from orbital elements; additive"
+ },
+ "outlier-quota": {
+  "group": "Seeds and API",
+  "means": "a share of outputs may break the rules on purpose",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "Weirdness slider; part of the answer to oatmeal"
+ },
+ "universe-level": {
+  "group": "Universe, cluster and galaxy",
+  "means": "several galaxies",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "6 KB",
+  "why": "D14; a level above never changes a galaxy (D17), so it may slip to 1.1 if the estimate is over"
+ },
+ "cluster-level": {
+  "group": "Universe, cluster and galaxy",
+  "means": "galaxy groups, clusters, filaments, voids",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "D14; same slip rule as the universe level"
+ },
+ "galaxy-shapes": {
+  "group": "Universe, cluster and galaxy",
+  "means": "more than one galaxy shape",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "6 KB",
+  "why": "prototyped: spiral, barred, elliptical, ring, irregular; add cluster, colliding pair, starburst"
+ },
+ "custom-shape-map": {
+  "group": "Universe, cluster and galaxy",
+  "means": "an image or density map as the shape",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "a density-function hook; image decoding stays outside the library"
+ },
+ "spiral-arm-count": {
+  "group": "Universe, cluster and galaxy",
+  "means": "configurable arms",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "prototyped (2 to 4)"
+ },
+ "min-spacing": {
+  "group": "Universe, cluster and galaxy",
+  "means": "systems never overlap",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "prototyped; the game today has neighbours 2.7 units apart"
+ },
+ "regions-sectors": {
+  "group": "Universe, cluster and galaxy",
+  "means": "named regions or sectors",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "the game has Core, MidRim, OuterRim by radius; 1.0 grows named regions over the lane graph (prototyped)"
+ },
+ "region-traits": {
+  "group": "Universe, cluster and galaxy",
+  "means": "regions share age, theme, danger",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "prototyped (age, theme)"
+ },
+ "constellations": {
+  "group": "Universe, cluster and galaxy",
+  "means": "constellations and Bayer letters seen from home",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Names",
+  "size": "6 KB",
+  "why": "a separate naming pass from a chosen home (Star Control: Origins)"
+ },
+ "lanes-graph": {
+  "group": "Universe, cluster and galaxy",
+  "means": "hyperlanes between systems",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "4 KB",
+  "why": "prototyped (relative neighbourhood graph plus Gabriel edges)"
+ },
+ "lane-density": {
+  "group": "Universe, cluster and galaxy",
+  "means": "tunable lane density",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "0",
+  "why": "prototyped; the extra-edge roll is drawn for every pair, so the option shifts nothing else"
+ },
+ "chokepoints": {
+  "group": "Universe, cluster and galaxy",
+  "means": "chokepoints and bridges as data",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "prototyped (Tarjan bridges and articulation points)"
+ },
+ "wormholes-gates": {
+  "group": "Universe, cluster and galaxy",
+  "means": "long links, gates, relays, with requirements",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "Star Ruler 2's ring of wormholes for the universe level; gate requirements (A9)"
+ },
+ "travel-terrain": {
+  "group": "Universe, cluster and galaxy",
+  "means": "free travel changed by terrain instead of lanes",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "nebula fields on their own stream; a LaneMode option (lanes, terrain, both)"
+ },
+ "danger-levels": {
+  "group": "Universe, cluster and galaxy",
+  "means": "danger per system or sector",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "the game's 1 to 10 never reaches 10; 1.0 uses hops plus regional noise (prototyped)"
+ },
+ "radial-progression": {
+  "group": "Universe, cluster and galaxy",
+  "means": "difficulty or tier by distance from a centre, barrier rings",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "a pure function of position (Avorion)"
+ },
+ "factions-territory": {
+  "group": "Universe, cluster and galaxy",
+  "means": "factions placed on the map",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "grown over the lane graph on its own stream (idea 22); story first (D18)"
+ },
+ "start-fairness": {
+  "group": "Universe, cluster and galaxy",
+  "means": "balanced start positions",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "Starts(n) as a pass that reads the galaxy; 4X users need it"
+ },
+ "contested-richness": {
+  "group": "Universe, cluster and galaxy",
+  "means": "richer resources between starts",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "Star Ruler 2's score, applied by the start pass"
+ },
+ "nebulae-hazards": {
+  "group": "Universe, cluster and galaxy",
+  "means": "nebulae, storms, black holes on the map",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "the game has Nebula and Anomaly flags, switched off; 1.0 places hazards by region"
+ },
+ "galaxy-age-metallicity": {
+  "group": "Universe, cluster and galaxy",
+  "means": "age and metallicity change the content",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "prototyped as region age shifting the star mix"
+ },
+ "handmade-systems": {
+  "group": "Universe, cluster and galaxy",
+  "means": "hand-made systems mixed into the map",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "pinned systems by address (idea 25); the game's home system is the first user"
+ },
+ "run-map": {
+  "group": "Universe, cluster and galaxy",
+  "means": "a roguelike branching run map",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "extracted from the lane graph (idea 24); SpaceDeckBuilder2 is the first user"
+ },
+ "landmark-guarantee": {
+  "group": "Universe, cluster and galaxy",
+  "means": "a memorable feature at every scale",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "the answer to oatmeal; the prototype's system sheet shows the need"
+ },
+ "spectral-classes": {
+  "group": "Stars",
+  "means": "real spectral classes",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "prototyped; the game has seven coarse types and never rolls blue, giant or supergiant"
+ },
+ "star-physics": {
+  "group": "Stars",
+  "means": "mass, luminosity, radius, temperature consistent",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "prototyped; the game draws mass 0.8 to 2.5 for any type"
+ },
+ "star-remnants": {
+  "group": "Stars",
+  "means": "white dwarfs, neutron stars, black holes, giants",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "the game's centres include remnants and black holes; 1.0 adds giants and supergiants"
+ },
+ "multiple-stars": {
+  "group": "Stars",
+  "means": "binaries and multiples with configuration",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "the game names 2 and 3-body centres; 1.0 adds close or wide pairs that affect planets (prototyped)"
+ },
+ "habitable-zone": {
+  "group": "Stars",
+  "means": "habitable zone computed",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "prototyped"
+ },
+ "frost-line": {
+  "group": "Stars",
+  "means": "frost line computed",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "prototyped"
+ },
+ "star-age": {
+  "group": "Stars",
+  "means": "age and lifetime affect output",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "region age drives giants and white dwarfs (prototyped coarsely)"
+ },
+ "star-colour": {
+  "group": "Stars",
+  "means": "colour for rendering",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "prototyped (bands); blackbody table later"
+ },
+ "planet-types": {
+  "group": "Planets and moons",
+  "means": "varied planet kinds",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "3 KB",
+  "why": "the game has four; prototype has 13 by zone"
+ },
+ "orbit-spacing": {
+  "group": "Planets and moons",
+  "means": "believable spacing",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "prototyped (period ratio); the game adds 1.5 to 4 units"
+ },
+ "exo-demographics": {
+  "group": "Planets and moons",
+  "means": "system architecture from exoplanet statistics",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "peas in a pod, giants past the frost line, binaries suppressing planets; cheap and must be in 1.0"
+ },
+ "orbital-elements": {
+  "group": "Planets and moons",
+  "means": "eccentricity, inclination, period",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "on the planet's own stream; the game has Circular or Elliptical labels only"
+ },
+ "planet-physics": {
+  "group": "Planets and moons",
+  "means": "radius, mass, density, gravity",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "the game draws radius, density and gravity independently; 1.0 derives them"
+ },
+ "temperature-climate": {
+  "group": "Planets and moons",
+  "means": "temperature and climate bands",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "P10, P12 on the planet's streams"
+ },
+ "atmosphere": {
+  "group": "Planets and moons",
+  "means": "composition and pressure",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "the game has profiles but never uses them; 1.0 with the Jeans rule and a why note"
+ },
+ "hydrosphere": {
+  "group": "Planets and moons",
+  "means": "oceans and ice",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "P13"
+ },
+ "rotation-tilt": {
+  "group": "Planets and moons",
+  "means": "day length, tilt, tidal lock",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "P12, A7"
+ },
+ "biomes": {
+  "group": "Planets and moons",
+  "means": "biomes or surface types",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "4 KB",
+  "why": "biome shares from climate (P15) on their own stream"
+ },
+ "life-ladder": {
+  "group": "Planets and moons",
+  "means": "none to sentient, flora and fauna",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "the game has a life flag that never fires; 1.0 has the ladder (P3)"
+ },
+ "life-conditions-table": {
+  "group": "Planets and moons",
+  "means": "life placed by condition rows",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "condition rows for creature archetypes (Elite exobiology) on their own stream"
+ },
+ "habitability-score": {
+  "group": "Planets and moons",
+  "means": "habitability or Earth similarity",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "derived, per species preferences (P17)"
+ },
+ "resources": {
+  "group": "Planets and moons",
+  "means": "resources per planet",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "the game has belt deposits; 1.0 grades planets 1 to 5 by composition (P6)"
+ },
+ "moons": {
+  "group": "Planets and moons",
+  "means": "moons generated",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "the game's code exists but no archetype allows moons; prototyped by planet kind"
+ },
+ "rings": {
+  "group": "Planets and moons",
+  "means": "planetary rings",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "prototyped"
+ },
+ "asteroid-belts": {
+  "group": "Planets and moons",
+  "means": "asteroid belts",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "1 KB",
+  "why": "the game has belts that overlap planets 127 times in 200 systems; prototype places them in gaps"
+ },
+ "surface-map": {
+  "group": "Planets and moons",
+  "means": "surface map parameters",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "a parameter pack for engines (P16), no meshes; own stream"
+ },
+ "planet-traits": {
+  "group": "Planets and moons",
+  "means": "special traits or anomalies",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "6 KB",
+  "why": "P1, on its own stream; story first (D18)"
+ },
+ "terraforming": {
+  "group": "Planets and moons",
+  "means": "terraforming potential",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "derived T0 to T3 (P7)"
+ },
+ "stations": {
+  "group": "Content and story",
+  "means": "stations and starports",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "2 KB",
+  "why": "the game has 30 name combinations and stations orbiting planets that do not exist; 1.0 fixes both"
+ },
+ "population-society": {
+  "group": "Content and story",
+  "means": "population, government, law, tech",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "optional society layer (P5) on its own stream"
+ },
+ "trade-codes": {
+  "group": "Content and story",
+  "means": "trade or economy class",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "derived from the society layer"
+ },
+ "profile-code": {
+  "group": "Content and story",
+  "means": "compact UWP-style code",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "derived (idea 19)"
+ },
+ "story-tags": {
+  "group": "Content and story",
+  "means": "tags with enemies, friends, complications, things, places",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core (small table); UniverseGenerator.Text (full tables)",
+  "size": "8 KB core, 40 KB satellite",
+  "why": "the stand-out feature for writers (idea 21), own stream"
+ },
+ "points-of-interest": {
+  "group": "Content and story",
+  "means": "ruins, derelicts, anomalies",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "4 KB",
+  "why": "placement rules (idea 23, A6), own stream"
+ },
+ "history-events": {
+  "group": "Content and story",
+  "means": "history timeline or events",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "10 KB",
+  "why": "generate then explain (Caves of Qud), own stream"
+ },
+ "description-text": {
+  "group": "Content and story",
+  "means": "generated paragraphs",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "30 to 60 KB",
+  "why": "tag-filtered grammar; a one-line descriptor ships in core at 1.0"
+ },
+ "tag-filtered-text": {
+  "group": "Content and story",
+  "means": "text cannot contradict the data",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "with the grammar",
+  "why": "Improv's approach"
+ },
+ "gm-secrets": {
+  "group": "Content and story",
+  "means": "GM-only section and player-safe view",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "2 KB",
+  "why": "a secret per object in the text layer; a player-safe export"
+ },
+ "names-catalogue": {
+  "group": "Content and story",
+  "means": "catalogue-style astronomical names",
+  "status": "have",
+  "seeds": "yes",
+  "package": "core",
+  "size": "17 KB (star tables, gzip)",
+  "why": "the game's CelestialNaming; 1.0 keeps it with tables embedded instead of the 954 KB RandomNameGeneratorLibrary dependency"
+ },
+ "names-fantasy": {
+  "group": "Content and story",
+  "means": "invented or themed names",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core (one syllable set); UniverseGenerator.Names (culture sets)",
+  "size": "5 KB core, 50 to 150 KB satellite",
+  "why": "names on their own stream, so additive"
+ },
+ "names-hierarchical": {
+  "group": "Content and story",
+  "means": "names derived from the parent",
+  "status": "have",
+  "seeds": "-",
+  "package": "core",
+  "size": "0",
+  "why": "the game's planet letters and Roman-numeral moons"
+ },
+ "name-encodes-address": {
+  "group": "Content and story",
+  "means": "a name decodes to its address",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "an optional naming style (Elite boxel names)"
+ },
+ "culture-phonology": {
+  "group": "Content and story",
+  "means": "names from per-culture sound rules",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Names",
+  "size": "20 KB",
+  "why": "Syllabore (MIT, .NET Standard 2.0) as dependency or model"
+ },
+ "cultures-species": {
+  "group": "Content and story",
+  "means": "species and cultures",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "10 KB",
+  "why": "hooks for writers, own stream"
+ },
+ "creatures": {
+  "group": "Content and story",
+  "means": "creature archetypes",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "8 KB",
+  "why": "signature creature archetypes (A5)"
+ },
+ "map-render": {
+  "group": "Output and tools",
+  "means": "draws a 2D map",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "8 KB",
+  "why": "an SVG string export; the lab page draws in 1.0, the library export can follow"
+ },
+ "map-3d": {
+  "group": "Output and tools",
+  "means": "3D view",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "visual, not data; the library gives 3D coordinates and engines render"
+ },
+ "export-json": {
+  "group": "Output and tools",
+  "means": "JSON export",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "6 KB",
+  "why": "a versioned schema, hand-written writer (no reflection, D19)"
+ },
+ "export-markdown": {
+  "group": "Output and tools",
+  "means": "Markdown or Obsidian export",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "6 KB",
+  "why": "YAML properties, relative links, GM section (A3)"
+ },
+ "export-image": {
+  "group": "Output and tools",
+  "means": "PNG or SVG",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "with map-render",
+  "why": "SVG only; PNG is the caller's job"
+ },
+ "export-vtt": {
+  "group": "Output and tools",
+  "means": "Foundry or other VTT",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "5 KB",
+  "why": "journal-entry JSON after the writers' survey confirms the format"
+ },
+ "export-text-html": {
+  "group": "Output and tools",
+  "means": "text, HTML or PDF",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "3 KB",
+  "why": "plain text sheet; HTML is the lab page's job"
+ },
+ "export-csv": {
+  "group": "Output and tools",
+  "means": "CSV",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "2 KB",
+  "why": "for spreadsheets and writer-tool imports"
+ },
+ "edit-after-generate": {
+  "group": "Output and tools",
+  "means": "edit or lock, then regenerate the rest",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "with overlay-diffs",
+  "why": "pins plus overlay"
+ },
+ "open-source-licence": {
+  "group": "Output and tools",
+  "means": "source available",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "-",
+  "size": "-",
+  "why": "MIT"
+ },
+ "unity-integration": {
+  "group": "Output and tools",
+  "means": "Unity package",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "com.m4bwav.universe-generator",
+  "size": "-",
+  "why": "OpenUPM, same source (D8)"
+ },
+ "godot-integration": {
+  "group": "Output and tools",
+  "means": "Godot addon",
+  "status": "1.x",
+  "seeds": "-",
+  "package": "NuGet (Godot C#)",
+  "size": "-",
+  "why": "Godot 4 C# takes the NuGet package; a GDScript addon is out of scope"
+ },
+ "web-tool": {
+  "group": "Output and tools",
+  "means": "runs in a browser",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "markdavidrogers.com /labs/galaxy",
+  "size": "-",
+  "why": "D11"
+ },
+ "price": {
+  "group": "Output and tools",
+  "means": "free or paid",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "-",
+  "size": "-",
+  "why": "free"
+ },
+ "sub-seeds": {
+  "group": "Seeds and API",
+  "means": "every object exposes its own seed or stable id",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "D17: every object has Address and Seed"
+ },
+ "visited-cache": {
+  "group": "Seeds and API",
+  "means": "places are saved when first visited so later changes never alter them",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "versioned seeds (D4) solve it without storage; a game can still save what it wants"
+ },
+ "multiplayer-determinism": {
+  "group": "Seeds and API",
+  "means": "server and clients derive the same world from the seed",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "follows from D5 and the golden tests; say so in the README"
+ },
+ "determinism-tests": {
+  "group": "Seeds and API",
+  "means": "golden or hash tests in CI",
+  "status": "1.0",
+  "seeds": "-",
+  "package": "tests",
+  "size": "0",
+  "why": "D4, D5: Windows, Linux, macOS, Mono, IL2CPP"
+ },
+ "typed-units": {
+  "group": "Seeds and API",
+  "means": "values carry physical units",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "D16: Units option (game units, AU, ly, pc) on plain doubles; no UnitsNet dependency (size)"
+ },
+ "diagnostics": {
+  "group": "Seeds and API",
+  "means": "soft problems returned as typed warnings",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "D15: Validate() and budget trims report what changed"
+ },
+ "cited-assumptions": {
+  "group": "Seeds and API",
+  "means": "each assumption shown with its source",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "docs",
+  "size": "0",
+  "why": "the wiki's rules pages cite every formula; Explain() can link them"
+ },
+ "custom-fields": {
+  "group": "Seeds and API",
+  "means": "users add, rename or hide fields",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "0",
+  "why": "D7: per-object Tags dictionary"
+ },
+ "rpg-system-profiles": {
+  "group": "Seeds and API",
+  "means": "generation biased by a tabletop rule set",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "5 KB",
+  "why": "Traveller UWP and SWN tags as presets and exports; rules text not copied"
+ },
+ "real-star-catalogue": {
+  "group": "Universe, cluster and galaxy",
+  "means": "maps from real catalogue stars",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "game and fiction scale (D16, D18); catalogue data is large; a hand-made-systems hook covers a few real stars"
+ },
+ "connected-graph": {
+  "group": "Universe, cluster and galaxy",
+  "means": "every system reachable",
+  "status": "1.0",
+  "seeds": "yes",
+  "package": "core",
+  "size": "0",
+  "why": "the relative neighbourhood graph is connected (prototyped)"
+ },
+ "spatial-index": {
+  "group": "Universe, cluster and galaxy",
+  "means": "query what is in a cell",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "a grid index over positions; additive"
+ },
+ "pathfinding-routes": {
+  "group": "Universe, cluster and galaxy",
+  "means": "shortest routes over lanes",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "Route(a, b) by breadth-first search or A*; additive"
+ },
+ "visibility-helpers": {
+  "group": "Universe, cluster and galaxy",
+  "means": "fog of war helpers",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "game logic, not generation; the lane graph and positions give a game what it needs"
+ },
+ "galaxy-blend": {
+  "group": "Universe, cluster and galaxy",
+  "means": "several galaxy types blended",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "density functions compose (Gaia Sky channels); colliding pair ships in 1.0"
+ },
+ "comets": {
+  "group": "Planets and moons",
+  "means": "comets as bodies",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "minor bodies on their own detail stream"
+ },
+ "sky-view": {
+  "group": "Planets and moons",
+  "means": "what the sky looks like from the surface",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 KB",
+  "why": "apparent size and colour of suns and moons, derived; the gap writers noticed"
+ },
+ "local-calendar": {
+  "group": "Planets and moons",
+  "means": "day, year and seasons as a calendar",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Text",
+  "size": "2 KB",
+  "why": "derived from rotation and orbit"
+ },
+ "npcs": {
+  "group": "Content and story",
+  "means": "named characters tied to places",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "characters belong to RandomNameGeneratorLibrary or the game; the library gives culture and name hooks"
+ },
+ "entity-links": {
+  "group": "Content and story",
+  "means": "typed links between objects",
+  "status": "1.0",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "addresses are links; factions, lanes and neighbours reference addresses"
+ },
+ "llm-text": {
+  "group": "Content and story",
+  "means": "prose written by a language model",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "non-deterministic, needs a service; tag-filtered grammar instead. A caller can still feed our data to a model"
+ },
+ "history-log": {
+  "group": "Output and tools",
+  "means": "a log of earlier results",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "lab page",
+  "size": "-",
+  "why": "the lab page keeps recent seeds in the browser"
+ },
+ "share-gallery": {
+  "group": "Output and tools",
+  "means": "public gallery of shared results",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "lab page",
+  "size": "-",
+  "why": "seed URLs are shareable; a gallery is a site feature for later"
+ },
+ "player-view-live": {
+  "group": "Output and tools",
+  "means": "live redacted view for players",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "a VTT's or site's job; the player-safe export feeds it"
+ },
+ "player-safe-export": {
+  "group": "Output and tools",
+  "means": "export that strips GM content",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "1 KB",
+  "why": "with the GM secrets"
+ },
+ "export-traveller-map": {
+  "group": "Output and tools",
+  "means": "Traveller SEC sector files",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "3 KB",
+  "why": "needs the profile code; a reach into an active community"
+ },
+ "export-wiki-site": {
+  "group": "Output and tools",
+  "means": "a static wiki or site",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "2 KB",
+  "why": "a folder of Markdown files is the route (LegendKeeper, Foundry MD to Journal)"
+ },
+ "export-wiki-tool": {
+  "group": "Output and tools",
+  "means": "export shaped for a wiki app",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "UniverseGenerator.Exports",
+  "size": "3 KB",
+  "why": "World Anvil and Kanka imports are closed or paid; Markdown first"
+ },
+ "import-foreign": {
+  "group": "Output and tools",
+  "means": "imports other tools' formats",
+  "status": "rejected",
+  "seeds": "no",
+  "package": "-",
+  "size": "-",
+  "why": "a generator, not a converter; hand-made systems take our own JSON"
+ },
+ "editor-preview": {
+  "group": "Output and tools",
+  "means": "preview in the engine editor",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "Unity package",
+  "size": "10 KB",
+  "why": "a Gizmos sample in Samples~ at 1.0; an editor window later"
+ },
+ "dice-tables-printable": {
+  "group": "Output and tools",
+  "means": "also printable as dice tables",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "docs",
+  "size": "-",
+  "why": "the wiki can print the tables for table play"
+ }
+}
