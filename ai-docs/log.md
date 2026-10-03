@@ -110,3 +110,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | dotnet add package refuses --version together with --prerelease (SDK 10.0.401); use --prerelease alone or --version alone. Attestation must be verified on the run's artifact: the nupkg from nuget.org carries the repository signature, so its digest differs
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] handoff | rewritten: 1.0.0-beta.1 published and verified; waiting for Mark to choose N1 (towards 1.0.0) or Stage 5; next-session-prompt.md rewritten
+## [2026-10-03] decision | Mark chose N1 first (towards 1.0.0), Stage 5 after 1.0.0; next-session-prompt.md rewritten for N1 (ruling table first, then build or move per row, then the 1.0.0 release pull request)
+## [2026-10-03] index | rebuilt (17 entries)

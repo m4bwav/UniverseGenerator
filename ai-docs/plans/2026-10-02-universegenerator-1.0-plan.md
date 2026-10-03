@@ -348,4 +348,4 @@ Mark asked whether the package could be F# compiled by Fable, so one source also
 
 ## Next single action
 
-**Mark chooses what comes next: Stage 4's 1.0.0 items (N1 first: build the unbuilt 1.0 matrix rows or move them to 1.x, [the Stop 2 note](../notes/2026-10-03-stop-2-questions.md)) or Stage 5 (the Unity compile check, OpenUPM).** 1.0.0-beta.1 is on nuget.org and verified (2026-10-03, [the Stage 4 checklist](../notes/2026-10-03-stage-4-checklist.md) step 7). The next session's prompt is [next-session-prompt.md](../next-session-prompt.md). Nothing gets tagged or published without Mark.
+**N1, chosen by Mark on 2026-10-03: the unbuilt 1.0 matrix rows, each built or moved to 1.x as he rules ([the Stop 2 note](../notes/2026-10-03-stop-2-questions.md)); then the 1.0.0 release pull request. Stage 5 (Unity, OpenUPM) after 1.0.0.** 1.0.0-beta.1 is on nuget.org and verified (2026-10-03, [the Stage 4 checklist](../notes/2026-10-03-stage-4-checklist.md) step 7). The next session's prompt is [next-session-prompt.md](../next-session-prompt.md). Nothing gets tagged or published without Mark.
