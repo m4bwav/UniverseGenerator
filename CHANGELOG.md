@@ -4,7 +4,7 @@ All notable changes to this package are documented here. The format follows [Kee
 
 The seed promise: from 1.0.0, a seed and a generator version give the same output on every supported runtime for the whole major version. A change that would alter any seed's output adds a generator version and keeps the old one selectable.
 
-## [1.0.0-beta.1] - Unreleased
+## [1.0.0-beta.1] - 2026-10-03
 
 The first release: a new package, extracted from the game SpaceDeckBuilder2 and rebuilt on stable seeds.
 
@@ -26,4 +26,4 @@ The first release: a new package, extracted from the game SpaceDeckBuilder2 and 
 
 ### Size
 
-Measured by the size gate (`scripts/size-gate.py`), every metric green: nupkg 373.5 KB (green under 1 MB), largest DLL 499.0 KB (green under 750 KB), Unity package 456.9 KB unpacked (green under 2 MB) and 116.0 KB compressed, 35 Runtime source files and 9,736 lines.
+Measured by the size gate (`scripts/size-gate.py`), every metric green: nupkg 373.2 KB (green under 1 MB), largest DLL 499.0 KB (green under 750 KB), Unity package 456.9 KB unpacked (green under 2 MB) and 114.5 KB compressed, 35 Runtime source files and 9,736 lines.
