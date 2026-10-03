@@ -42,18 +42,27 @@ jobs:
           global-json-file: global.json
           cache: true
           cache-dependency-path: '**/packages.lock.json'
-      # The seed promise (AGENTS.md): golden files are added, never changed or deleted.
-      - name: No committed golden file changed
+      # The seed promise (AGENTS.md): a golden file in a release never changes; the legacy recordings never change.
+      - name: No released golden file changed
         env:
           BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
-          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
-            echo "no base commit to compare with"
+          if [ -n "$BASE" ] && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            changed=$(git diff --name-only --diff-filter=MDR "$BASE" HEAD -- tests/Golden/legacy)
+            if [ -n "$changed" ]; then
+              echo "::error::the legacy recordings are a record and never change: $changed"
+              exit 1
+            fi
+          fi
+          tags=$(git tag -l 'v*' --sort=-v:refname)
+          tag=${tags%%$'\n'*}
+          if [ -z "$tag" ]; then
+            echo "nothing released yet: a golden file may still be rewritten on purpose, said in the commit message"
             exit 0
           fi
-          changed=$(git diff --name-only --diff-filter=MDR "$BASE" HEAD -- tests/Golden)
+          changed=$(git diff --name-only --diff-filter=MDR "$tag" HEAD -- tests/Golden)
           if [ -n "$changed" ]; then
-            echo "::error::golden files changed or deleted (add a generator version instead): $changed"
+            echo "::error::golden files released in $tag changed or deleted (add a generator version instead): $changed"
             exit 1
           fi
       - run: dotnet restore --locked-mode

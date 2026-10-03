@@ -17,15 +17,18 @@ Knowledge base: [../../kb/INDEX.md](../../kb/INDEX.md) (feature matrix, sources,
 
 ## Status
 
-Active. Stages 0, 1 and 2 done on 2026-10-02. **Stop 1 ruled on 2026-10-02:** Mark chose the recommendation on all eight questions asked (D20 embed the star tables; D18 game-tuned star mix; D16 60 systems with automatic shapes; D21 core plus add-on packages; D14 all six levels, cluster and universe to 1.1 if Stage 3 runs long; D1 UniverseGenerator; D10 the game chooses, saves and shows its galaxy seed in Stage 5; D23 descriptor and tags in the 1.0 core, paragraphs in the Text add-on). The decisions not asked stand as recommended. Stage 3 began 2026-10-02: the repository exists (private) with this plan, `kb/`, the legacy recordings, AGENTS.md and the everlast doc set; the code comes next.
+Active. Stages 0, 1 and 2 done on 2026-10-02. **Stop 1 ruled on 2026-10-02:** Mark chose the recommendation on all eight questions asked (D20 embed the star tables; D18 game-tuned star mix; D16 60 systems with automatic shapes; D21 core plus add-on packages; D14 all six levels, cluster and universe to 1.1 if Stage 3 runs long; D1 UniverseGenerator; D10 the game chooses, saves and shows its galaxy seed in Stage 5; D23 descriptor and tags in the 1.0 core, paragraphs in the Text add-on). The decisions not asked stand as recommended. Stage 3 began 2026-10-02: the repository exists (private) with this plan, `kb/`, the legacy recordings, AGENTS.md and the everlast doc set. The C# core (seeds, DMath, addresses, JSON writer, golden test identical on .NET 10 and .NET Framework 4.8, CI on the self-hosted runner) is on branch `stage3-core`, draft PR #1.
+
+**Language change, 2026-10-02 (D26):** Mark asked to write the package in F# and compile it with Fable, so the same source also ships to npm (his research: `Ai/typescript-csharp-dual-packages-2026.md`, route 4). This plan now follows that. It changes D8, D11, D15 and D19 and adds D26 to D31; the questions marked **Stop 1b** need his ruling, and Stage 3 now opens with a Fable spike whose result can still stop the switch (gate below). The C# core becomes the reference for the port.
 
 ## Goal
 
+- One F# source, three registries: NuGet, npm and OpenUPM (D26).
 - The best seeded space generator anyone can install for games and fiction: universe, galaxy cluster, galaxy, star system, planet, moons and belts, every level usable alone or nested.
 - Easy start (one line with defaults), deep options (presets, options, tables, hooks), game scale by default.
-- One seed, one result, on every runtime: Windows, Linux and macOS on .NET 10 and .NET Framework 4.8, Unity Mono and IL2CPP, for the whole 1.x line, enforced by golden tests.
+- One seed, one result, on every runtime: Windows, Linux and macOS on .NET 10 and .NET Framework 4.8, Unity Mono and IL2CPP, and JavaScript (Node and browsers, through Fable), for the whole 1.x line, enforced by the same golden files.
 - Small: green on the D19 budget (nupkg under 1 MB, UPM under 2 MB unpacked, under 300 KB added to a WebGL build, a default galaxy under 50 ms).
-- Released through nuget.org Trusted Publishing with Mark's approval, then OpenUPM; the game uses the package; the lab page and post link everything to SpaceDeckBuilder2.
+- Released through nuget.org and npm trusted publishing with Mark's approval, then OpenUPM; the game uses the package; the lab page and post link everything to SpaceDeckBuilder2.
 
 ## Where it stands (survey 2026-10-02)
 
@@ -69,23 +72,29 @@ Stage 0 and 1 changes are marked **(changed)** or **(new)**.
 | D5 | Float determinism **(changed)** | integer decisions; maths from + - * / and sqrt only (DMath: Exp, Log, Pow, Sin, Cos, Atan2 by series); doubles rounded before storing; test an ARM64 IL2CPP build for fused multiply-add | Mono's double-precision float maths measured in Stage 0 | fixed point |
 | D6 | Improvements for 1.0 | the Stage 1 table below: everything that changes seeds is in 1.0; additive features may follow in 1.x | | cheap ideas only |
 | D7 | Extension point | tables as C# records plus JSON by id, a per-object Tags dictionary, generation hooks | | inheritance only |
-| D8 | Source layout | one source folder `Packages/com.m4bwav.universe-generator/Runtime/` (asmdef with noEngineReferences), compiled by src/UniverseGenerator/UniverseGenerator.csproj for `netstandard2.0;net10.0`, LangVersion 9; tests `net10.0;net48`; one tag releases both | | subtree split branch |
+| D8 | Source layout **(changed by D26)** | F# source in `src/UniverseGenerator/` (fsproj, `netstandard2.0;net10.0`); Fable compiles the same files to `npm/` (TypeScript, then JavaScript with .d.ts); the Unity package `Packages/com.m4bwav.universe-generator/` ships the built `netstandard2.0` DLLs under `Runtime/Plugins/` with committed `.meta` files, copied in by a script before each tag; tests `net10.0;net48` plus the same tests compiled by Fable and run in Node; one tag releases all three | Unity cannot compile F#, so the one-folder C# layout of 2026-10-02 no longer applies | C# source folder as before (no npm) |
 | D9 | Visibility | private until Mark approves the Stage 3 pull request and the secret scan; then public, then 1.0.0-beta.1 | | public at once |
 | D10 | Game switch **(changed)** | yes, after OpenUPM 1.0.0; and the game starts choosing, saving and showing its galaxy seed (it stores none today), so "same seed as the lab page" can be checked | Stage 0 | leave the game on its copy |
-| D11 | Lab page | server-side Razor pages with inline SVG in markdavidrogers-web; one page per address; JSON export; rate limit and long cache | | TypeScript port |
+| D11 | Lab page **(changed by D26; Stop 1b)** | the page runs the npm package in the browser: generation on the visitor's machine, no server load or rate limit, the same seed text as the game and NuGet; inline SVG, one URL per address, JSON export | the npm build makes it free; it also proves the seed promise across languages in public | server-side Razor pages, as first recommended |
 | D12 | Blog post | `draft: true`, `ai: generated`; Mark edits and publishes | | outline only |
 | D13 | Docs | README, CHANGELOG, AGENTS.md, SECURITY.md, Samples~ (Gizmos scene), wiki by wikiwright | | |
 | D14 | Levels **(changed)** | all six in 1.0, built in the order system, galaxy, planet, moon and belt detail, cluster, universe; if Stage 3 runs long, cluster and universe move to 1.1 (no seed changes, D17). Estimate below: about 21 working days | | galaxy, system and planet only |
-| D15 | Ease of use | three layers; the README's first example is below and needs no reading | | options only |
+| D15 | Ease of use **(changed by D26)** | three layers; the README's first example is below and needs no reading. One example per audience: C#, F# and TypeScript (D29) | | options only |
 | D16 | Game scale **(changed)** | defaults: galaxy of **60** systems (prototype: 40 is too few for a spiral to read; ellipticals, rings and irregulars read at 40); `Shape = Auto` picks only shapes that read at the requested count (spirals and bars from 80); every count capped by `GenerationBudget`; coordinates per level within float-safe ranges; lazily generated by address | Stage 1 contact sheets | real counts and units |
 | D17 | Seed scheme | hierarchical: child = SplitMix64(parent, label, index); one stream per purpose; versioned, URL-safe seed strings that are addresses | prototyped | flat seeds |
 | D18 | Games and writing first | default star mix game-tuned (M 31%, K 21%, G 14%, F 10%, white dwarf 7%, A 6%, giant 5%, B 3%, rest under 1% each); `Preset.Plausible` uses the real shares (M 73%); story hooks, names, readable maps first | prototyped; the game today never rolls blue stars or giants | science first |
-| D19 | Size budget | as the size-budget note; CI gate; warn at yellow; never red | | react later |
+| D19 | Size budget **(changed by D26)** | as the size-budget note; CI gate; warn at yellow; never red. New metrics: npm unpacked size and the minified, gzipped browser bundle of the default galaxy (green under 60 KB). FSharp.Core counts against the Unity package (D28) | | react later |
 | D20 | Star names **(new)** | embed RandomNameGeneratorLibrary's star tables (Mark's own MIT code; 61 KB raw, 17 KB gzipped) in the core, drawn with the package's PCG32; no dependency on that package | the whole package is 954 KB and takes a System.Random, which breaks D3 and adds about 1 MB to every install and WebGL build | depend on RandomNameGeneratorLibrary |
 | D21 | Package split **(new)** | `UniverseGenerator` core at 1.0; satellites additive in 1.x: `UniverseGenerator.Names` (culture name sets, constellations), `UniverseGenerator.Text` (description grammar, history, cultures, creatures), `UniverseGenerator.Exports` (Markdown/Obsidian, CSV, SVG, Traveller, VTT); `UniverseGenerator.All` metapackage; the same split as UPM packages | keeps the core green on every metric while features grow | one package |
 | D22 | Knowledge base **(new)** | the research lives in the repository's `kb/` (moved from the maintainer's private run record): the generated feature matrix, sources and rules; the wiki publishes the matrix, the rules and how-to pages | Mark, 2026-10-02: "The AI should store a knowledge base in md files and/or the repo wiki" | wiki only |
 | D23 | Text for writers **(new)** | 1.0 core gives each object a one-line descriptor from its data ("a cold ocean world under a red dwarf") and story tags on their own stream; full paragraphs, history and GM secrets come in `UniverseGenerator.Text` 1.x, built as a tag-filtered grammar so text never contradicts data | Fantasy Name Generators' prose is what writers use most; filtered grammar (Improv) keeps it honest | paragraphs in 1.0 core |
 | D24 | Landmarks and variety **(new)** | every system gets at least one landmark (an unusual star, ringed giant, living world, belt, ruin or hazard), every region a monument, every galaxy a few beacons; a Weirdness slider sets an outlier share (default 5%) | the prototype's 50-system sheet still looks alike at a glance; Hervé et al. 2025, Kreminski 2023 | none |
+| D26 | Language **(new, Mark 2026-10-02)** | F#, compiled for .NET by the F# compiler and for JavaScript by Fable 5 (5.18.0 on 2026-09-25); the C# core of 2026-10-02 is ported, not kept | one source for NuGet and npm; Fable is the most mature single-source route (Mark's research note); the determinism rules already avoid what differs between .NET and JS (C-library maths, culture, hashing) | C# with a TypeScript port sharing golden files (route 1); Metano (C# to TS, too young) |
+| D27 | Determinism under Fable **(new)** | add to `kb/rules/determinism.md`: every wrapping integer operation in `uint64`/`int64` (Fable maps them to BigInt and wraps exactly); `int32`/`uint32` only where no value can overflow, because Fable compiles them to JS numbers that do not wrap ("without expected truncation to 32 bits on overflow", fable.io compatibility page, read 2026-10-02); no `float32`; no `BitConverter` in DMath (powers of two from a table, the exponent by halving); no `sprintf` or `printf` in the library (reflection on .NET, size in JS); ordinal string comparison only; no reliance on dictionary order. The spike proves the golden bits match in Node | the seed promise must hold in JS too | |
+| D28 | Unity delivery **(new, Stop 1b)** | precompiled `UniverseGenerator.dll` plus `FSharp.Core.dll` (netstandard2.0) in the UPM package. FSharp.Core 10.0.100's netstandard2.0 DLL is 2.39 MB (6.0.7's: 3.07 MB; measured 2026-10-02), which puts the UPM package in yellow (2 to 5 MB) on its own; the spike measures the IL2CPP WebGL delta after stripping, and tries trimming FSharp.Core into the package's DLL (ILLink or ILRepack) as the way back to green | Unity cannot compile F# source | NuGetForUnity only (no OpenUPM); a C# port for Unity (two sources again) |
+| D29 | Public API per audience **(new)** | the core in F# modules and records; a C# surface in the same assembly (static `Generate` methods, `IReadOnlyList`, nullable values instead of `option`, and `options.With(systems: 120, shape: GalaxyShape.Barred)` with named optional parameters, because C#'s `with` does not work on F# records); a TypeScript surface from Fable (camelCase functions, plain option objects: `Galaxy.generate("my-seed", { systems: 120 })`). Golden tests run on the core, so every surface shares the same output | each audience gets an idiomatic API from one source | one F#-shaped API everywhere |
+| D30 | Dependencies **(new, Stop 1b)** | NuGet: FSharp.Core only, pinned to the lowest version the code needs (package-modernize F# rule: `DisableImplicitFSharpCoreReference`, never bundled); C# users then install about 3 MB more. npm: `@fable-org/fable-library-js` (2.8.0, 736 KB unpacked; bundlers keep only what is used) or Fable's inlined library, whichever the spike shows smaller. The "no dependencies" line of the Security section becomes "one runtime dependency per registry" | | |
+| D31 | npm name and release **(new)** | `universe-generator` (free on 2026-10-02; unscoped like Mark's other npm packages); ESM with .d.ts, Node 20+ and browsers; released through npm trusted publishing (staged, Mark approves with 2FA), as get-title-at-url 3.0.0 | | `@m4bwav/universe-generator` |
 | D25 | Legacy recordings **(new)** | keep them in the new repository's `tests/Golden/legacy/` as the record of the game before the switch; no test compares against them | D3 drops legacy output | delete |
 
 ## Stage 1: every idea, with its decision
@@ -260,29 +269,43 @@ Console.WriteLine(planet.Address);           // v1-my-seed/galaxy/system/31/plan
 var same = Universe.At(planet.Address);      // any object regenerates alone from its address
 ```
 
-Every level has the same pair of entry points: `Universe.Generate`, `GalaxyCluster.Generate`, `Galaxy.Generate`, `StarSystem.Generate`, `Planet.Generate`, each taking a seed text (or a 64-bit seed) and optionally a preset or options. Options validate with readable messages ("Systems must be 1 to 2000; you asked for 0"). Output is plain records (no engine types), with coordinates as doubles in the chosen units and a float adapter in the Unity package. Throws ArgumentException only for invalid options; generation itself never throws.
+F# and TypeScript (D29):
+
+```fsharp
+let galaxy = Galaxy.generate "my-seed" { Preset.spaceOpera with Systems = 120; Shape = Barred }
+```
+
+```ts
+import { Galaxy } from "universe-generator";
+const galaxy = Galaxy.generate("my-seed", { systems: 120, shape: "barred" });
+```
+
+In C#, `Preset.SpaceOpera with { ... }` becomes `Preset.SpaceOpera.With(systems: 120, shape: GalaxyShape.Barred)` (D29). Every level has the same pair of entry points: `Universe.Generate`, `GalaxyCluster.Generate`, `Galaxy.Generate`, `StarSystem.Generate`, `Planet.Generate`, each taking a seed text (or a 64-bit seed) and optionally a preset or options. Options validate with readable messages ("Systems must be 1 to 2000; you asked for 0"). Output is plain records (no engine types), with coordinates as doubles in the chosen units and a float adapter in the Unity package. Throws ArgumentException only for invalid options; generation itself never throws.
 
 ## Build and package specifics
 
-- Layout per D8; the package-modernize NuGet templates (`Library.csproj.template`, `Directory.Build.props`, `global.json`, workflows) copied, not written from memory.
-- Embedded data: the star tables gzipped as embedded resources in the netstandard2.0 and net10.0 DLL; for Unity, the same files as `.bytes` TextAssets behind a small loader, because OpenUPM builds from source and precompiled DLLs need workarounds (the size-budget note's open question, answered for TextAssets unless the OpenUPM check in Stage 5 proves a data DLL works).
+- Layout per D8; the package-modernize NuGet templates (`Directory.Build.props`, `global.json`, workflows) copied, not written from memory, with the skill's F# rules (references/nuget.md, "F# packages"; worked example m4bwav/IsImageUrlDotNet): FSharp.Core pinned, Fantomas `--check` in CI (dotnet format does nothing for F#), `--warnon:1182,3390`, the F# analyzers, a C# test project for the C# surface. npm side from the npm templates (get-title-at-url 3.0.0).
+- Embedded data: the star tables as string literals in a generated source file (`scripts/embed-star-tables.py`, written 2026-10-02 for C#; it will write F#), split on first use. The same text compiles for .NET and Fable, so no resource loader, TextAsset or per-runtime file reading (this replaces the earlier gzipped-resource and TextAsset plan).
 - `IsTrimmable` and `IsAotCompatible` on net10.0; no reflection; a hand-written JSON writer.
-- CI on the self-hosted runner while private (package-modernize references/private-repo-ci.md), GitHub-hosted Windows, Linux and macOS once public.
+- CI on the self-hosted runner while private (package-modernize references/private-repo-ci.md; runner `universe` registered 2026-10-02, first run green), GitHub-hosted Windows, Linux and macOS once public. CI adds the Fable build, the golden tests in Node, and the npm pack check.
 
 ## Stages from here
 
 ### Stage 3: new repository and 1.0 code
 - [x] Create m4bwav/UniverseGenerator (or the ruled name), private; everlast, AGENTS.md, CLAUDE.md with the AGENTS.md import line; copy this plan, the knowledge base (to `kb/`) and the legacy recordings (to `tests/Golden/legacy/`).
-- [ ] Core, then the levels in D14's order, each merged with its tests; the prototype (`Tests/GalaxyPrototype` on the game repository's capture branch) is the starting point.
+- [x] C# core with its golden test and CI (2026-10-02; branch `stage3-core`, draft PR #1). Now the reference for the F# port.
+- [ ] **Stop 1b** (Mark): D28 Unity delivery and its yellow size, D30 the FSharp.Core dependency, D11 the lab page in the browser.
+- [ ] **Fable spike (1 to 2 days), the gate for D26.** Port the core (Pcg32, Seeds, DMath, Address, JSON writer) to F#; build it for net10.0, net48 and with Fable for Node; the existing `tests/Golden/v1/core.json` must match bit for bit in all three. Measure: the npm bundle of the core (minified, gzipped), Node speed of 10,000 PCG32 draws on BigInt, the Unity IL2CPP WebGL delta with FSharp.Core stripped, and a trimmed or merged FSharp.Core. Stop and report to Mark if the golden bits differ in Node and cannot be fixed, or the Unity delta is red (over 1 MB); the fallback is route 1 (C# plus a TypeScript port on shared golden files).
+- [ ] Core, then the levels in D14's order, each merged with its tests; the prototype (`Tests/GalaxyPrototype` on the game repository's capture branch) is the starting point, and the star system design is [the 2026-10-02 note](../notes/2026-10-02-star-system-level-design.md).
 - [ ] Golden seeds v1, property tests, distribution tests against the preset's own targets, hierarchy tests, the Unity compile check, scale tests, BenchmarkDotNet, the D19 size gate.
 - [ ] README (the example above first, then the feature matrix's short form), CHANGELOG, samples. **Stop 2: pull request review.**
 
-### Stage 4: NuGet release
-- [ ] Mark makes the repository public after the secret and history scan; creates the Trusted Publishing policy (scope allowing new packages); approves each deployment.
-- [ ] 1.0.0-beta.1 rehearsal, verified from nuget.org; then 1.0.0; PackageValidationBaselineVersion 1.0.0.
+### Stage 4: NuGet and npm release
+- [ ] Mark makes the repository public after the secret and history scan; creates the nuget.org Trusted Publishing policy (scope allowing new packages) and the npm trusted publisher for `universe-generator`; approves each deployment.
+- [ ] 1.0.0-beta.1 rehearsal on both registries (npm under the `beta` dist-tag), verified from nuget.org and the npm registry with fresh consumers (C#, F#, TypeScript in Node and a browser bundle); then 1.0.0; PackageValidationBaselineVersion 1.0.0.
 
 ### Stage 5: OpenUPM, then the game's switch
-- [ ] Scratch Unity 6 project: install by git URL, run the sample, EditMode golden tests in Mono and an IL2CPP player (one ARM64 build for the fused multiply-add check); measure the WebGL build-size delta.
+- [ ] Scratch Unity 6 project: install by git URL (the DLLs under Runtime/Plugins), run the sample, EditMode golden tests in Mono and an IL2CPP player (one ARM64 build for the fused multiply-add check); check FSharp.Core under IL2CPP (no tail-call reliance, no reflection); measure the WebGL build-size delta.
 - [ ] Prepare the OpenUPM submission; Mark opens it.
 - [ ] The game's switch on a branch, with the galaxy seed saved and shown (D10). **Stop 3.**
 
@@ -294,7 +317,7 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 
 | Layer | What it proves | How | Runs where |
 |---|---|---|---|
-| Golden v1 | a seed's output never changes within 1.x | committed JSON per level for fixed seeds, compared as text after rounding | net10.0 and net48 on Windows, Linux, macOS; Unity Mono and IL2CPP |
+| Golden v1 | a seed's output never changes within 1.x | committed JSON per level for fixed seeds, compared as text after rounding | net10.0 and net48 on Windows, Linux, macOS; Node (Fable); Unity Mono and IL2CPP |
 | Canary | the golden test can fail | a planted change in a rule turns it red | CI once, logged |
 | Properties | no NaN, names unique per galaxy, orbits increasing, lanes connected, belts clear of planets, stations orbit real bodies | NUnit over 10,000 seeds | all |
 | Hierarchy | a system alone equals the same system in its galaxy; a level above never changes a galaxy | address round trips | all |
@@ -305,7 +328,7 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 
 ## Security
 
-No network, no file access beyond its own embedded tables, no reflection, no dependencies. Publishing only through Trusted Publishing from `release.yml` with the `nuget` environment's reviewer. The public history starts clean: the game repository's history is never copied, and a secret and name scan runs before the repository goes public.
+No network, no file access, no reflection; one runtime dependency per registry (FSharp.Core on NuGet, Fable's library on npm; D30). Publishing only through Trusted Publishing from `release.yml` with the `nuget` environment's reviewer. The public history starts clean: the game repository's history is never copied, and a secret and name scan runs before the repository goes public.
 
 ## Verification checklist
 
@@ -321,10 +344,11 @@ No network, no file access beyond its own embedded tables, no reflection, no dep
 - WebGL size: a core of about 200 KB of IL may add 120 to 250 KB Brotli to a WebGL build; green, but near the 300 KB line. Measured in Stage 5; satellites keep text and exports out of the core.
 - IL2CPP on ARM64 may contract multiply-add (D5); the golden test there decides.
 - OpenUPM and embedded data: TextAssets unless a data DLL proves fine.
-- The effort estimate (21 days) is a guess from the prototype; cluster and universe are the release valve.
+- The effort estimate (21 days) is a guess from the prototype; cluster and universe are the release valve. D26 adds about 5 days: the spike (1 to 2), npm packaging and CI (2), the C# and TypeScript surfaces (1 to 2).
+- Fable risks (D26, D27): int32 arithmetic that silently stops wrapping in JS; BigInt speed for PCG32 in JS (a 60-system galaxy needs tens of thousands of draws; the spike times it, and a 32-bit-halves PCG32 is the fallback); FSharp.Core size in Unity (D28); IL2CPP and F# (tail calls are ignored, so recursion must stay shallow).
 
 ## Next single action
 
-Stage 3: check the name is still free on nuget.org and GitHub, then create m4bwav/UniverseGenerator (private).
+Mark rules Stop 1b (D28, D30, D11). The Fable spike can start meanwhile, since its measurements inform those rulings: port `Runtime/Core/*.cs` to F# and make `tests/Golden/v1/core.json` pass on net10.0, net48 and Node.
 
 Related: [the extraction plan](2026-10-02-galaxy-generator-extraction.md), [knowledge base](../../kb/INDEX.md), [Stage 0 note](../notes/2026-10-02-galaxy-stage0-survey-and-capture.md), [size budget](../notes/2026-10-02-package-size-budget.md).
