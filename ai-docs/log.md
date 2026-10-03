@@ -90,3 +90,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] verify | Status check for the next session: repository still private, runner universe still registered and online, no environments (so no nuget or NUGET_USER), no v* tag, no release run; every agent step waits for Mark, nothing applied; next-session-prompt.md kept as it was
+## [2026-10-03] update | Mark removed the runner universe (runners list empty, no workflow names self-hosted); at his explicit request the agent made the repository public (gh repo edit --visibility public); reads back PUBLIC
+## [2026-10-03] add | Public-repository settings, all accepted on the free plan and read back: secret scanning and push protection enabled, private vulnerability reporting enabled, workflow token read with no pull request approval, ruleset master 24430276 (deletion, non_fast_forward, required check ci, admin bypass), ruleset Tags only by admins 24430278 (all tags, package-modernize template unchanged); recorded in the checklist
+## [2026-10-03] handoff | rewritten: waiting for Mark (Trusted Publishing policy, nuget environment); next-session-prompt.md rewritten (release pull request, then nuget.org verification)
+## [2026-10-03] index | rebuilt (17 entries)
