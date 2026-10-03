@@ -12,7 +12,8 @@ namespace UniverseGeneration
     public static class Universe
     {
         /// <summary>
-        /// Regenerates the object at <paramref name="address"/>, such as <c>v1-my-seed/galaxy/system/31/planet/2</c>: a
+        /// Regenerates the object at <paramref name="address"/>, such as <c>v1-my-seed/galaxy/system/31/planet/2</c> or
+        /// <c>v1-my-seed/planet</c> (a planet generated on its own): a
         /// <see cref="Galaxy"/>, <see cref="StarSystem"/>, <see cref="Planet"/>, <see cref="Moon"/> or <see cref="Station"/>.
         /// An address does not carry options, so pass the ones the object was generated with.
         /// </summary>
@@ -52,8 +53,22 @@ namespace UniverseGeneration
                 case "system":
                     system = StarSystemGenerator.Generate(where, SystemContext.Alone, o);
                     break;
+                case "planet":
+                    var lone = PlanetGenerator.Generate(where, o);
+                    if (path.Count == 0)
+                    {
+                        return lone;
+                    }
+
+                    var moon = Pick(lone.Moons, path, step++, "moon", where);
+                    if (step < path.Count)
+                    {
+                        throw new ArgumentException($"Nothing in this package lies below {Describe(path, step)}; the address goes on with \"{path[step].Label}/{path[step].Index.ToString(CultureInfo.InvariantCulture)}\".", nameof(address));
+                    }
+
+                    return moon;
                 default:
-                    throw new ArgumentException($"\"{a.Root}\" is not a level this package generates; an address starts from galaxy or system, as in v1-my-seed/galaxy/system/3.", nameof(address));
+                    throw new ArgumentException($"\"{a.Root}\" is not a level this package generates; an address starts from galaxy, system or planet, as in v1-my-seed/galaxy/system/3.", nameof(address));
             }
 
             if (step == path.Count)

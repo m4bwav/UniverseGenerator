@@ -10,7 +10,7 @@ namespace UniverseGeneration
     /// </summary>
     internal static class StarSystemGenerator
     {
-        private const double AuPerSolarRadius = 0.00465;
+        internal const double AuPerSolarRadius = 0.00465;
         private const double KmPerAu = 1.496e8;
         private const double KmPerEarthRadius = 6371;
         private const double SunsPerEarthMass = 3.003e-6;
@@ -40,7 +40,7 @@ namespace UniverseGeneration
             GasGiant,
         }
 
-        private sealed class Draft
+        internal sealed class Draft
         {
             public double Orbit;
             public double Period;
@@ -53,7 +53,7 @@ namespace UniverseGeneration
         public static StarSystem Generate(Address address, SystemContext context, GeneratorOptions options)
         {
             var seed = address.ObjectSeed;
-            var age = context.Age ?? s_ages[Seeds.Stream(seed, "age").Weighted(s_ageWeights)];
+            var age = context.Age ?? DrawAge(seed);
             var danger = context.Danger ?? Seeds.Stream(seed, "danger").Range(1, 10);
             var (star, companion) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
             var name = context.Name ?? StarNames.Draw(Seeds.Stream(seed, "names"), star.Class);
@@ -61,10 +61,7 @@ namespace UniverseGeneration
             var close = companion != null && companion.Orbit == CompanionOrbit.Close;
             var totalMass = star.Mass + (close ? companion!.Star.Mass : 0);
             var light = Math.Max(star.Luminosity + (close ? companion!.Star.Luminosity : 0), 0.0001);
-            // The optimistic habitable zone (Kopparapu et al. 2013: recent Venus to early Mars), wider for play.
-            var hzInner = DMath.Round(Math.Sqrt(light / 1.776), 4);
-            var hzOuter = DMath.Round(Math.Sqrt(light / 0.32), 4);
-            var frost = DMath.Round(2.7 * Math.Sqrt(light), 4);
+            var (hzInner, hzOuter, frost) = Zones(light);
 
             var drafts = Planets(Seeds.Stream(seed, "planets"), star, companion, totalMass, hzInner, hzOuter, frost);
             if (drafts.Count > options.MaxPlanetsPerSystem)
@@ -73,29 +70,11 @@ namespace UniverseGeneration
             }
 
             var letters = DiscoveryLetters(drafts.Count, Seeds.Stream(seed, "letters"));
+            var host = new PlanetHost(star, totalMass, light, age);
             var planets = new Planet[drafts.Count];
             for (var i = 0; i < drafts.Count; i++)
             {
-                var d = drafts[i];
-                var planetAddress = address.Child("planet", i);
-                var planetName = name + " " + letters[i];
-                var moons = Seeds.Stream(Seeds.Child(seed, "planet", i), "moons");
-                var rings = moons.Chance(RingPercent(d.Kind), 100);
-                planets[i] = new Planet
-                {
-                    Address = planetAddress.ToString(),
-                    Index = i,
-                    Name = planetName,
-                    Kind = d.Kind,
-                    Zone = d.Zone,
-                    Orbit = DMath.Round(d.Orbit, 4),
-                    Period = DMath.Round(d.Period, 2),
-                    Mass = DMath.Round(d.Mass, 3),
-                    Radius = DMath.Round(d.Radius, 3),
-                    Rings = rings,
-                    Moons = Moons(moons, d, totalMass, planetAddress, planetName),
-                    Descriptor = Story.PlanetDescriptor(d.Kind, d.Zone, rings, star),
-                };
+                planets[i] = BuildPlanet(drafts[i], i, Seeds.Child(seed, "planet", i), address.Child("planet", i), name + " " + letters[i], host, options.Weirdness);
             }
 
             var belts = Belts(Seeds.Stream(seed, "belts"), planets, frost);
@@ -121,6 +100,47 @@ namespace UniverseGeneration
             };
         }
 
+        /// <summary>
+        /// A planet from its draft: rings and moons from its <c>moons</c> stream, then the planet level's detail from its
+        /// other streams (<see cref="PlanetDetail"/>). <paramref name="planetSeed"/> is the seed of <paramref name="planetAddress"/>.
+        /// </summary>
+        internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness)
+        {
+            var moons = Seeds.Stream(planetSeed, "moons");
+            var rings = moons.Chance(RingPercent(d.Kind), 100);
+            var planet = new Planet
+            {
+                Address = planetAddress.ToString(),
+                Index = index,
+                Name = planetName,
+                Kind = d.Kind,
+                Zone = d.Zone,
+                Orbit = DMath.Round(d.Orbit, 4),
+                Period = DMath.Round(d.Period, 2),
+                Mass = DMath.Round(d.Mass, 3),
+                Radius = DMath.Round(d.Radius, 3),
+                Rings = rings,
+                Moons = Moons(moons, d, host.TotalMass, planetAddress, planetName),
+                Descriptor = Story.PlanetDescriptor(d.Kind, d.Zone, rings, host.Star),
+            };
+            return PlanetDetail.Apply(planet, host, planetSeed, weirdness);
+        }
+
+        /// <summary>The system's age when no galaxy gives one: Young 30, Mature 45, Old 25 from the <c>age</c> stream.</summary>
+        internal static StellarAge DrawAge(ulong seed) => s_ages[Seeds.Stream(seed, "age").Weighted(s_ageWeights)];
+
+        /// <summary>
+        /// The optimistic habitable zone (Kopparapu et al. 2013: recent Venus to early Mars), wider for play, and the
+        /// frost line, in au for a luminosity in Suns.
+        /// </summary>
+        internal static (double Inner, double Outer, double Frost) Zones(double light) =>
+            (DMath.Round(Math.Sqrt(light / 1.776), 4), DMath.Round(Math.Sqrt(light / 0.32), 4), DMath.Round(2.7 * Math.Sqrt(light), 4));
+
+        /// <summary>No garden worlds around blazing, swollen or dead stars.</summary>
+        internal static bool NoGarden(StarClass c) =>
+            c == StarClass.O || c == StarClass.B || c == StarClass.Giant || c == StarClass.Supergiant || c == StarClass.WhiteDwarf
+            || c == StarClass.NeutronStar || c == StarClass.BlackHole;
+
         private static List<Draft> Planets(Pcg32 rng, Star star, Companion? companion, double totalMass, double hzInner, double hzOuter, double frost)
         {
             var (innerMin, innerMax, outerMin, outerMax) = Counts(star.Class);
@@ -129,9 +149,7 @@ namespace UniverseGeneration
             var giantWeight = (int)(30 * DMath.Clamp(star.Mass, 0.15, 1.6));
             // Peas in a pod (Weiss 2018): one typical mass per system for small planets, one for sub-Neptunes.
             var pod = (Rocky: LogUniform(rng, 0.25, 2.2), Gassy: LogUniform(rng, 4.7, 12));
-            var noGarden = star.Class == StarClass.O || star.Class == StarClass.B || star.Class == StarClass.Giant
-                || star.Class == StarClass.Supergiant || star.Class == StarClass.WhiteDwarf || star.Class == StarClass.NeutronStar
-                || star.Class == StarClass.BlackHole;
+            var noGarden = NoGarden(star.Class);
 
             var minOrbit = Math.Max(0.01, star.Radius * AuPerSolarRadius * 3);
             if (companion != null && companion.Orbit == CompanionOrbit.Close)
@@ -198,14 +216,14 @@ namespace UniverseGeneration
             }
         }
 
-        private static OrbitZone Zone(double orbit, double hzInner, double hzOuter, double frost) =>
+        internal static OrbitZone Zone(double orbit, double hzInner, double hzOuter, double frost) =>
             orbit < hzInner * 0.5 ? OrbitZone.Hot
             : orbit < hzInner ? OrbitZone.Warm
             : orbit <= hzOuter ? OrbitZone.Temperate
             : orbit <= frost ? OrbitZone.Cold
             : OrbitZone.Outer;
 
-        private static Draft Draw(Pcg32 rng, double orbit, double totalMass, OrbitZone zone, int g, bool innerLink, (double Rocky, double Gassy) pod, bool noGarden)
+        internal static Draft Draw(Pcg32 rng, double orbit, double totalMass, OrbitZone zone, int g, bool innerLink, (double Rocky, double Gassy) pod, bool noGarden)
         {
             // Weights [dwarf, terrestrial, sub-Neptune, ice giant, gas giant] per zone; giants follow the star's mass.
             int[] weights;
@@ -499,7 +517,7 @@ namespace UniverseGeneration
             return text;
         }
 
-        private static double LogUniform(Pcg32 rng, double low, double high) =>
+        internal static double LogUniform(Pcg32 rng, double low, double high) =>
             low * DMath.Exp(rng.NextDouble() * DMath.Log(high / low));
     }
 }

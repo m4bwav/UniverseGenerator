@@ -205,46 +205,6 @@ namespace UniverseGeneration
         public double Radius { get; init; }
     }
 
-    /// <summary>A planet. Orbit in au, period in days, mass and radius in Earths.</summary>
-    public sealed record Planet
-    {
-        /// <summary>Where it is, such as <c>v1-my-seed/galaxy/system/31/planet/2</c>.</summary>
-        public string Address { get; init; } = "";
-
-        /// <summary>Its position counting outwards from 0.</summary>
-        public int Index { get; init; }
-
-        /// <summary>Its name: the system's name and a letter, such as "Tau Ceti e".</summary>
-        public string Name { get; init; } = "";
-
-        /// <summary>What kind of world.</summary>
-        public PlanetKind Kind { get; init; }
-
-        /// <summary>Its zone: hot, warm, temperate, cold or outer.</summary>
-        public OrbitZone Zone { get; init; }
-
-        /// <summary>Distance from the star (or both stars of a close pair) in au.</summary>
-        public double Orbit { get; init; }
-
-        /// <summary>Orbital period in days.</summary>
-        public double Period { get; init; }
-
-        /// <summary>Mass in Earths.</summary>
-        public double Mass { get; init; }
-
-        /// <summary>Radius in Earths.</summary>
-        public double Radius { get; init; }
-
-        /// <summary>True when it has rings.</summary>
-        public bool Rings { get; init; }
-
-        /// <summary>Its moons, innermost first.</summary>
-        public IReadOnlyList<Moon> Moons { get; init; } = System.Array.Empty<Moon>();
-
-        /// <summary>One line in plain words, such as "a cold ocean world under a red dwarf" (plan D23).</summary>
-        public string Descriptor { get; init; } = "";
-    }
-
     /// <summary>A belt of asteroids or icy bodies, from <see cref="Inner"/> to <see cref="Outer"/> au.</summary>
     public sealed record Belt
     {

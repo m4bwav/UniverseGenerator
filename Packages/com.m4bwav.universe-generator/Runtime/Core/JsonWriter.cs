@@ -70,6 +70,16 @@ namespace UniverseGeneration
             }
 
             BeforeValue();
+            _text.Append(Format(value, decimals));
+            return this;
+        }
+
+        /// <summary>
+        /// A finite number rounded to <paramref name="decimals"/> places as <see cref="DMath.Round"/> does, without
+        /// trailing zeros, the same on every runtime (no culture or runtime formatting of doubles).
+        /// </summary>
+        internal static string Format(double value, int decimals)
+        {
             var p = DMath.PowerOfTen(decimals);
             var scaled = Math.Floor(Math.Abs(value) * p + 0.5);
             if (scaled >= 9007199254740992.0)
@@ -78,27 +88,16 @@ namespace UniverseGeneration
             }
 
             var digits = ((long)scaled).ToString(CultureInfo.InvariantCulture);
-            if (scaled != 0 && value < 0)
-            {
-                _text.Append('-');
-            }
-
+            var sign = scaled != 0 && value < 0 ? "-" : "";
             if (decimals == 0)
             {
-                _text.Append(digits);
-                return this;
+                return sign + digits;
             }
 
             digits = digits.PadLeft(decimals + 1, '0');
             var whole = digits.Substring(0, digits.Length - decimals);
             var fraction = digits.Substring(digits.Length - decimals).TrimEnd('0');
-            _text.Append(whole);
-            if (fraction.Length > 0)
-            {
-                _text.Append('.').Append(fraction);
-            }
-
-            return this;
+            return fraction.Length > 0 ? sign + whole + "." + fraction : sign + whole;
         }
 
         public JsonWriter Bool(bool value)

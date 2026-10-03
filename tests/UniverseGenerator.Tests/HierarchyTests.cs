@@ -51,6 +51,23 @@ namespace UniverseGeneration.Tests
         }
 
         [Test]
+        public void Every_lone_planet_and_its_moons_regenerate_alone_from_their_addresses()
+        {
+            foreach (var options in new[] { Preset.Default, Preset.Plausible, Preset.Default with { Weirdness = 100 } })
+            {
+                foreach (var seed in SystemJson.Seeds(300))
+                {
+                    var planet = Planet.Generate(seed, options);
+                    Assert.That(PlanetJson.LoneText((Planet)Universe.At(planet.Address, options)), Is.EqualTo(PlanetJson.LoneText(planet)), planet.Address);
+                    foreach (var moon in planet.Moons)
+                    {
+                        Assert.That(Universe.At(moon.Address, options), Is.EqualTo(moon), moon.Address);
+                    }
+                }
+            }
+        }
+
+        [Test]
         public void A_system_alone_and_the_same_seed_in_a_galaxy_are_different_places()
         {
             Assert.That(StarSystem.Generate("my-seed").Address, Is.EqualTo("v1-my-seed/system"));
@@ -80,6 +97,10 @@ namespace UniverseGeneration.Tests
             Refused("v1-my-seed/system/planet/0/moon/40", "v1-my-seed/system/planet/0 has ");
             var station = SystemJson.Seeds(50).Select(x => StarSystem.Generate(x)).First(x => x.Stations.Count > 0).Stations[0];
             Refused(station.Address + "/moon/0", "Nothing in this package lies below a station");
+            Refused("v1-my-seed/planet/station/0", "Below v1-my-seed/planet comes a moon; the address has \"station\".");
+            var mooned = SystemJson.Seeds(50).Select(x => Planet.Generate(x)).First(x => x.Moons.Count > 0);
+            Refused(mooned.Moons[0].Address + "/moon/0", "Nothing in this package lies below a moon");
+            Refused($"{mooned.Address}/moon/{mooned.Moons.Count}", $"{mooned.Address} has {mooned.Moons.Count} moons");
             Refused("v1-my-seed/galaxy", "Systems must be 1 to 2000", Preset.Default with { Systems = 0 });
             Refused("v1-" + new string('x', 201) + "/system", "A seed must be at most 200 characters");
         }
@@ -104,6 +125,7 @@ namespace UniverseGeneration.Tests
             {
                 var p = (Planet)Universe.At(planet.Address, options);
                 Assert.That(SystemJson.Text(p), Is.EqualTo(SystemJson.Text(planet)), planet.Address);
+                Assert.That(PlanetJson.Text(p), Is.EqualTo(PlanetJson.Text(planet)), planet.Address);
                 foreach (var moon in planet.Moons)
                 {
                     Assert.That(Universe.At(moon.Address, options), Is.EqualTo(moon), moon.Address);
