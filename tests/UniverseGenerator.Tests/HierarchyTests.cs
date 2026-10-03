@@ -30,6 +30,7 @@ namespace UniverseGeneration.Tests
                 var galaxy = Galaxy.Generate(seed, options);
                 var again = (Galaxy)Universe.At(galaxy.Address, options);
                 Assert.That(GalaxyJson.Text(again), Is.EqualTo(GalaxyJson.Text(galaxy)), galaxy.Address);
+                Assert.That(ExtrasJson.Text(again), Is.EqualTo(ExtrasJson.Text(galaxy)), galaxy.Address);
                 foreach (var system in galaxy.Systems)
                 {
                     objects += CheckSystem(system, options);
@@ -54,7 +55,9 @@ namespace UniverseGeneration.Tests
                 Assert.That(ClusterJson.Text((GalaxyCluster)Universe.At(cluster.Address, options)), Is.EqualTo(ClusterJson.Text(cluster)), cluster.Address);
                 foreach (var galaxy in cluster.Galaxies)
                 {
-                    Assert.That(ClusterJson.GalaxyText((Galaxy)Universe.At(galaxy.Address, options)), Is.EqualTo(ClusterJson.GalaxyText(galaxy)), galaxy.Address);
+                    var again = (Galaxy)Universe.At(galaxy.Address, options);
+                    Assert.That(ClusterJson.GalaxyText(again), Is.EqualTo(ClusterJson.GalaxyText(galaxy)), galaxy.Address);
+                    Assert.That(ExtrasJson.Text(again), Is.EqualTo(ExtrasJson.Text(galaxy)), galaxy.Address);
                     objects++;
                 }
 
@@ -91,7 +94,9 @@ namespace UniverseGeneration.Tests
                     Assert.That(ClusterJson.Text((GalaxyCluster)Universe.At(cluster.Address, options)), Is.EqualTo(ClusterJson.Text(cluster)), cluster.Address);
                     foreach (var galaxy in cluster.Galaxies)
                     {
-                        Assert.That(UniverseJson.GalaxyText((Galaxy)Universe.At(galaxy.Address, options)), Is.EqualTo(UniverseJson.GalaxyText(galaxy)), galaxy.Address);
+                        var again = (Galaxy)Universe.At(galaxy.Address, options);
+                        Assert.That(UniverseJson.GalaxyText(again), Is.EqualTo(UniverseJson.GalaxyText(galaxy)), galaxy.Address);
+                        Assert.That(ExtrasJson.Text(again), Is.EqualTo(ExtrasJson.Text(galaxy)), galaxy.Address);
                         objects++;
                     }
 

@@ -87,6 +87,21 @@ namespace UniverseGeneration
         /// <summary>Every system in full, in the order of <see cref="Map"/>; each is generated when first read.</summary>
         public IReadOnlyList<StarSystem> Systems { get; init; } = Array.Empty<StarSystem>();
 
+        /// <summary>The powers holding its systems, grown over the lanes from their capitals; <see cref="MapEntry.Faction"/> says who holds each.</summary>
+        public IReadOnlyList<Faction> Factions { get; init; } = Array.Empty<Faction>();
+
+        /// <summary>Sites its story places in systems: ruins, wrecks, caches, anomalies, outposts, shrines and a precursor trail.</summary>
+        public IReadOnlyList<PointOfInterest> PointsOfInterest { get; init; } = Array.Empty<PointOfInterest>();
+
+        /// <summary>Areas where travel is harder: nebulae, ion storms, rifts, dark clouds and an active core's radiation.</summary>
+        public IReadOnlyList<GalaxyHazard> Hazards { get; init; } = Array.Empty<GalaxyHazard>();
+
+        /// <summary>One monument per region, in the order of <see cref="Regions"/> (plan D24).</summary>
+        public IReadOnlyList<Monument> Monuments { get; init; } = Array.Empty<Monument>();
+
+        /// <summary>Two to four beacons seen from anywhere in the galaxy, spread across the map (plan D24).</summary>
+        public IReadOnlyList<Beacon> Beacons { get; init; } = Array.Empty<Beacon>();
+
         /// <summary>System <paramref name="index"/> in full, the same as <c>Systems[index]</c>.</summary>
         /// <exception cref="ArgumentOutOfRangeException">The galaxy has no system with that index; the message gives the range.</exception>
         public StarSystem System(int index)
@@ -145,6 +160,12 @@ namespace UniverseGeneration
 
         /// <summary>True when every route between some other systems passes through this one.</summary>
         public bool Chokepoint { get; init; }
+
+        /// <summary>The index of the faction holding it in <see cref="Galaxy.Factions"/>, or null when it is independent.</summary>
+        public int? Faction { get; init; }
+
+        /// <summary>True when it is held and a lane joins it to a system of another faction: a border.</summary>
+        public bool Contested { get; init; }
     }
 
     /// <summary>A lane between two systems of a galaxy.</summary>
@@ -282,6 +303,9 @@ namespace UniverseGeneration
                 lanes[l] = new Lane { A = a, B = b, Bridge = bridge };
             }
 
+            // The extras (factions, points of interest, hazards, monuments, beacons) read the finished map, add each entry's
+            // faction, and draw only from their own streams: no system's context changes.
+            var extras = GalaxyExtrasGenerator.Generate(seed, layout, regions, map, context.CoreActivity, ClusterGenerator.HazardRadius(context.CoreActivity));
             var type = context.Type ?? GalaxyTypes.Derive(layout.Shape, layout.Pitch, layout.Ellipse);
             return new Galaxy
             {
@@ -303,6 +327,11 @@ namespace UniverseGeneration
                 Lanes = lanes,
                 Regions = regions,
                 Systems = new LazySystems(address, contexts, options),
+                Factions = extras.Factions,
+                PointsOfInterest = extras.Points,
+                Hazards = extras.Hazards,
+                Monuments = extras.Monuments,
+                Beacons = extras.Beacons,
             };
         }
 
