@@ -24,9 +24,33 @@ What Mark does to release UniverseGenerator 1.0.0-beta.1 to nuget.org, in order.
 - [x] **(agent)** Re-run the scan on the final `master`, as the [scan note](2026-10-03-history-scan.md) says ("Re-run before going public"). Go on only when it is clean. Done 2026-10-03 on 272b0e0: clean, nothing new (scan note, "Re-run on the final master").
 - [ ] Decide on the history findings: the scan judged them harmless (local paths and your second commit address, all already public in other m4bwav repositories), so the recommendation is to keep the history as it is. Optional: GitHub, Settings, Emails, "Keep my email addresses private", so later web merges use the noreply address.
 - [x] **Before** switching to public, take CI off your PC: a public repository's pull requests from forks could otherwise run code on the self-hosted runner. Done 2026-10-03: `RUNS_ON` was set to `"ubuntu-latest"`, then PR #5 (merged) made `ci.yml`'s build job the hosted Ubuntu 24.04, Windows and macOS matrix with no self-hosted fallback, and the agent deleted the `RUNS_ON` variable (nothing reads it; the repository has no Actions variables now). `ci` on `master` 558c544 (run 37145366186) passed on all three: 170 tests each on net10.0, net48 on Windows, size gate green (nupkg 373.2 KB, DLL 499.0 KB).
-- [ ] Remove the runner `universe` from the repository (Settings, Actions, Runners) and stop its scheduled task on your PC. Still registered and online on 2026-10-03 after PR #5 (checked again later the same day); no workflow uses it any more.
-- [ ] Make it public: Settings, General, Danger Zone, Change visibility, or `gh repo edit m4bwav/UniverseGenerator --visibility public --accept-visibility-change-consequences`.
-- [ ] **(agent)** Then the settings the free plan allows only on public repositories: secret scanning and push protection, private vulnerability reporting, workflow permissions read, the `master` ruleset (deletion and non-fast-forward blocked, required check `ci`, admin bypass) and a tag ruleset so only admins create `v*` tags (package-modernize templates `rulesets/`). The wiki (Stage 7) can be switched on too.
+- [x] Remove the runner `universe` from the repository (Settings, Actions, Runners) and stop its scheduled task on your PC. Done by Mark 2026-10-03 (the runners list reads back empty; no workflow names `self-hosted`).
+- [x] Make it public (done 2026-10-03: the agent ran the command below on Mark's explicit request, after checking the runner was gone; visibility reads back `PUBLIC`): Settings, General, Danger Zone, Change visibility, or `gh repo edit m4bwav/UniverseGenerator --visibility public --accept-visibility-change-consequences`.
+- [x] **(agent)** Then the settings the free plan allows only on public repositories: secret scanning and push protection, private vulnerability reporting, workflow permissions read, the `master` ruleset (deletion and non-fast-forward blocked, required check `ci`, admin bypass) and a tag ruleset so only admins create `v*` tags (package-modernize templates `rulesets/`). The wiki (Stage 7) can be switched on too (not done; Stage 7).
+
+Done 2026-10-03, every one accepted by the API on the free plan and read back with `gh api`:
+
+| Setting | Read back |
+|---|---|
+| Secret scanning | `security_and_analysis.secret_scanning` enabled |
+| Push protection | `secret_scanning_push_protection` enabled (non-provider patterns and validity checks stay off; dependabot security updates off) |
+| Private vulnerability reporting | `private-vulnerability-reporting` `{"enabled":true}` |
+| Workflow permissions | `default_workflow_permissions` read, `can_approve_pull_request_reviews` false |
+| Ruleset `master` (id 24430276) | branch, active, `~DEFAULT_BRANCH`; rules deletion, non_fast_forward, required_status_checks [`ci`] (not strict); bypass: repository role 5 (admin), always. `rules/branches/master` lists all three. |
+| Ruleset `Tags only by admins` (id 24430278) | tag, active, `~ALL` tags (covers `v*` and is stricter); rules creation, update, deletion; bypass admin, always. From the package-modernize template unchanged. |
+
+The `master` ruleset as sent (the templates have no branch ruleset file):
+
+```json
+{"name": "master", "target": "branch", "enforcement": "active",
+ "conditions": {"ref_name": {"include": ["~DEFAULT_BRANCH"], "exclude": []}},
+ "rules": [{"type": "deletion"}, {"type": "non_fast_forward"},
+   {"type": "required_status_checks", "parameters": {"strict_required_status_checks_policy": false,
+     "required_status_checks": [{"context": "ci"}]}}],
+ "bypass_actors": [{"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}]}
+```
+
+`ci` is the summary job in `ci.yml` that needs every matrix leg, so one required check covers Ubuntu, Windows and macOS. The admin bypass means your own merges are never blocked; pull requests still show the check.
 
 ## 3. nuget.org Trusted Publishing policy
 
