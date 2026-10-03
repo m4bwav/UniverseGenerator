@@ -1,10 +1,9 @@
-# From the package-modernize ci.yml template (2026-09-27), for a private repository: every job runs on the maintainer's
-# own runner (package-modernize references/private-repo-ci.md, label `universe`). Setting the repository variable RUNS_ON
-# to "ubuntu-latest" (with the quotes) moves the jobs to GitHub's runners without a code change. Once the repository is
-# public (plan D9), the build job becomes the template's Windows, Linux and macOS matrix on GitHub-hosted runners.
+# From the package-modernize NuGet ci.yml template (2026-09-27), on GitHub-hosted runners: the build job runs on Linux,
+# Windows and macOS (plan D9 and the seed promise: the golden tests pass on every runtime).
 # Every push to master and every pull request: no committed golden file changed, locked restore, dotnet format, build
-# with warnings as errors, the NuGet audit, the tests (net10.0, and net48 on Windows), the console sample, the Unity .meta check, a pack with
-# a content and dependency check, the size gate, and the final `ci` job the ruleset on master requires.
+# with warnings as errors, the NuGet audit, the tests (net10.0 everywhere, and net48 on Windows), the console sample, the
+# Unity .meta check, a pack, then on Linux the content and dependency check and the size gate, and the final `ci` job the
+# ruleset on master requires.
 # Actions are pinned to commit SHAs with the version in a comment (from the template, checked 2026-09-27).
 name: ci
 
@@ -27,17 +26,19 @@ defaults:
 
 jobs:
   build:
-    name: build and test
-    runs-on: ${{ fromJSON(vars.RUNS_ON || '["self-hosted","universe"]') }}
+    name: build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # Source Link records the commit; the golden check needs the base commit
           persist-credentials: false
-      # The maintainer's machine has the SDK; setup-dotnet would install into Program Files there.
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        if: runner.environment == 'github-hosted'
         with:
           global-json-file: global.json
           cache: true
@@ -80,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure()
         with:
-          name: test-results
+          name: test-results-${{ matrix.os }}
           path: TestResults
           retention-days: 7
       - name: Every Unity package file has a .meta with a unique GUID
@@ -89,9 +90,12 @@ jobs:
           "$py" scripts/add-meta.py --check
       - name: Pack
         run: dotnet pack src/UniverseGenerator --no-build -c Release -o artifacts
+      # The package is the same on every OS (deterministic build); release.yml packs and checks it on Linux too.
       - name: The package holds exactly what it should and declares no dependencies
+        if: runner.os == 'Linux'
         run: bash scripts/check-package.sh artifacts
       - name: Size gate (plan D19)
+        if: runner.os == 'Linux'
         run: |
           if command -v python >/dev/null; then py=python; else py=python3; fi
           "$py" scripts/size-gate.py artifacts
@@ -100,7 +104,7 @@ jobs:
     name: ci
     if: ${{ always() }}
     needs: [build]
-    runs-on: ${{ fromJSON(vars.RUNS_ON || '["self-hosted","universe"]') }}
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Every job passed
