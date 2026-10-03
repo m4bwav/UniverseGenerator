@@ -294,6 +294,8 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 
 ### Stage 6: lab page and post (markdavidrogers-web). **Stop 4.**
 
+- [ ] With the lab page, a random star name generator in the site's tools area (asked by Mark 2026-10-03; the site plan's Stage 3 lists it): seeded star catalogue names by star class from the published package. Needs a public name entry point (`StarNames` is internal today), added without changing any seed's output.
+
 ### Stage 7: wiki (from `kb/`), inventory, handoff, skill lessons, launch list.
 
 ## Test strategy
