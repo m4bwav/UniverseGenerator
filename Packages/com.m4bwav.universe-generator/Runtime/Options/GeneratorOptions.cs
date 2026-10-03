@@ -90,6 +90,25 @@ namespace UniverseGeneration
             }
         }
 
+        /// <summary>
+        /// The settings that differ from the defaults as short text, such as <c>systems=120&amp;shape=barred</c> (empty for
+        /// the defaults). Put it after an address with <c>?</c> to share an object with its options (see
+        /// <see cref="Universe.Link"/>), or read it back with <see cref="FromCode"/>. Codes stay readable for the whole major version.
+        /// </summary>
+        public string ToCode() => OptionsCode.Write(this);
+
+        /// <summary>Reads a code written by <see cref="ToCode"/>; a leading <c>?</c> is allowed and an empty code gives the defaults.</summary>
+        /// <exception cref="ArgumentException">The code names an unknown setting, repeats one, or gives a value out of range; the message says which.</exception>
+        public static GeneratorOptions FromCode(string code)
+        {
+            if (code is null)
+            {
+                throw new ArgumentNullException(nameof(code), "A code is text such as \"systems=120\"; use \"\" for the defaults.");
+            }
+
+            return OptionsCode.Read(code);
+        }
+
         internal static string CheckSeed(string? seed)
         {
             if (seed is null)

@@ -104,17 +104,53 @@ namespace UniverseGeneration
             Generate(GeneratorOptions.SeedText(seed), options);
 
         /// <summary>
+        /// A link to the object at <paramref name="address"/> made with <paramref name="options"/>: the address, then
+        /// <c>?</c> and <see cref="GeneratorOptions.ToCode"/>, such as <c>v1-my-seed/galaxy/system/31?systems=120</c>, or the
+        /// address alone for the defaults. <see cref="At"/> regenerates the object from the link with no options passed.
+        /// </summary>
+        /// <exception cref="ArgumentException">The address cannot be read, or an option is out of range.</exception>
+        public static string Link(string address, GeneratorOptions options)
+        {
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            options.Validate();
+            if (!UniverseGeneration.Address.TryParse(address, out _, out var error))
+            {
+                throw new ArgumentException(error, nameof(address));
+            }
+
+            var code = options.ToCode();
+            return code.Length == 0 ? address : address + "?" + code;
+        }
+
+        /// <summary>
         /// Regenerates the object at <paramref name="address"/>, such as <c>v1-my-seed/galaxy/system/31/planet/2</c> or
         /// <c>v1-my-seed/planet</c> (a planet generated on its own): a <see cref="Universe"/> (<c>v1-my-seed/universe</c>),
         /// <see cref="GalaxyCluster"/> (alone, <c>v1-my-seed/cluster</c>, or <c>v1-my-seed/universe/cluster/2</c>), <see cref="CosmicVoid"/>
         /// (<c>v1-my-seed/universe/void/0</c>), <see cref="Galaxy"/> (alone, or <c>.../cluster/galaxy/2</c>), <see cref="StarSystem"/>,
         /// <see cref="Planet"/>, <see cref="Moon"/>, <see cref="Station"/> or <see cref="Belt"/> (<c>.../system/belt/0</c>).
         /// It gives the same result as generating the level it belongs to and walking down to it (plan D17).
-        /// An address does not carry options, so pass the ones the object was generated with.
+        /// An address does not carry options, so pass the ones the object was generated with, or pass a link from
+        /// <see cref="Link"/> (the address, <c>?</c> and the options' code), which carries them.
         /// </summary>
-        /// <exception cref="ArgumentException">The address cannot be read, names a level or object that does not exist, or an option is out of range; the message says which.</exception>
+        /// <exception cref="ArgumentException">The address cannot be read, names a level or object that does not exist, or an option is out of range, or a link was passed together with options; the message says which.</exception>
         public static object At(string address, GeneratorOptions? options = null)
         {
+            var q = address is null ? -1 : address.IndexOf('?');
+            if (q >= 0)
+            {
+                if (options is not null)
+                {
+                    throw new ArgumentException("This link carries its options after the ?; pass a link or options, not both.", nameof(address));
+                }
+
+                options = GeneratorOptions.FromCode(address!.Substring(q + 1));
+                address = address.Substring(0, q);
+            }
+
             var o = options ?? Preset.Default;
             o.Validate();
             if (!UniverseGeneration.Address.TryParse(address, out var parsed, out var error))

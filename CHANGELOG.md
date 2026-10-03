@@ -4,6 +4,12 @@ All notable changes to this package are documented here. The format follows [Kee
 
 The seed promise: from 1.0.0, a seed and a generator version give the same output on every supported runtime for the whole major version. A change that would alter any seed's output adds a generator version and keeps the old one selectable.
 
+## [Unreleased]
+
+### Added
+
+- `GeneratorOptions.ToCode()` and `GeneratorOptions.FromCode(code)`: the settings that differ from the defaults as short text (`systems=120&shape=barred`), and links: `Universe.Link(address, options)` writes the address, `?` and the code, and `Universe.At(link)` regenerates the object with those options, so a shared address carries its options.
+
 ## [1.0.0-beta.1] - 2026-10-03
 
 The first release: a new package, extracted from the game SpaceDeckBuilder2 and rebuilt on stable seeds.

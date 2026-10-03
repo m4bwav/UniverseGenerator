@@ -93,6 +93,18 @@ namespace ConsoleSample
             Console.WriteLine($"{system.Descriptor}; {planet.Summary}; {moon.Name}");
         }
 
+        public static void Links()
+        {
+            #region readme
+            var options = Preset.Default with { Systems = 120 };
+            var system = Galaxy.Generate("my-seed", options).System(31);
+            var link = Universe.Link(system.Address, options);   // the address, ? and options.ToCode()
+            Console.WriteLine(link);                              // v1-my-seed/galaxy/system/31?systems=120
+            var again = (StarSystem)Universe.At(link);            // the link carries the options
+            Console.WriteLine(again.Name == system.Name);         // True
+            #endregion
+        }
+
         /// <summary>Runs every example in README order.</summary>
         public static void All()
         {
@@ -103,6 +115,7 @@ namespace ConsoleSample
             GalaxyExtras();
             StarNames();
             LoneObjects();
+            Links();
         }
     }
 }
