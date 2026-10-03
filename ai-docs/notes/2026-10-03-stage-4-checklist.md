@@ -17,11 +17,11 @@ What Mark does to release UniverseGenerator 1.0.0-beta.1 to nuget.org, in order.
 
 ## 1. Merge the preparation
 
-- [ ] Review and merge the `stage4-prep` pull request (the [history scan](2026-10-03-history-scan.md), `release.yml`, `scripts/check-package.sh`), after `ci` is green.
+- [x] Review and merge the `stage4-prep` pull request (the [history scan](2026-10-03-history-scan.md), `release.yml`, `scripts/check-package.sh`), after `ci` is green.
 
 ## 2. Make the repository public
 
-- [ ] **(agent)** Re-run the scan on the final `master`, as the [scan note](2026-10-03-history-scan.md) says ("Re-run before going public"). Go on only when it is clean.
+- [x] **(agent)** Re-run the scan on the final `master`, as the [scan note](2026-10-03-history-scan.md) says ("Re-run before going public"). Go on only when it is clean. Done 2026-10-03 on 272b0e0: clean, nothing new (scan note, "Re-run on the final master").
 - [ ] Decide on the history findings: the scan judged them harmless (local paths and your second commit address, all already public in other m4bwav repositories), so the recommendation is to keep the history as it is. Optional: GitHub, Settings, Emails, "Keep my email addresses private", so later web merges use the noreply address.
 - [ ] **Before** switching to public, take CI off your PC: a public repository's pull requests from forks could otherwise run code on the self-hosted runner. Set the variable (Settings, Secrets and variables, Actions, Variables) `RUNS_ON` to `"ubuntu-latest"` with the quotes, or let an agent run `gh variable set RUNS_ON -R m4bwav/UniverseGenerator --body '"ubuntu-latest"'`. Then remove the runner `universe` from the repository (Settings, Actions, Runners) and stop its scheduled task. Until the template's Windows, Linux and macOS matrix replaces this (plan D9, an agent's follow-up pull request), `ci` tests net10.0 on Linux and the net48 tests run in `release.yml`'s Windows job.
 - [ ] Make it public: Settings, General, Danger Zone, Change visibility, or `gh repo edit m4bwav/UniverseGenerator --visibility public --accept-visibility-change-consequences`.

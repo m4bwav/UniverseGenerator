@@ -56,4 +56,16 @@ python scripts/history-scan.py --names-file <the names file in the private sidec
 
 Expect no gitleaks finding, `current: 0 distinct finding(s)` and exit 0, and in history only the findings above plus the lines this branch removed (they show as removals in its commits).
 
+## Re-run on the final master (2026-10-03)
+
+On `master` at 272b0e0 (the merge of `stage4-prep`), 37 commits on every ref, before the repository went public:
+
+| Tool | Result |
+|---|---|
+| gitleaks 8.30.1 (still the latest release; official Windows x64 zip, sha256 checked, run from the session's scratch folder), `git --log-opts=--all --redact` | 34 commits with their own diffs, no leaks |
+| gitleaks 8.30.1, `dir --redact .` | no leaks |
+| `scripts/history-scan.py --names-file` (the private list) | history: the same five kinds as the table above, with two more commits each: 9586a58 and the merge 272b0e0, which hold the removals of those lines; current: 0, exit 0 |
+
+**Nothing new.** The first run of the re-run also reported a connection string and a second vault path, both in `scripts/history-scan.py` itself: its own patterns (the Azure storage connection string prefix and the package-modernize overlay folder) as they were added in 9586a58. The script already skipped its own file in the current tree; it now skips it in history too, and the re-run gives the result above. No private name, LAN address or other email address appears; the merge of `stage4-prep` carries the public author address. Clean, so step 2 of the [Stage 4 checklist](2026-10-03-stage-4-checklist.md) can go on.
+
 Related: builds on [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md) (N8, Stage 4); see also [Stage 4 checklist](2026-10-03-stage-4-checklist.md), [Stop 2 questions](2026-10-03-stop-2-questions.md).
