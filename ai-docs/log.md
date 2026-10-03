@@ -89,3 +89,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] handoff | rewritten: waiting for Mark (remove the runner, go public); next-session-prompt.md rewritten (public-repository settings and rulesets, then the release pull request)
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] verify | Status check for the next session: repository still private, runner universe still registered and online, no environments (so no nuget or NUGET_USER), no v* tag, no release run; every agent step waits for Mark, nothing applied; next-session-prompt.md kept as it was

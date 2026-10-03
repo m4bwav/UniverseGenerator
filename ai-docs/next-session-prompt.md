@@ -14,7 +14,8 @@ Paste the block below into a fresh session to continue the run. Every session re
 (AGENTS.md, "Document for handoff"), so the chain continues: the prompt it writes ends with the same instruction.
 
 Written 2026-10-03, after PR #4 and PR #5 were merged and RUNS_ON was deleted (ci green on Ubuntu, Windows and
-macOS). Use it once Mark has removed the runner and made the repository public, or has gone further.
+macOS). Re-checked by a later session the same day: Mark had not started his steps, so the prompt is unchanged. Use it once
+Mark has removed the runner and made the repository public, or has gone further.
 
 ```
 Continue the UniverseGenerator run (C#; the F# port is deferred). Stage 4, 2026-10-03: PR #3, #4 and #5 are merged,
