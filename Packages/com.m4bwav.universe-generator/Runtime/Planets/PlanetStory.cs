@@ -77,6 +77,12 @@ namespace UniverseGeneration
                 ("tidal flexing", p.Spin == Spin.Resonant ? 6 : 0),
             };
 
+            return Pick(rng, candidates);
+        }
+
+        /// <summary>One trait by weight, and a second, different one at 40% when another is possible.</summary>
+        public static string[] Pick(Pcg32 rng, (string Trait, int Weight)[] candidates)
+        {
             var weights = new int[candidates.Length];
             for (var i = 0; i < candidates.Length; i++)
             {
@@ -111,8 +117,8 @@ namespace UniverseGeneration
             return list[rng.NextInt(list.Length)];
         }
 
-        /// <summary>The hazards in words, worst first, and the worst tier (1 when there is none). No draws.</summary>
-        public static (int Hazard, string[] Hazards) Hazards(Planet p, Star star)
+        /// <summary>The hazards in words, worst first, and the worst tier (1 when there is none); <paramref name="extra"/> adds a moon's own. No draws.</summary>
+        public static (int Hazard, string[] Hazards) Hazards(Planet p, Star star, IReadOnlyList<(string Text, int Tier)>? extra = null)
         {
             var found = new List<(string Text, int Tier)>();
             var c = star.Class;
@@ -207,6 +213,11 @@ namespace UniverseGeneration
                 }
             }
 
+            if (extra != null)
+            {
+                found.AddRange(extra);
+            }
+
             var worst = 1;
             foreach (var (_, tier) in found)
             {
@@ -229,9 +240,10 @@ namespace UniverseGeneration
         }
 
         /// <summary>"1 g, breathable air at 1.2 bar, 17 °C, 64% ocean, mostly temperate forest, complex life; hazard 1".</summary>
-        public static string Summary(Planet p)
+        /// <remarks>A moon passes <paramref name="extra"/> (its hidden ocean), written before its life, and two decimals of gravity.</remarks>
+        public static string Summary(Planet p, string? extra = null, int? gravityDecimals = null)
         {
-            var parts = new List<string> { JsonWriter.Format(p.Gravity, p.Gravity < 10 ? 1 : 0) + " g" };
+            var parts = new List<string> { JsonWriter.Format(p.Gravity, gravityDecimals ?? (p.Gravity < 10 ? 1 : 0)) + " g" };
             var a = p.Atmosphere;
             switch (a.Class)
             {
@@ -284,6 +296,11 @@ namespace UniverseGeneration
                 parts.Add("tidally locked");
             }
 
+            if (extra != null)
+            {
+                parts.Add(extra);
+            }
+
             switch (p.Life)
             {
                 case LifeLevel.Prebiotic: parts.Add("prebiotic chemistry"); break;
@@ -307,7 +324,7 @@ namespace UniverseGeneration
             return text;
         }
 
-        private static string GasName(Gas gas)
+        public static string GasName(Gas gas)
         {
             switch (gas)
             {

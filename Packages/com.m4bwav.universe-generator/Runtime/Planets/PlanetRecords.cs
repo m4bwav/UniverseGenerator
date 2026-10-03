@@ -228,8 +228,8 @@ namespace UniverseGeneration
         public double Share { get; init; }
     }
 
-    /// <summary>What can be mined or harvested, each graded 0 (none) or 1 (poor) to 5 (rich) (plan P6).</summary>
-    public sealed record PlanetResources
+    /// <summary>What can be mined or harvested on a planet, moon or belt, each graded 0 (none) or 1 (poor) to 5 (rich) (plan P6).</summary>
+    public sealed record ResourceGrades
     {
         /// <summary>Iron, nickel and common metals.</summary>
         public int Metals { get; init; }

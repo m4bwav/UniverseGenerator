@@ -113,7 +113,7 @@ namespace UniverseGeneration
         public string? Anomaly { get; init; }
 
         /// <summary>What can be mined or harvested.</summary>
-        public PlanetResources Resources { get; init; } = new PlanetResources();
+        public ResourceGrades Resources { get; init; } = new ResourceGrades();
 
         /// <summary>How dangerous the surface is: 1 shirt-sleeves, 2 a mask or coat, 3 a pressure suit, 4 heavy protection, 5 lethal (plan P4).</summary>
         public int Hazard { get; init; }
@@ -138,33 +138,7 @@ namespace UniverseGeneration
                 throw new System.ArgumentNullException(nameof(species));
             }
 
-            if (Atmosphere.Pressure is null)
-            {
-                return Habitability.Hostile;
-            }
-
-            var p = Atmosphere.Pressure.Value;
-            var air = !species.BreathesOxygen || PlanetDetail.Has(Atmosphere.Gases, Gas.Oxygen);
-            var t = Temperature;
-            if (air && t >= species.MinTemperature && t <= species.MaxTemperature && Gravity >= species.MinGravity
-                && Gravity <= species.MaxGravity && p >= species.MinPressure && p <= species.MaxPressure)
-            {
-                return Habitability.Ideal;
-            }
-
-            if (t >= species.MinTemperature - 20 && t <= species.MaxTemperature + 20 && Gravity >= species.MinGravity * 0.5
-                && Gravity <= species.MaxGravity * 1.25 && p >= species.MinPressure / 5 && p <= species.MaxPressure * 3)
-            {
-                return Habitability.Habitable;
-            }
-
-            if (t >= species.MinTemperature - 80 && t <= species.MaxTemperature + 80 && Gravity <= species.MaxGravity * 1.6
-                && p <= species.MaxPressure * 10)
-            {
-                return Habitability.Marginal;
-            }
-
-            return Habitability.Hostile;
+            return PlanetDetail.HabitabilityOf(species, Atmosphere, Temperature, Gravity);
         }
 
         /// <summary>Generates a planet on its own, with its star drawn from the same seed, from any seed text such as "my-seed".</summary>

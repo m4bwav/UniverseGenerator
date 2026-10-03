@@ -20,27 +20,21 @@ namespace UniverseGeneration
 
         public static string PlanetDescriptor(PlanetKind kind, OrbitZone zone, bool rings, Star star)
         {
-            string noun;
-            var zoned = true;
+            bool zoned;
             switch (kind)
             {
-                case PlanetKind.Lava: noun = "lava world"; zoned = false; break;
-                case PlanetKind.Iron: noun = "iron world"; break;
-                case PlanetKind.Barren: noun = "barren rock"; break;
-                case PlanetKind.Desert: noun = "desert world"; break;
-                case PlanetKind.Rocky: noun = "rocky world"; break;
-                case PlanetKind.Greenhouse: noun = "greenhouse world"; zoned = false; break;
-                case PlanetKind.Ocean: noun = "ocean world"; break;
-                case PlanetKind.Garden: noun = "garden world"; zoned = false; break;
-                case PlanetKind.Ice: noun = "ice world"; zoned = zone != OrbitZone.Outer; break;
-                case PlanetKind.Dwarf: noun = "dwarf planet"; zoned = zone == OrbitZone.Warm || zone == OrbitZone.Temperate; break;
-                case PlanetKind.SubNeptune: noun = "mini-Neptune"; break;
-                case PlanetKind.GasGiant: noun = "gas giant"; zoned = zone == OrbitZone.Warm || zone == OrbitZone.Temperate; break;
-                case PlanetKind.IceGiant: noun = "ice giant"; zoned = zone == OrbitZone.Warm || zone == OrbitZone.Temperate; break;
-                default: noun = "hot Jupiter"; zoned = false; break;
+                case PlanetKind.Lava:
+                case PlanetKind.Greenhouse:
+                case PlanetKind.Garden:
+                case PlanetKind.HotJupiter: zoned = false; break;
+                case PlanetKind.Ice: zoned = zone != OrbitZone.Outer; break;
+                case PlanetKind.Dwarf:
+                case PlanetKind.GasGiant:
+                case PlanetKind.IceGiant: zoned = zone == OrbitZone.Warm || zone == OrbitZone.Temperate; break;
+                default: zoned = true; break;
             }
 
-            var words = (rings ? "ringed " : "") + (zoned ? ZoneWord(zone) + " " : "") + noun;
+            var words = (rings ? "ringed " : "") + (zoned ? ZoneWord(zone) + " " : "") + PlanetNoun(kind);
             var preposition = zone == OrbitZone.Outer ? "far from" : zone == OrbitZone.Hot ? "skimming" : "under";
             return WithArticle(words) + " " + preposition + " " + WithArticle(star.Description);
         }
@@ -269,7 +263,29 @@ namespace UniverseGeneration
             }
         }
 
-        private static string WithArticle(string words) =>
+        /// <summary>"gas giant", "barren rock", "mini-Neptune".</summary>
+        public static string PlanetNoun(PlanetKind kind)
+        {
+            switch (kind)
+            {
+                case PlanetKind.Lava: return "lava world";
+                case PlanetKind.Iron: return "iron world";
+                case PlanetKind.Barren: return "barren rock";
+                case PlanetKind.Desert: return "desert world";
+                case PlanetKind.Rocky: return "rocky world";
+                case PlanetKind.Greenhouse: return "greenhouse world";
+                case PlanetKind.Ocean: return "ocean world";
+                case PlanetKind.Garden: return "garden world";
+                case PlanetKind.Ice: return "ice world";
+                case PlanetKind.Dwarf: return "dwarf planet";
+                case PlanetKind.SubNeptune: return "mini-Neptune";
+                case PlanetKind.GasGiant: return "gas giant";
+                case PlanetKind.IceGiant: return "ice giant";
+                default: return "hot Jupiter";
+            }
+        }
+
+        public static string WithArticle(string words) =>
             (words[0] == 'a' || words[0] == 'e' || words[0] == 'i' || words[0] == 'o' || words[0] == 'u' ? "an " : "a ") + words;
     }
 }

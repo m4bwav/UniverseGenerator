@@ -79,6 +79,52 @@ namespace UniverseGeneration
             return false;
         }
 
+        /// <summary>A gas's molecular mass, for the Jeans rule (0 for rock vapour, which never escapes here).</summary>
+        public static double GasMass(Gas gas) => s_gasMass[(int)gas];
+
+        public static AtmosphereClass Classify(double pressure) =>
+            pressure == 0 ? AtmosphereClass.None
+            : pressure < 0.01 ? AtmosphereClass.Trace
+            : pressure < 0.5 ? AtmosphereClass.Thin
+            : pressure < 2 ? AtmosphereClass.Standard
+            : pressure < 10 ? AtmosphereClass.Dense
+            : AtmosphereClass.Crushing;
+
+        /// <summary>The grey greenhouse: τ = k P^1.1 warms <paramref name="teq"/> to T_eq (1 + 0.75 τ)^¼.</summary>
+        public static double Greenhouse(double teq, double k, double pressure) =>
+            pressure == 0 ? teq : teq * Math.Sqrt(Math.Sqrt(1 + 0.75 * k * DMath.Pow(pressure, 1.1)));
+
+        /// <summary>How well <paramref name="species"/> could live with this air, temperature (K) and gravity (g).</summary>
+        public static Habitability HabitabilityOf(Species species, Atmosphere atmosphere, double t, double gravity)
+        {
+            if (atmosphere.Pressure is null)
+            {
+                return Habitability.Hostile;
+            }
+
+            var p = atmosphere.Pressure.Value;
+            var air = !species.BreathesOxygen || Has(atmosphere.Gases, Gas.Oxygen);
+            if (air && t >= species.MinTemperature && t <= species.MaxTemperature && gravity >= species.MinGravity
+                && gravity <= species.MaxGravity && p >= species.MinPressure && p <= species.MaxPressure)
+            {
+                return Habitability.Ideal;
+            }
+
+            if (t >= species.MinTemperature - 20 && t <= species.MaxTemperature + 20 && gravity >= species.MinGravity * 0.5
+                && gravity <= species.MaxGravity * 1.25 && p >= species.MinPressure / 5 && p <= species.MaxPressure * 3)
+            {
+                return Habitability.Habitable;
+            }
+
+            if (t >= species.MinTemperature - 80 && t <= species.MaxTemperature + 80 && gravity <= species.MaxGravity * 1.6
+                && p <= species.MaxPressure * 10)
+            {
+                return Habitability.Marginal;
+            }
+
+            return Habitability.Hostile;
+        }
+
         public static Planet Apply(Planet p, PlanetHost host, ulong seed, int weirdness)
         {
             var giant = IsGiant(p.Kind);
@@ -327,15 +373,10 @@ namespace UniverseGeneration
             }
 
             pressure = DMath.Round(pressure, 4);
-            var temperature = pressure == 0 ? teq : teq * Math.Sqrt(Math.Sqrt(1 + 0.75 * k * DMath.Pow(pressure, 1.1)));
+            var temperature = Greenhouse(teq, k, pressure);
             var atmosphere = new Atmosphere
             {
-                Class = pressure == 0 ? AtmosphereClass.None
-                    : pressure < 0.01 ? AtmosphereClass.Trace
-                    : pressure < 0.5 ? AtmosphereClass.Thin
-                    : pressure < 2 ? AtmosphereClass.Standard
-                    : pressure < 10 ? AtmosphereClass.Dense
-                    : AtmosphereClass.Crushing,
+                Class = Classify(pressure),
                 Pressure = pressure,
                 Gases = pressure == 0 ? Array.Empty<Gas>() : kept.ToArray(),
                 LightestGasKept = lightest,
@@ -346,7 +387,7 @@ namespace UniverseGeneration
         }
 
         /// <summary>The pressure whose greenhouse (τ = k P^1.1) warms <paramref name="teq"/> to <paramref name="target"/>, within the kind's range.</summary>
-        private static double Solve(double target, double teq, double k, double low, double high)
+        internal static double Solve(double target, double teq, double k, double low, double high)
         {
             var ratio = target / teq;
             var need = (ratio * ratio * ratio * ratio - 1) / 0.75;
@@ -405,7 +446,7 @@ namespace UniverseGeneration
         }
 
         /// <summary>Life level, flora and fauna. Draws: always three.</summary>
-        private static (LifeLevel Life, int Flora, int Fauna) Life(Pcg32 rng, PlanetKind kind, int temperature, StellarAge age)
+        internal static (LifeLevel Life, int Flora, int Fauna) Life(Pcg32 rng, PlanetKind kind, int temperature, StellarAge age)
         {
             var roll = rng.NextInt(100);
             var a = rng.NextInt(4);
@@ -447,7 +488,7 @@ namespace UniverseGeneration
         }
 
         /// <summary>Six bands with their temperatures and biomes, the biome shares, and the ocean and ice shares. No draws.</summary>
-        private static (ClimateBand[] Bands, BiomeShare[] Biomes, double Water, double Ice) Climate(PlanetKind kind, Spin spin,
+        internal static (ClimateBand[] Bands, BiomeShare[] Biomes, double Water, double Ice) Climate(PlanetKind kind, Spin spin,
             double temperature, double day, double night, double tilt, double redistribution, double pressure, double inventory, int flora)
         {
             var locked = spin == Spin.Locked;
@@ -546,7 +587,7 @@ namespace UniverseGeneration
         }
 
         /// <summary>Grades by kind, each moved by -1, 0 or +1 (a zero stays zero); organics from life. Draws: always five.</summary>
-        private static PlanetResources Resources(Pcg32 rng, Planet p)
+        private static ResourceGrades Resources(Pcg32 rng, Planet p)
         {
             var far = p.Zone == OrbitZone.Cold || p.Zone == OrbitZone.Outer;
             int metals, rare, ices, gases;
@@ -568,18 +609,27 @@ namespace UniverseGeneration
                 default: (metals, rare, ices, gases) = (0, 0, 0, 2); break;
             }
 
-            int organics;
-            switch (p.Life)
-            {
-                case LifeLevel.Complex: organics = 2 + p.Flora / 2; break;
-                case LifeLevel.Simple: organics = 2; break;
-                case LifeLevel.Microbial:
-                case LifeLevel.Prebiotic: organics = 1; break;
-                default: organics = Has(p.Atmosphere.Gases, Gas.Methane) && p.Atmosphere.Class != AtmosphereClass.Envelope ? 1 : 0; break;
-            }
+            return Grades(rng, metals, rare, ices, gases, Organics(p.Life, p.Flora, p.Atmosphere));
+        }
 
+        /// <summary>Organics from life; without life, 1 where methane lies in air over a surface.</summary>
+        internal static int Organics(LifeLevel life, int flora, Atmosphere air)
+        {
+            switch (life)
+            {
+                case LifeLevel.Complex: return 2 + flora / 2;
+                case LifeLevel.Simple: return 2;
+                case LifeLevel.Microbial:
+                case LifeLevel.Prebiotic: return 1;
+                default: return Has(air.Gases, Gas.Methane) && air.Class != AtmosphereClass.Envelope ? 1 : 0;
+            }
+        }
+
+        /// <summary>Each base moved by -1, 0 or +1 and kept in 1 to 5; a zero stays zero. Draws: always five.</summary>
+        internal static ResourceGrades Grades(Pcg32 rng, int metals, int rare, int ices, int gases, int organics)
+        {
             int Grade(int value, int step) => value == 0 ? 0 : DMath.Clamp(value + step - 1, 1, 5);
-            return new PlanetResources
+            return new ResourceGrades
             {
                 Metals = Grade(metals, rng.NextInt(3)),
                 RareElements = Grade(rare, rng.NextInt(3)),
@@ -589,11 +639,13 @@ namespace UniverseGeneration
             };
         }
 
-        /// <summary>The Earth Similarity Index (Schulze-Makuch et al. 2011) from radius, density, escape velocity and temperature.</summary>
-        private static double Similarity(Planet p)
+        private static double Similarity(Planet p) => Similarity(p.Radius, p.Density, p.EscapeVelocity, p.Temperature);
+
+        /// <summary>The Earth Similarity Index (Schulze-Makuch et al. 2011) from radius (Earths), density, escape velocity and temperature.</summary>
+        internal static double Similarity(double radius, double density, double escape, double temperature)
         {
             static double Term(double x, double earth, double weight) => DMath.Pow(1 - Math.Abs(x - earth) / (x + earth), weight / 4);
-            return DMath.Round(Term(p.Radius, 1, 0.57) * Term(p.Density, 5.51, 1.07) * Term(p.EscapeVelocity, 11.19, 0.70) * Term(p.Temperature, 288, 5.58), 2);
+            return DMath.Round(Term(radius, 1, 0.57) * Term(density, 5.51, 1.07) * Term(escape, 11.19, 0.70) * Term(temperature, 288, 5.58), 2);
         }
     }
 }
