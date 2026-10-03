@@ -47,3 +47,9 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] decision | Every session ends by rewriting ai-docs/next-session-prompt.md, a prompt for the next session that ends with the same instruction (Mark, 2026-10-03: chained fresh sessions cost less than one long one); rule in AGENTS.md
 ## [2026-10-03] index | rebuilt (12 entries)
 ## [2026-10-03] index | rebuilt (12 entries)
+## [2026-10-03] add | notes/2026-10-03-universe-level-design.md: the universe level designed before coding (epoch, cosmic web of clusters and filaments, voids with lone systems, landmark slots, merging pair with a tidal frontier and hook, sky landmark, distance frames); plan Stage 6 gains a star name tool for the site (asked by Mark; site plan PR m4bwav/markdavidrogers-site#2, merged)
+## [2026-10-03] add | Universe level (8a42448): Universe record with Generate and At, Epoch option, filaments as the Gabriel graph, voids bounded by clusters, filaments and the map edge, landmark slots through ClusterContext (values only, no draws), merging pair with Tidal link and frontier, galaxy.Landmark, GalaxyGate.Cluster, Distances; universe.json golden identical on net10.0 and net48, the other six unchanged; 158 tests; size gate green (DLL 467.0 KB, nupkg 340.3 KB)
+## [2026-10-03] decision | Universe roles are fixed by node index (0 home group, 1 great cluster, 2 merging group, the farthest field node holds the quasar) so every slot is guaranteed without retries; inside a universe the ClusterKind option is ignored as Shape is inside a cluster; a lone cluster obeys Epoch only when it names an epoch
+## [2026-10-03] update | Universe note: tuning while coding, statistics, open for tuning; plan Stage 3 checklist (universe done; galaxy extras and the star-name entry point owed) and next action (galaxy extras); PR #1 description
+## [2026-10-03] handoff | rewritten: galaxy extras next
+## [2026-10-03] index | rebuilt (13 entries)
