@@ -19,5 +19,12 @@
   ],
   "documentationUrl": "https://github.com/m4bwav/UniverseGenerator#readme",
   "changelogUrl": "https://github.com/m4bwav/UniverseGenerator/blob/master/CHANGELOG.md",
-  "licensesUrl": "https://github.com/m4bwav/UniverseGenerator/blob/master/LICENSE"
+  "licensesUrl": "https://github.com/m4bwav/UniverseGenerator/blob/master/LICENSE",
+  "samples": [
+    {
+      "displayName": "Galaxy printer",
+      "description": "A MonoBehaviour that writes the galaxy of a seed to the console: its systems, descriptors, danger and factions.",
+      "path": "Samples~/GalaxyPrinter"
+    }
+  ]
 }

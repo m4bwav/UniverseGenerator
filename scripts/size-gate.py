@@ -42,13 +42,14 @@ def show(value: int, metric: str) -> str:
 
 
 def upm_sizes() -> tuple[int, int]:
-    """What OpenUPM packs: the package folder without hidden or ~ entries, as a gzipped tarball."""
+    """What OpenUPM packs: the package folder without hidden entries, as a gzipped tarball. Samples~ ships in the
+    tarball (Unity imports samples from it), so it counts; Unity only skips ~ folders when it compiles the package."""
     unpacked = 0
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz", compresslevel=9) as tar:
         for path in sorted(PACKAGE.rglob("*")):
             rel = path.relative_to(PACKAGE)
-            if any(p.startswith(".") or p.endswith("~") for p in rel.parts) or not path.is_file():
+            if any(p.startswith(".") for p in rel.parts) or not path.is_file():
                 continue
             unpacked += path.stat().st_size
             tar.add(path, arcname=f"package/{rel.as_posix()}")

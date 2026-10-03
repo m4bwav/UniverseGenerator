@@ -21,6 +21,13 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- The samples, compiled and run here on both frameworks so they cannot rot: the console sample's README examples
+       and the Unity sample's engine-free code (SampleTests). -->
+  <ItemGroup>
+    <Compile Include="../../samples/ConsoleSample/Examples.cs" Link="Samples/Examples.cs" />
+    <Compile Include="../../Packages/com.m4bwav.universe-generator/Samples~/GalaxyPrinter/GalaxyReport.cs" Link="Samples/GalaxyReport.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../src/UniverseGenerator/UniverseGenerator.csproj" />
   </ItemGroup>

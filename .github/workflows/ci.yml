@@ -3,7 +3,7 @@
 # to "ubuntu-latest" (with the quotes) moves the jobs to GitHub's runners without a code change. Once the repository is
 # public (plan D9), the build job becomes the template's Windows, Linux and macOS matrix on GitHub-hosted runners.
 # Every push to master and every pull request: no committed golden file changed, locked restore, dotnet format, build
-# with warnings as errors, the NuGet audit, the tests (net10.0, and net48 on Windows), the Unity .meta check, a pack with
+# with warnings as errors, the NuGet audit, the tests (net10.0, and net48 on Windows), the console sample, the Unity .meta check, a pack with
 # a content and dependency check, the size gate, and the final `ci` job the ruleset on master requires.
 # Actions are pinned to commit SHAs with the version in a comment (from the template, checked 2026-09-27).
 name: ci
@@ -75,6 +75,8 @@ jobs:
       - name: Test (net48, Windows only; exercises the netstandard2.0 build)
         if: runner.os == 'Windows'
         run: dotnet test --no-build -c Release -f net48 --logger trx --results-directory TestResults
+      - name: Run the console sample (the README's examples)
+        run: dotnet run --project samples/ConsoleSample --no-build -c Release > /dev/null
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure()
         with:

@@ -66,7 +66,7 @@ namespace UniverseGeneration.Tests
         [Test]
         public void Source_files_use_lf_line_ends()
         {
-            var withCr = new[] { Package, "src", "tests/UniverseGenerator.Tests" }
+            var withCr = new[] { Package, "src", "samples", "tests/UniverseGenerator.Tests" }
                 .SelectMany(d => Directory.GetFiles(Repo.PathTo(d), "*.*", SearchOption.AllDirectories))
                 .Where(f => !f.Contains(Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar) && !f.Contains(Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar))
                 // NuGet writes lock files with CRLF on Windows; .gitattributes stores them LF.

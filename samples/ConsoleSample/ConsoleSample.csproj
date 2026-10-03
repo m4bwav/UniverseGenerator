@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The console sample for NuGet users. Program.cs holds every C# example in the README, region by region; a test
+       checks the README's code blocks against those regions, and CI runs this program, so the README cannot rot.
+       A copy outside this repository replaces the ProjectReference with <PackageReference Include="UniverseGenerator" />. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ConsoleSample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/UniverseGenerator/UniverseGenerator.csproj" />
+  </ItemGroup>
+
+</Project>
