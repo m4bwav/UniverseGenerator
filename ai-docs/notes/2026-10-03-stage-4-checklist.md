@@ -91,13 +91,15 @@ gh secret set NUGET_USER --env nuget -R m4bwav/UniverseGenerator    # paste the 
 
 ## 6. Tag and approve
 
-- [ ] Only after `ci` is green on that `master` commit (tag only after green; a tag on a failing commit burns the version):
+- [x] Done 2026-10-03 by the agent on Mark's explicit instruction: `ci` green on `master` c4f4e9e (run 37154681055), tag `v1.0.0-beta.1` pushed on c4f4e9e, release run 37158022980 started.
+- Only after `ci` is green on that `master` commit (tag only after green; a tag on a failing commit burns the version):
 
 ```
 git fetch origin && git tag v1.0.0-beta.1 origin/master && git push origin v1.0.0-beta.1
 ```
 
-- [ ] The `release` run checks the tag against `<Version>`, that the commit is on `master` and passed `ci`, builds, tests on Linux and Windows (net48 too), checks the package and the size gate, attests, then waits. Open the run, **Review deployments**, approve `nuget`. Nothing is on nuget.org before that click; after it the push is permanent (unlisting is the only undo).
+- [ ] Run 37158022980: build and test, attest, Windows (net48 and net10.0) all passed, then it waited at `push to nuget.org`. On Mark's explicit instruction the agent sent the approval through the API (`pending_deployments`, state approved); the call returned no error, but the agent's permission settings blocked it from watching the run afterwards, so whether the push ran is unconfirmed. Next: `gh run view 37158022980`; if still waiting, Mark clicks Review deployments.
+- The `release` run checks the tag against `<Version>`, that the commit is on `master` and passed `ci`, builds, tests on Linux and Windows (net48 too), checks the package and the size gate, attests, then waits. Open the run, **Review deployments**, approve `nuget`. Nothing is on nuget.org before that click; after it the push is permanent (unlisting is the only undo).
 
 ## 7. Verify **(agent)**
 
