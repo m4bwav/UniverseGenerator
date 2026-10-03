@@ -30,3 +30,10 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-02] handoff | rewritten: moon and belt detail next
 ## [2026-10-02] index | rebuilt (9 entries)
 ## [2026-10-02] index | rebuilt (9 entries)
+## [2026-10-03] add | notes/2026-10-03-moon-and-belt-level-design.md: moon and belt detail designed before coding (moon physics by kind, orbit, Peale tidal heat bounded by the kind, Jeans air with renewal for hazy and garden moons, hidden oceans, life, hazards; belt addresses, composition, resources)
+## [2026-10-03] update | Planet level refactor (12d0d87): greenhouse, pressure solver, climate, resource grading, similarity, habitability, trait picker and hazard list exposed for reuse; PlanetResources renamed ResourceGrades; no output change
+## [2026-10-03] add | Moon and belt detail (49c5fa5): moons and belts on their own seeds, Universe.At reaches belts (.../belt/k); moon-belt.json golden identical on net10.0 and net48, the other four unchanged; 130 tests; CI green on the self-hosted runner; size gate green (DLL 400.0 KB, nupkg 275.8 KB)
+## [2026-10-03] decision | Moon kinds win over physics where the system level promised more (volcanic and ocean heat floors, hazy and garden air renewed, the planet level's Jeans rule kept as Mark asked); belts follow physics (warm outer belts lose their ice); thick air shields a moon from its giant's radiation
+## [2026-10-03] update | Moon and belt note: tuning while coding and statistics; plan Stage 3 checklist and next action (galaxy cluster level); PR #1 description
+## [2026-10-03] handoff | rewritten: galaxy cluster level next
+## [2026-10-03] index | rebuilt (10 entries)
