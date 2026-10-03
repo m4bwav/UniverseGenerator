@@ -19,6 +19,7 @@ import re
 import subprocess
 import sys
 
+SELF = "scripts/history-scan.py"  # its own patterns would match themselves
 PUBLIC_EMAILS = {"m4bwav@gmail.com", "noreply@github.com"}
 SECRET_KINDS = {"secret-shaped assignment", "private key block", "known token prefix", "connection string"}
 KINDS = [
@@ -78,7 +79,7 @@ def main():
             commit, path = line.split()[1], None
         elif line.startswith("+++ b/"):
             path = line[6:]
-        elif line.startswith(("+", "-")) and not line.startswith(("+++ ", "--- ")):
+        elif line.startswith(("+", "-")) and not line.startswith(("+++ ", "--- ")) and path != SELF:
             for kind, value in matches(kinds, line):
                 history[(kind, value)].add((commit, path))
     for block in git(args.repo, "log", "--all", "--format=@@COMMIT %h%n%an <%ae>%n%cn <%ce>%n%B").split("@@COMMIT ")[1:]:
@@ -88,7 +89,7 @@ def main():
 
     current = collections.defaultdict(set)
     for path in git(args.repo, "ls-files").splitlines():
-        if path == "scripts/history-scan.py":
+        if path == SELF:
             continue
         try:
             with open(f"{args.repo}/{path}", "rb") as f:
