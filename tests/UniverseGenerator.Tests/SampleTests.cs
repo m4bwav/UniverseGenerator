@@ -41,7 +41,7 @@ namespace UniverseGeneration.Tests
             Assert.That(output, Does.Contain("\nA truce holds the frontier, and someone is working to break it.\n"));
             Assert.That(output, Does.Contain("\nan empire ruled from HD 31487, holding 17 systems\n"));
             Assert.That(output, Does.Contain("\nHD 45528 (K)\nHD 19029 (F)\nKepler-1971 (F)\n"));
-            Assert.That(output, Does.EndWith("; HD 147927 e I\nv1-my-seed/galaxy/system/31?systems=120\nTrue\n"));
+            Assert.That(output, Does.EndWith("; HD 147927 e I\nv1-my-seed/galaxy/system/31?systems=120\nTrue\n  \"address\": \"v1-my-seed/planet\",\nTrue\n"));
         }
 
         [Test]

@@ -115,6 +115,19 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Export()
+        {
+            #region readme
+            var planet = Planet.Generate("my-seed");
+            var json = planet.ToJson(indented: true);   // every field, after "schema" and "type"
+            Console.WriteLine(json.Split('\n')[3]);       //   "address": "v1-my-seed/planet",
+            var galaxy = Galaxy.Generate("my-seed", Preset.Pocket);
+            var map = galaxy.ToJson();                  // the map and extras; "systems" is null
+            var all = galaxy.ToJson(children: true);    // every system in full as well
+            Console.WriteLine(all.Length > map.Length); // True
+            #endregion
+        }
+
         /// <summary>Runs every example in README order.</summary>
         public static void All()
         {
@@ -127,6 +140,7 @@ namespace ConsoleSample
             StarNames();
             LoneObjects();
             Links();
+            Export();
         }
     }
 }

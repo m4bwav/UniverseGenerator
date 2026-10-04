@@ -7,7 +7,7 @@ namespace UniverseGeneration
     /// A star system: its star (and companion), planets with their moons, belts, stations, landmarks and story tags.
     /// Distances are in au. <c>StarSystem.Generate("my-seed")</c> makes one on its own; a galaxy makes them in place.
     /// </summary>
-    public sealed record StarSystem
+    public sealed partial record StarSystem
     {
         /// <summary>Where it is, such as <c>v1-my-seed/system</c> or <c>v1-my-seed/galaxy/system/31</c>.</summary>
         public string Address { get; init; } = "";

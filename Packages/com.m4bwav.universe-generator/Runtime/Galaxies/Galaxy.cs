@@ -31,7 +31,7 @@ namespace UniverseGeneration
     /// core. Positions are in game units within <see cref="Radius"/> of the centre. <c>Galaxy.Generate("my-seed")</c>
     /// makes one; each system's details are generated when first read, and equal what its address alone regenerates.
     /// </summary>
-    public sealed record Galaxy
+    public sealed partial record Galaxy
     {
         /// <summary>Where it is, such as <c>v1-my-seed/galaxy</c>.</summary>
         public string Address { get; init; } = "";
