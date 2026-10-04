@@ -169,3 +169,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-04] add | OpenUPM cover image docs/images/openupm-cover.png (my-seed Epic barred galaxy from 1.0.0, 1200x600) with a note holding the dump and render scripts; topic stays Procedural Generation only
 ## [2026-10-04] index | rebuilt (22 entries)
 ## [2026-10-04] index | rebuilt (22 entries)
+## [2026-10-04] verify | Mark says he submitted to OpenUPM, but openupm/openupm has no pull request for the package and m4bwav has no fork: the form's Submit metadata step stops at GitHub until the file is proposed
+## [2026-10-04] handoff | next-session-prompt.md rewritten to cover everything left in the 1.0 project (OpenUPM check, 1.0.1 doc fixes, Stage 7 wiki, IL2CPP, then Mark-asked items)
+## [2026-10-04] index | rebuilt (22 entries)
