@@ -63,7 +63,7 @@ Totals, as first written in human working days (relative size only, see the ruli
 
 Every row is additive: none changes an existing seed's output or an existing golden file, so any of them can also land in a 1.x minor after 1.0.0.
 
-### N1 progress (2026-10-03, end of session)
+### N1 progress (2026-10-03, every row built)
 
 The pull requests are stacked: each one's base is the one before it, so Mark merges them in order, #17 first. When a base branch is deleted on merge, GitHub retargets the next pull request to `master`. All are assigned to m4bwav with `needs-review`. Each was green on Linux, Windows and macOS when last checked, or green locally (the last one, #25).
 
@@ -77,10 +77,12 @@ The pull requests are stacked: each one's base is the one before it, so Mark mer
 | `typed-units` (conversions, not an option: see #22) | #22 | none |
 | `diagnostics` | #23 | `diagnostics.json` |
 | `galaxy-shapes` | #25 | `shapes.json` |
-| `constraints` | not started | |
-| `hooks-plugins` and `custom-fields` | not started | |
-| `data-tables-editable` | not started | |
-| Unity float adapter | not started | |
+| `constraints` (`GeneratorOptions.Require`, `Guarantee` flags) | #29, merged | `constraints.json` |
+| `hooks-plugins` and `custom-fields` (`GeneratorHooks`, `Custom`) | #30 | `hooks.json` |
+| `data-tables-editable` (`GeneratorTables`, `TablesAsset`) | #31 | `tables.json` |
+| Unity float adapter (`UnityVectors`) | #32 | none (no .NET output) |
+
+Merged so far: #17 went to `master`, but #18 to #25 merged into `feat/seed-url` (that branch was not deleted, so GitHub did not retarget them); #28 carried them to `master`, and #29 followed. #30 was retargeted to `master`; #31 and #32 are stacked on it. Size at #32 (local): nupkg 441.2 KB, DLL 563.0 KB (green under 750), UPM 606.7 KB unpacked, 46 Runtime files, 13,423 lines. Both Unity assemblies compiled in Unity 6000.6.4f1, and a galaxy's full export had the same length on Unity Mono as on .NET 10.
 
 `export.json` holds the export as written in #19. A field added later is stripped from it by `JsonKeyFilter.AddedLater` in the tests, and gets its own golden file, so `export.json` never changes. `scripts/gen-json-export.py` regenerates the writer after a field is added; `ExportTests` fails until it is run.
 

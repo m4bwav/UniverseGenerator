@@ -121,3 +121,11 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | export.json must not change when fields are added: the export golden test strips later keys (JsonKeyFilter.AddedLater) and each field gets its own golden file; a reflection test guards that every GeneratorOptions property has an options-code name
 ## [2026-10-03] handoff | rewritten: N1 has four rows left (constraints, hooks and custom fields, editable tables, Unity float adapter); stack #17 to #25 waits for Mark in order; next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (18 entries)
+## [2026-10-03] update | Mark merged the N1 stack, but #18 to #25 merged into feat/seed-url (its branch was not deleted, so GitHub did not retarget them); carry PR #28 (feat/seed-url to master) took them to master
+## [2026-10-03] add | constraints: GeneratorOptions.Require with Guarantee flags (garden and ocean worlds, precursor site, blue, giant, white dwarf, neutron, black hole, Sun-like stars), repaired per galaxy on its constraints stream through SystemContext; golden constraints.json; PR #29 (merged by Mark)
+## [2026-10-03] add | hooks-plugins and custom-fields: GeneratorHooks (OnPlanet, OnSystem, OnGalaxy, OnCluster, OnUniverse) beside the options, not in them (value equality, ToCode); Custom string dictionary on nine records; golden hooks.json; PR #30
+## [2026-10-03] add | data-tables-editable: GeneratorTables (nine weight tables by id, hand-written JsonReader, registry, GeneratorOptions.Tables) and TablesAsset in a new UniverseGenerator.Unity asmdef; built-in tables give identical output; golden tables.json; PR #31
+## [2026-10-03] add | Unity float adapter: UnityVectors (Vector2/Vector3 positions, lane ends, Planet.OrbitPosition); PR #32. Both Unity assemblies compiled in Unity 6000.6.4f1; a galaxy's export had the same length on Unity Mono and .NET 10
+## [2026-10-03] learn | Stacked pull requests: retarget the next one to master after its base merges (gh pr edit N --base master), or the merge lands in the old base branch
+## [2026-10-03] handoff | rewritten: N1 built; #30, #31, #32 wait for Mark; then the 1.0.0 release pull request; next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (18 entries)
