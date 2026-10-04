@@ -87,7 +87,7 @@
   "seeds": "yes",
   "package": "core",
   "size": "3 KB",
-  "why": "landmark guarantee and fair starts need it; deterministic repair pass on its own stream"
+  "why": "built for 1.0.0: GeneratorOptions.Require with Guarantee flags (garden and ocean worlds, a precursor site, blue, giant, white dwarf, neutron, black hole and Sun-like stars), repaired per galaxy on its constraints stream through the system context; default none; planned as: landmark guarantee and fair starts need it; deterministic repair pass on its own stream"
  },
  "explain-trace": {
   "group": "Seeds and API",

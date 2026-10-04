@@ -56,7 +56,7 @@ namespace UniverseGeneration
             var age = context.Age ?? DrawAge(seed);
             // A galaxy's map already holds the shifted danger; a system alone shifts its own draw.
             var danger = context.Danger ?? DMath.Clamp(Seeds.Stream(seed, "danger").Range(1, 10) + options.DangerShift, 1, 10);
-            var (star, companion) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
+            var (star, companion) = context.Star != null ? (context.Star, null) : StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
             var name = context.Name ?? InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
 
             var close = companion != null && companion.Orbit == CompanionOrbit.Close;
@@ -68,6 +68,12 @@ namespace UniverseGeneration
             if (drafts.Count > options.MaxPlanetsPerSystem)
             {
                 drafts.RemoveRange(options.MaxPlanetsPerSystem, drafts.Count - options.MaxPlanetsPerSystem);
+            }
+
+            // A galaxy's guarantee (Constraints) changes one temperate planet's kind after every draw of the system.
+            if (context.ForcedPlanet >= 0 && context.ForcedPlanet < drafts.Count)
+            {
+                drafts[context.ForcedPlanet].Kind = context.ForcedKind;
             }
 
             var letters = DiscoveryLetters(drafts.Count, Seeds.Stream(seed, "letters"));

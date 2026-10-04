@@ -14,7 +14,15 @@ namespace UniverseGeneration
     internal static class OptionsCode
     {
         // The names, in the order ToCode writes them. Add a setting at the end and in both methods below.
-        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger", "names" };
+        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger", "names", "require" };
+
+        // The guarantees in the order a code lists them, with their names; flags beyond these are refused by Validate.
+        private static readonly (Guarantee Flag, string Name)[] s_guarantees =
+        {
+            (Guarantee.GardenWorld, "garden"), (Guarantee.OceanWorld, "ocean"), (Guarantee.PrecursorSite, "precursor"),
+            (Guarantee.BlueStar, "blue"), (Guarantee.Giant, "giant"), (Guarantee.WhiteDwarf, "whitedwarf"),
+            (Guarantee.NeutronStar, "neutron"), (Guarantee.BlackHole, "blackhole"), (Guarantee.SunLikeStar, "sunlike"),
+        };
 
         public static string Write(GeneratorOptions o)
         {
@@ -73,6 +81,11 @@ namespace UniverseGeneration
             if (o.Names != d.Names)
             {
                 Add(text, "names", o.Names == NameStyle.Invented ? "invented" : "catalogue");
+            }
+
+            if (o.Require != d.Require)
+            {
+                Add(text, "require", GuaranteeNames(o.Require));
             }
 
             return text.ToString();
@@ -141,6 +154,9 @@ namespace UniverseGeneration
                         break;
                     case "danger":
                         o = o with { DangerShift = ReadInt(name, value) };
+                        break;
+                    case "require":
+                        o = o with { Require = ReadGuarantees(value) };
                         break;
                     default:
                         o = o with { Names = value == "catalogue" ? NameStyle.Catalogue : value == "invented" ? NameStyle.Invented : throw Choice(name, value, "catalogue, invented") };
@@ -230,6 +246,55 @@ namespace UniverseGeneration
             "old" => Epoch.Old,
             _ => throw Choice("epoch", value, "auto, young, mature, old"),
         };
+
+        // Joined by commas, as in require=garden,blackhole.
+        private static string GuaranteeNames(Guarantee require)
+        {
+            var text = new StringBuilder();
+            foreach (var (flag, name) in s_guarantees)
+            {
+                if ((require & flag) != 0)
+                {
+                    text.Append(text.Length > 0 ? "," : "").Append(name);
+                }
+            }
+
+            return text.Length == 0 ? "none" : text.ToString();
+        }
+
+        private static Guarantee ReadGuarantees(string value)
+        {
+            if (value == "none")
+            {
+                return Guarantee.None;
+            }
+
+            var require = Guarantee.None;
+            foreach (var part in value.Split(','))
+            {
+                var found = false;
+                foreach (var (flag, name) in s_guarantees)
+                {
+                    if (part == name)
+                    {
+                        if ((require & flag) != 0)
+                        {
+                            throw Bad($"require lists \"{name}\" twice.");
+                        }
+
+                        require |= flag;
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                {
+                    throw Bad($"require takes none or a comma-separated list of garden, ocean, precursor, blue, giant, whitedwarf, neutron, blackhole, sunlike; got \"{part}\".");
+                }
+            }
+
+            return require;
+        }
 
         private static ArgumentException Choice(string name, string value, string choices) =>
             Bad($"{name} must be one of {choices}; got \"{value}\".");

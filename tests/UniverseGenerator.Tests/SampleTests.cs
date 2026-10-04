@@ -38,6 +38,7 @@ namespace UniverseGeneration.Tests
             Assert.That(output, Does.Contain("\na ringed ice giant far from a red dwarf\nv1-my-seed/galaxy/system/31/planet/1\nTrue\n"));
             Assert.That(output, Does.Contain("Systems must be 1 to 2000; you asked for 0."));
             Assert.That(output, Does.Contain("\n15 of 30 systems at danger 8 or more\n6 of 40 systems at danger 8 or more\n"));
+            Assert.That(output, Does.Contain("\nv1-my-seed/galaxy/system/13/planet/1\nv1-my-seed/galaxy?systems=20&planets=6&require=garden,blackhole\n"));
             Assert.That(output, Does.Contain("\nA truce holds the frontier, and someone is working to break it.\n"));
             Assert.That(output, Does.Contain("\nan empire ruled from HD 31487, holding 17 systems\n"));
             Assert.That(output, Does.Contain("\nHD 45528 (K)\nHD 19029 (F)\nKepler-1971 (F)\n"));
