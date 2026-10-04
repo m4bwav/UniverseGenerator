@@ -298,8 +298,8 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 
 ### Stage 5: OpenUPM, then the game's switch
 Picked by Mark on 2026-10-03, after Stage 4. Machine check the same day: editors 6000.5.8f1, 6000.6.0f1, 6000.6.4f1; Mono Windows players on all three, IL2CPP on none, WebGL only on 6000.5.8f1; no ARM64 device yet.
-- [ ] Scratch Unity 6 project: install by git URL, run the sample, EditMode golden tests in Mono and an IL2CPP player (one ARM64 build for the fused multiply-add check); measure the WebGL build-size delta.
-- [ ] Prepare the OpenUPM submission; Mark opens it.
+- [ ] Scratch Unity 6 project: install by git URL, run the sample, EditMode golden tests in Mono and an IL2CPP player (one ARM64 build for the fused multiply-add check); measure the WebGL build-size delta. **Done 2026-10-04 except two runs** (on Mark's overnight go-ahead; [Stage 5 Unity checks](../notes/2026-10-03-stage-5-unity-checks.md), harness `tests/Unity/`, PR #44 merged): the git-URL install at `v1.0.0` compiles in 6000.6.4f1 and 6000.5.8f1 with no warnings, and the sample runs. Unity Mono passes 266 of 266 tests on both editors, the 18 golden checks among them. IL2CPP (WebGL, wasm32) passes all 18 golden checks. WebGL adds 116.0 KB, green. Open: a Windows x64 IL2CPP player (module and C++ build tools need an elevated install, Mark's to approve) and the ARM64 check (no device).
+- [ ] Prepare the OpenUPM submission; Mark opens it. **Prepared 2026-10-04:** [the submission note](../notes/2026-10-04-openupm-submission.md) has the form values (min version 1.0.0, topic procedural-generation). LICENSE is missing from the tarball, so PR #46 adds it to the package folder for the next release. The README's Unity line was fixed in PR #45 (merged). Waits for Mark's submission.
 - [ ] The game's switch on a branch, with the galaxy seed saved and shown (D10). **Stop 3.**
 
 ### Real stars track (Mark, 2026-10-03; 1.x, after 1.0.0)
@@ -356,4 +356,4 @@ Mark asked whether the package could be F# compiled by Fable, so one source also
 
 ## Next single action
 
-**Stage 4 is done (2026-10-03): 1.0.0 released and verified, the 1.0.0 wiki live, and every 1.x pack validated against the published 1.0.0 (PR #39, bd86cf8). Mark picked Stage 5 (2026-10-03): the scratch Unity 6 project installed by git URL at `v1.0.0`, golden tests in Mono and IL2CPP, the WebGL size delta, then the OpenUPM submission prepared for him to open. First, list the editors and modules; installing IL2CPP or WebGL waits for his go-ahead. The game's switch waits for the OpenUPM listing.** The next session's prompt is [next-session-prompt.md](../next-session-prompt.md). Nothing gets tagged or published without Mark.
+**Stage 5 under way (2026-10-04).** The Unity checks pass for 1.0.0 (PR #44, merged) and the OpenUPM values are ready. Mark: review #46 (LICENSE) and #47 (flag rename), submit to OpenUPM with [the submission note](../notes/2026-10-04-openupm-submission.md), and decide on the Windows IL2CPP module with C++ build tools and an ARM64 device. Next for the agent: check the OpenUPM build and page once Mark has submitted, then the remaining IL2CPP runs; the game's switch (Stop 3) waits for the listing. The next session's prompt is [next-session-prompt.md](../next-session-prompt.md). Nothing gets tagged or published without Mark.

@@ -157,3 +157,8 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] decision | Mark picked Stage 5 (Unity and OpenUPM) after Stage 4: scratch project by git URL, golden tests in Mono and IL2CPP, WebGL size delta, OpenUPM submission prepared for him; machine had no IL2CPP module and WebGL only on 6000.5.8f1
 ## [2026-10-03] handoff | rewritten: Stage 5 next; next-session-prompt.md rewritten around Stage 5
 ## [2026-10-03] index | rebuilt (19 entries)
+## [2026-10-04] verify | Stage 5 Unity checks of 1.0.0 from the git tag: compiles in 6000.6.4f1 and 6000.5.8f1, sample runs, 266/266 tests in Unity Mono on both, 18/18 golden checks in an IL2CPP WebGL player (Chrome), WebGL +116.0 KB Brotli (green); harness tests/Unity (PR #44, merged by Mark)
+## [2026-10-04] learn | Unity: custom NUnit 3.5 needs rewrites of NUnit 4 calls; all-platform test asmdef runs only as PlayMode; NUnit in a player needs BuildOptions.IncludeTestAssemblies; WebGL is an IL2CPP check without the Windows module; module installs need elevation (UAC)
+## [2026-10-04] add | OpenUPM submission prepared (form values, min version 1.0.0, topic procedural-generation); PR #46 LICENSE.md in the package folder (npm pack of the folder drops the root LICENSE); PR #47 renames --local to --working-tree (scan false positive); PR #45 README git-URL line merged by Mark
+## [2026-10-04] handoff | rewritten: Stage 5 under way; Mark submits to OpenUPM and reviews #46 and #47; next-session-prompt.md rewritten
+## [2026-10-04] index | rebuilt (21 entries)
