@@ -82,7 +82,7 @@ The pull requests are stacked: each one's base is the one before it, so Mark mer
 | `data-tables-editable` (`GeneratorTables`, `TablesAsset`) | #31 | `tables.json` |
 | Unity float adapter (`UnityVectors`) | #32 | none (no .NET output) |
 
-Merged so far: #17 went to `master`, but #18 to #25 merged into `feat/seed-url` (that branch was not deleted, so GitHub did not retarget them); #28 carried them to `master`, and #29 followed. #30 was retargeted to `master`; #31 and #32 are stacked on it. Size at #32 (local): nupkg 441.2 KB, DLL 563.0 KB (green under 750), UPM 606.7 KB unpacked, 46 Runtime files, 13,423 lines. Both Unity assemblies compiled in Unity 6000.6.4f1, and a galaxy's full export had the same length on Unity Mono as on .NET 10.
+Merged so far: #17 went to `master`, but #18 to #25 merged into `feat/seed-url` (that branch was not deleted, so GitHub did not retarget them); #28 carried them to `master`, and #29 followed. #30, #31 and #32 were retargeted to `master` and Mark merged them on 2026-10-03 (4260ff5, `ci` run 37171661790 green on Linux, Windows and macOS), so every N1 row is on `master`. Size at #32 (local): nupkg 441.2 KB, DLL 563.0 KB (green under 750), UPM 606.7 KB unpacked, 46 Runtime files, 13,423 lines. Both Unity assemblies compiled in Unity 6000.6.4f1, and a galaxy's full export had the same length on Unity Mono as on .NET 10.
 
 `export.json` holds the export as written in #19. A field added later is stripped from it by `JsonKeyFilter.AddedLater` in the tests, and gets its own golden file, so `export.json` never changes. `scripts/gen-json-export.py` regenerates the writer after a field is added; `ExportTests` fails until it is run.
 

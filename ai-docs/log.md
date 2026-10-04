@@ -129,3 +129,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | Stacked pull requests: retarget the next one to master after its base merges (gh pr edit N --base master), or the merge lands in the old base branch
 ## [2026-10-03] handoff | rewritten: N1 built; #30, #31, #32 wait for Mark; then the 1.0.0 release pull request; next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (18 entries)
+## [2026-10-03] update | Mark merged #30, #31, #32 (retargeted to master); every N1 row on master at 4260ff5, ci run 37171661790 green on all three OSes, size gate all green (nupkg 441.0 KB, DLL 563.0 KB, UPM 606.7 KB / 143.2 KB, 46 files, 13,423 lines)
+## [2026-10-03] add | release PR #34 (release/1.0.0): CHANGELOG [1.0.0] - 2026-10-03 with size section, Version and package.json 1.0.0, README status and AGENTS what-this-is updated; golden v1 only gained 9 files since v1.0.0-beta.1; waits for Mark to merge, tag v1.0.0 and approve nuget
+## [2026-10-03] handoff | rewritten: #34 waits for Mark; then verify 1.0.0 from nuget.org (checklist step 7) and the PackageValidationBaselineVersion PR; next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (18 entries)

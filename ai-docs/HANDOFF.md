@@ -1,10 +1,10 @@
 # Handoff
 
 ## Current state
-2026-10-03, Stage 4 towards 1.0.0 (1.0.0-beta.1 is on nuget.org and verified). **Every N1 row is built** (Mark's ruling: all unbuilt or partial 1.0 rows go in 1.0.0). On `master` (744eb77): #17 to #25 (carried by #28) and #29 `constraints`. Waiting for Mark, in order: #30 hooks and custom fields (base `master`), #31 editable tables (base #30), #32 Unity float adapter (base #31). The table is in the [Stop 2 note](notes/2026-10-03-stop-2-questions.md) under "N1 progress". `tests/Golden/v1/` gained only new files. Size at #32 (local): nupkg 441.2 KB, DLL 563.0 KB (green under 750), 46 Runtime files, 13,423 lines.
+2026-10-03, Stage 4: **the 1.0.0 release pull request is #34** (branch `release/1.0.0`), waiting for Mark. Every N1 row is on `master` (4260ff5; #30, #31, #32 merged by Mark after retargeting), `ci` run 37171661790 green on Linux, Windows and macOS. Size gate on that run, all green: nupkg 441.0 KB, largest DLL 563.0 KB, UPM 606.7 KB unpacked and 143.2 KB compressed, 46 Runtime files, 13,423 lines. `tests/Golden/v1/` only gained 9 files since `v1.0.0-beta.1`.
 
 ## In progress
-Nothing half-done. Next: the 1.0.0 release pull request, once Mark has merged #30 to #32.
+Nothing half-done. #34 carries the dated CHANGELOG (`## [1.0.0] - 2026-10-03`, with that size section), `<Version>` and `package.json` at 1.0.0, and the README and AGENTS.md status lines.
 
 ## Dead ends hit
 - Stacked pull requests: when a merged base branch is not deleted, GitHub does not retarget the next pull request, and it merges into the old branch, not `master` (#18 to #25 landed in `feat/seed-url`; #28 carried them). After a base merges, retarget the next pull request to `master` (`gh pr edit N --base master`) or ask Mark to delete the branch.
@@ -21,10 +21,10 @@ Nothing half-done. Next: the 1.0.0 release pull request, once Mark has merged #3
 - Mark rejects effort estimates in human working days: estimate in agent time.
 
 ## Left / follow-ups
-1. Mark: review and merge #30, #31, #32 in that order (#30 states where hooks live and why).
-2. The 1.0.0 release pull request: CHANGELOG heading dated, with the size numbers from `master`'s size gate; `<Version>` and package.json 1.0.0; the README status line ("1.0.0-beta.1 in review, not released yet" is stale). Then Mark tags and approves; verify as checklist step 7; then `PackageValidationBaselineVersion` 1.0.0.
-3. After 1.0.0: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope.
+1. Mark: merge #34; with `ci` green on `master`, tag `v1.0.0` on the merge commit and push it; approve the `nuget` deployment. (If he tags on another day, the CHANGELOG date should change first.)
+2. Agent, after the release run: verify 1.0.0 from nuget.org as [checklist](notes/2026-10-03-stage-4-checklist.md) step 7 did for beta.1; then a pull request setting `PackageValidationBaselineVersion` 1.0.0 and replacing the csproj comment about no baseline.
+3. After 1.0.0: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope. Start neither unless Mark asks.
 4. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
 
 ## Next single action
-When #30 to #32 are merged: the 1.0.0 release pull request. The prompt is [next-session-prompt.md](next-session-prompt.md).
+When Mark has tagged `v1.0.0` and approved the deployment: verify 1.0.0 from nuget.org. The prompt is [next-session-prompt.md](next-session-prompt.md).
