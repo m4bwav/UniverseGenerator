@@ -10,7 +10,7 @@ The seed promise covers Unity Mono and IL2CPP (AGENTS.md). These files build a t
 
 ```
 python tests/Unity/make_project.py tests <project-dir> --editor 6000.6.4f1   # package from git, tag v1.0.0
-python tests/Unity/make_project.py tests <project-dir> --local               # this working tree's package
+python tests/Unity/make_project.py tests <project-dir> --working-tree         # this working tree's package
 ```
 
 It installs the package by git URL at the tag, as users will. It also copies `tests/UniverseGenerator.Tests/*.cs` (without `RepoRulesTests.cs`) into an assembly named `UniverseGenerator.Tests`, so the runtime's `InternalsVisibleTo` applies. The golden files go in as Resources, and a generated `GoldenRunner` calls every test method that checks a golden file. The repository's tests use NUnit 4, and Unity ships a custom NUnit 3.5, so a short table of rewrites in `make_project.py` keeps each assertion's meaning. Add to it when a new test uses a newer NUnit API.

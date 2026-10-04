@@ -2,7 +2,7 @@
 """Write a throwaway Unity 6 project that checks the package in Unity (tests/Unity/README.md).
 
 Kinds:
-  tests  the package from a git tag (or --local), the repository's NUnit tests compiled in Unity as the assembly
+  tests  the package from a git tag (or --working-tree), the repository's NUnit tests compiled in Unity as the assembly
          UniverseGenerator.Tests (so InternalsVisibleTo applies), the golden files as Resources, and a runner that
          repeats every golden check in players (IL2CPP).
   size   a near-empty project for the WebGL size delta; --with-package adds the package and one call to
@@ -98,7 +98,7 @@ def set_dependencies(project, add, remove=()):
 
 
 def package_source(args):
-    if args.local:
+    if args.working_tree:
         return "file:" + os.path.join(REPO, "Packages", PACKAGE).replace("\\", "/")
     return f"{GIT_URL}#{args.ref}"
 
@@ -289,7 +289,7 @@ def main():
     p.add_argument("--editor", default="6000.6.4f1", help="Unity editor version (default 6000.6.4f1)")
     p.add_argument("--unity", help="path to the Unity executable, when it is not in the Hub's default folder")
     p.add_argument("--ref", default="v1.0.0", help="git tag or commit of the package (default v1.0.0)")
-    p.add_argument("--local", action="store_true", help="use this working tree's package folder instead of git")
+    p.add_argument("--working-tree", action="store_true", help="use this working tree's package folder instead of git")
     p.add_argument("--with-package", action="store_true", help="size kind: add the package and its probe")
     args = p.parse_args()
     project = os.path.abspath(args.project)
