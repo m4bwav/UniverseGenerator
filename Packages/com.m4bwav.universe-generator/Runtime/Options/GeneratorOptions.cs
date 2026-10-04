@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace UniverseGeneration
@@ -134,6 +135,20 @@ namespace UniverseGeneration
             }
 
             return OptionsCode.Read(code);
+        }
+
+        /// <summary>
+        /// Soft problems with these settings that <see cref="Validate"/> lets through, such as <see cref="Arms"/> for a
+        /// shape without arms, each as a <see cref="GeneratorWarning"/>; empty when there are none. A galaxy also lists
+        /// what generation itself had to change in <see cref="Galaxy.Warnings"/>.
+        /// </summary>
+        /// <exception cref="ArgumentException">A setting is invalid (see <see cref="Validate"/>).</exception>
+        public IReadOnlyList<GeneratorWarning> Check()
+        {
+            Validate();
+            var warnings = new List<GeneratorWarning>();
+            Diagnostics.Shape(warnings, Shape, Systems, Arms);
+            return warnings;
         }
 
         internal static string CheckSeed(string? seed)
