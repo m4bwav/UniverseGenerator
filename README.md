@@ -2,7 +2,7 @@
 
 A seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, for .NET and Unity. One seed gives the same galaxy on every platform and runtime: names, star types, planets, moons, lanes, regions, factions, danger and story tags, as plain C# records with no dependencies.
 
-**Status: 1.0.0-beta.1 in review, not released yet.**
+**Status: 1.0.0, the first stable release, on nuget.org. The OpenUPM listing comes next; until then, install in Unity by git URL.**
 
 ## Install
 

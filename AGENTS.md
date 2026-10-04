@@ -4,7 +4,7 @@ Rules for any AI agent (Claude Code, Copilot, Cursor, Codex) working in this rep
 
 ## What this is
 
-UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, as the NuGet package `UniverseGenerator` (namespace `UniverseGeneration`) and the Unity package `com.m4bwav.universe-generator` (OpenUPM), built from one source folder. It was extracted from the game SpaceDeckBuilder2. 1.0.0-beta.1 is on nuget.org (2026-10-03, Trusted Publishing) and the repository is public; 1.0.0 and OpenUPM are next. The plan is `ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md` (decisions D1 to D25, ruled 2026-10-02); start with `ai-docs/HANDOFF.md`. Why it does what it does: `kb/INDEX.md`.
+UniverseGenerator: a seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, as the NuGet package `UniverseGenerator` (namespace `UniverseGeneration`) and the Unity package `com.m4bwav.universe-generator` (OpenUPM), built from one source folder. It was extracted from the game SpaceDeckBuilder2. 1.0.0 is the current release on nuget.org (Trusted Publishing; 1.0.0-beta.1 came first, 2026-10-03) and the repository is public; OpenUPM is next. The plan is `ai-docs/plans/2026-10-02-universegenerator-1.0-plan.md` (decisions D1 to D25, ruled 2026-10-02); start with `ai-docs/HANDOFF.md`. Why it does what it does: `kb/INDEX.md`.
 
 ## Rules
 

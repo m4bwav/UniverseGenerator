@@ -1,6 +1,6 @@
 {
   "name": "com.m4bwav.universe-generator",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "displayName": "Universe Generator",
   "description": "Seeded universe, galaxy, star system, planet and moon generator for games and fiction. One seed gives the same galaxy on every platform: names, star types, planets, lanes, regions, danger and story tags, as plain C# data with no engine dependencies.",
   "unity": "6000.0",
