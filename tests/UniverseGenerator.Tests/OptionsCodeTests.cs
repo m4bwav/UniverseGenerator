@@ -160,6 +160,12 @@ namespace UniverseGeneration.Tests
             {
                 candidates = new object[] { !(current is bool b && b) };
             }
+            else if (type == typeof(string))
+            {
+                // The only string setting is Tables, which must name registered tables.
+                GeneratorTables.Register(GeneratorTables.Default.With("options-code-test"));
+                candidates = new object[] { "options-code-test" };
+            }
             else if (type.IsEnum)
             {
                 candidates = Enum.GetValues(type).Cast<object>().Where(e => !e.Equals(current)).ToArray();

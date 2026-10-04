@@ -10,16 +10,16 @@ namespace UniverseGeneration
     internal static class StarGenerator
     {
         // Order of every weight table below.
-        private static readonly StarClass[] s_classes =
+        internal static readonly StarClass[] Classes =
         {
             StarClass.M, StarClass.K, StarClass.G, StarClass.F, StarClass.A, StarClass.B, StarClass.O,
             StarClass.WhiteDwarf, StarClass.Giant, StarClass.Supergiant, StarClass.NeutronStar, StarClass.BlackHole,
         };
 
-        private static readonly int[] s_gameYoung = { 260, 170, 140, 110, 90, 40, 10, 20, 25, 15, 6, 3 };
-        private static readonly int[] s_gameMature = { 300, 200, 150, 90, 50, 15, 3, 60, 50, 8, 10, 5 };
-        private static readonly int[] s_gameOld = { 320, 210, 140, 70, 25, 4, 1, 110, 80, 4, 14, 8 };
-        private static readonly int[] s_plausible = { 7250, 1290, 590, 310, 60, 4, 0, 590, 40, 1, 10, 2 };
+        internal static readonly int[] GameYoung = { 260, 170, 140, 110, 90, 40, 10, 20, 25, 15, 6, 3 };
+        internal static readonly int[] GameMature = { 300, 200, 150, 90, 50, 15, 3, 60, 50, 8, 10, 5 };
+        internal static readonly int[] GameOld = { 320, 210, 140, 70, 25, 4, 1, 110, 80, 4, 14, 8 };
+        internal static readonly int[] Plausible = { 7250, 1290, 590, 310, 60, 4, 0, 590, 40, 1, 10, 2 };
 
         // Percent of stars of each class with a companion (Duchene and Kraus 2013, rounded for play).
         private static readonly int[] s_binaryPercent = { 25, 35, 45, 50, 65, 70, 75, 20, 30, 50, 15, 20 };
@@ -27,14 +27,15 @@ namespace UniverseGeneration
         private static readonly StarClass[] s_companionClasses = { StarClass.M, StarClass.K, StarClass.G, StarClass.WhiteDwarf };
         private static readonly int[] s_companionWeights = { 60, 25, 10, 5 };
 
-        public static (Star Star, Companion? Companion) Roll(Pcg32 rng, StellarAge age, StarMix mix)
+        public static (Star Star, Companion? Companion) Roll(Pcg32 rng, StellarAge age, GeneratorOptions options)
         {
-            var weights = mix == StarMix.Plausible ? s_plausible
-                : age == StellarAge.Young ? s_gameYoung
-                : age == StellarAge.Old ? s_gameOld
-                : s_gameMature;
+            var tables = GeneratorTables.For(options);
+            var weights = tables.Weights(options.StarMix == StarMix.Plausible ? GeneratorTables.StarPlausible
+                : age == StellarAge.Young ? GeneratorTables.StarYoung
+                : age == StellarAge.Old ? GeneratorTables.StarOld
+                : GeneratorTables.StarMature);
             var index = rng.Weighted(weights);
-            var star = Make(s_classes[index], rng);
+            var star = Make(Classes[index], rng);
 
             Companion? companion = null;
             if (rng.NextInt(100) < s_binaryPercent[index])

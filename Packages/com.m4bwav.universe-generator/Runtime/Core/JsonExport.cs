@@ -1531,5 +1531,41 @@ namespace UniverseGeneration
             w.Name("galaxies");
             w.Int(v.Galaxies);
         }
+
+        public static void Write(JsonWriter w, WeightEntry v, bool children)
+        {
+            w.BeginObject();
+            Fields(w, v, children);
+            w.EndObject();
+        }
+
+        private static void Fields(JsonWriter w, WeightEntry v, bool children)
+        {
+            _ = children;
+            w.Name("name");
+            w.String(v.Name);
+            w.Name("weight");
+            w.Int(v.Weight);
+        }
+
+        public static void Write(JsonWriter w, WeightTable v, bool children)
+        {
+            w.BeginObject();
+            Fields(w, v, children);
+            w.EndObject();
+        }
+
+        private static void Fields(JsonWriter w, WeightTable v, bool children)
+        {
+            w.Name("id");
+            w.String(v.Id);
+            w.Name("entries");
+            w.BeginArray();
+            foreach (var item in v.Entries)
+            {
+                Write(w, item, children);
+            }
+            w.EndArray();
+        }
     }
 }

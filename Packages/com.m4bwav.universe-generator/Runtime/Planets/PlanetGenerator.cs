@@ -18,7 +18,7 @@ namespace UniverseGeneration
         {
             var seed = address.ObjectSeed;
             var age = StarSystemGenerator.DrawAge(seed);
-            var (star, _) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
+            var (star, _) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options);
             var starName = InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
             var light = Math.Max(star.Luminosity, 0.0001);
             var (hzInner, hzOuter, frost) = StarSystemGenerator.Zones(light);
@@ -42,10 +42,11 @@ namespace UniverseGeneration
             var zone = StarSystemGenerator.Zone(orbit, hzInner, hzOuter, frost);
             var giantWeight = (int)(30 * DMath.Clamp(star.Mass, 0.15, 1.6));
             var pod = (Rocky: StarSystemGenerator.LogUniform(body, 0.25, 2.2), Gassy: StarSystemGenerator.LogUniform(body, 4.7, 12));
-            var draft = StarSystemGenerator.Draw(body, orbit, star.Mass, zone, giantWeight, false, pod, StarSystemGenerator.NoGarden(star.Class));
+            var tables = GeneratorTables.For(options);
+            var draft = StarSystemGenerator.Draw(body, orbit, star.Mass, zone, giantWeight, false, pod, StarSystemGenerator.NoGarden(star.Class), tables);
 
             var host = new PlanetHost(star, star.Mass, light, age);
-            return StarSystemGenerator.BuildPlanet(draft, 0, seed, address, starName + " b", host, options.Weirdness, new StarSystemGenerator.OrbitShape(false, 0.6));
+            return StarSystemGenerator.BuildPlanet(draft, 0, seed, address, starName + " b", host, options.Weirdness, new StarSystemGenerator.OrbitShape(false, 0.6), tables);
         }
     }
 }

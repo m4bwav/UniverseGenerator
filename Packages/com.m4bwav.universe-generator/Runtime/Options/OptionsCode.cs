@@ -14,7 +14,7 @@ namespace UniverseGeneration
     internal static class OptionsCode
     {
         // The names, in the order ToCode writes them. Add a setting at the end and in both methods below.
-        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger", "names", "require" };
+        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger", "names", "require", "tables" };
 
         // The guarantees in the order a code lists them, with their names; flags beyond these are refused by Validate.
         private static readonly (Guarantee Flag, string Name)[] s_guarantees =
@@ -88,6 +88,11 @@ namespace UniverseGeneration
                 Add(text, "require", GuaranteeNames(o.Require));
             }
 
+            if (o.Tables != null)
+            {
+                Add(text, "tables", o.Tables);
+            }
+
             return text.ToString();
         }
 
@@ -154,6 +159,9 @@ namespace UniverseGeneration
                         break;
                     case "danger":
                         o = o with { DangerShift = ReadInt(name, value) };
+                        break;
+                    case "tables":
+                        o = o with { Tables = value };
                         break;
                     case "require":
                         o = o with { Require = ReadGuarantees(value) };
