@@ -150,3 +150,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | wiki run found four doc corrections (README OpenUPM line, plan IDs in XML docs, ToJson doc wording, kb habitable-zone row and stale Proto column); listed in the wiki note and HANDOFF for the next release
 ## [2026-10-03] handoff | rewritten: 1.0.0 released, verified and documented in the wiki; PR #39 waits for Mark; next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (19 entries)
+## [2026-10-03] verify | Mark merged PR #39 (bd86cf8): ci run 37175151368 green on Linux, Windows and macOS, pack step without a warning; local -v diag pack on master sets the validator baseline path to the nuget.org 1.0.0 nupkg, 0 warnings. Stage 4 done
+## [2026-10-03] learn | Package validation is silent in the CI log when it passes; to prove it used the baseline, pack with -v diag and look for _packageValidationBaselinePath
+## [2026-10-03] handoff | rewritten: Stage 4 done; Mark picks the next track (Stage 5, real stars, wiki doc corrections, Trusted Publishing scope); next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (19 entries)
