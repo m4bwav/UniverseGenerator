@@ -133,3 +133,8 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] add | release PR #34 (release/1.0.0): CHANGELOG [1.0.0] - 2026-10-03 with size section, Version and package.json 1.0.0, README status and AGENTS what-this-is updated; golden v1 only gained 9 files since v1.0.0-beta.1; waits for Mark to merge, tag v1.0.0 and approve nuget
 ## [2026-10-03] handoff | rewritten: #34 waits for Mark; then verify 1.0.0 from nuget.org (checklist step 7) and the PackageValidationBaselineVersion PR; next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (18 entries)
+## [2026-10-03] update | Mark merged release PR #34 (3505547, 2026-10-04 02:59 UTC); ci run 37172716089 on master green on Linux, Windows and macOS, size gate all green (nupkg 441.0 KB, DLL 563.0 KB, UPM 606.6 KB / 143.2 KB, 46 files, 13,423 lines); no v1.0.0 tag and no release run, so the tag and the nuget approval wait for Mark
+## [2026-10-03] learn | release.yml checks only that a release version's CHANGELOG heading has a date, not that it matches the tag day
+## [2026-10-03] handoff | rewritten: tag v1.0.0 and the nuget approval wait for Mark; next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (18 entries)
+## [2026-10-03] index | rebuilt
