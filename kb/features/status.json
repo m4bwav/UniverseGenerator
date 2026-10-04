@@ -15,7 +15,7 @@
   "seeds": "no",
   "package": "core",
   "size": "2 KB",
-  "why": "Options.ToCode() / FromCode(); the lab page's addresses (D11, D17)"
+  "why": "built for 1.0.0: GeneratorOptions.ToCode() and FromCode(code), Universe.Link(address, options) and links (address?code) in Universe.At; planned as: Options.ToCode() / FromCode(); the lab page's addresses (D11, D17)"
  },
  "seed-versioned": {
   "group": "Seeds and API",

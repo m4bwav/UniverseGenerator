@@ -105,12 +105,23 @@ Up to 1,000 different catalogue-style names per call, for a name tool or a story
 
 ## Universe.At and addresses
 
-Every object has an `Address` such as `v1-my-seed/galaxy/system/31/planet/1`, and `Universe.At` regenerates it alone, with the same result as generating its level and walking down. Save the address, not the object. An address does not carry options: pass the options the object was made with. Every level can also be generated on its own:
+Every object has an `Address` such as `v1-my-seed/galaxy/system/31/planet/1`, and `Universe.At` regenerates it alone, with the same result as generating its level and walking down. Save the address, not the object. An address does not carry options: pass the options the object was made with, or share a link, which does. Every level can also be generated on its own:
 
 ```csharp
 var system = StarSystem.Generate("my-seed");   // v1-my-seed/system
 var planet = Planet.Generate("my-seed");       // v1-my-seed/planet
 var moon = (Moon)Universe.At("v1-my-seed/galaxy/system/0/planet/0/moon/0");   // HD 147927 e I
+```
+
+A link is an address followed by `?` and the options' code, such as `systems=120&shape=barred`: only the settings that differ from the defaults, as lowercase `name=value` pairs that stay readable for the whole major version. `GeneratorOptions.ToCode()` and `GeneratorOptions.FromCode(code)` convert options on their own, for a save file or a URL.
+
+```csharp
+var options = Preset.Default with { Systems = 120 };
+var system = Galaxy.Generate("my-seed", options).System(31);
+var link = Universe.Link(system.Address, options);   // the address, ? and options.ToCode()
+Console.WriteLine(link);                              // v1-my-seed/galaxy/system/31?systems=120
+var again = (StarSystem)Universe.At(link);            // the link carries the options
+Console.WriteLine(again.Name == system.Name);         // True
 ```
 
 ## The seed promise
