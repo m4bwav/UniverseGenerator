@@ -14,7 +14,7 @@ namespace UniverseGeneration
     internal static class OptionsCode
     {
         // The names, in the order ToCode writes them. Add a setting at the end and in both methods below.
-        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger" };
+        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger", "names" };
 
         public static string Write(GeneratorOptions o)
         {
@@ -68,6 +68,11 @@ namespace UniverseGeneration
             if (o.DangerShift != d.DangerShift)
             {
                 Add(text, "danger", Int(o.DangerShift));
+            }
+
+            if (o.Names != d.Names)
+            {
+                Add(text, "names", o.Names == NameStyle.Invented ? "invented" : "catalogue");
             }
 
             return text.ToString();
@@ -134,8 +139,11 @@ namespace UniverseGeneration
                     case "lanes":
                         o = o with { ExtraLanes = ReadInt(name, value) };
                         break;
-                    default:
+                    case "danger":
                         o = o with { DangerShift = ReadInt(name, value) };
+                        break;
+                    default:
+                        o = o with { Names = value == "catalogue" ? NameStyle.Catalogue : value == "invented" ? NameStyle.Invented : throw Choice(name, value, "catalogue, invented") };
                         break;
                 }
             }

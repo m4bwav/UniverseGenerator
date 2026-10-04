@@ -279,7 +279,7 @@ namespace UniverseGeneration
                 var systemSeed = GalaxyLayout.SystemSeed(seed, i);
                 var age = regions[layout.Region[i]].Age;
                 var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
-                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i);
+                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i, options.Names);
                 contexts[i] = new SystemContext(name, age, danger[i], richness);
                 map[i] = new MapEntry
                 {
@@ -335,11 +335,11 @@ namespace UniverseGeneration
             };
         }
 
-        private static string UniqueName(Pcg32 rng, StarClass c, HashSet<string> used, int index)
+        private static string UniqueName(Pcg32 rng, StarClass c, HashSet<string> used, int index, NameStyle style)
         {
             for (var tries = 0; tries < 100; tries++)
             {
-                var name = StarNames.Draw(rng, c);
+                var name = InventedNames.SystemName(rng, c, style);
                 if (used.Add(name))
                 {
                     return name;
@@ -347,7 +347,7 @@ namespace UniverseGeneration
             }
 
             // Out of reach in practice (hundreds of thousands of catalogue names); kept so generation never loops forever.
-            var fallback = StarNames.Draw(rng, c) + " " + (index + 1).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
+            var fallback = InventedNames.SystemName(rng, c, style) + " " + (index + 1).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
             used.Add(fallback);
             return fallback;
         }

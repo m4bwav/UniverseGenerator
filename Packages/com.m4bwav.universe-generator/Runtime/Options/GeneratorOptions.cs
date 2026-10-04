@@ -76,6 +76,9 @@ namespace UniverseGeneration
         /// <summary>Added to every system's danger (-5 to 5), which stays within 1 to 10; negative for a safer galaxy.</summary>
         public int DangerShift { get; init; }
 
+        /// <summary>Catalogue names (the default) or invented ones; planets and moons take their system's name either way.</summary>
+        public NameStyle Names { get; init; } = NameStyle.Catalogue;
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
@@ -101,6 +104,11 @@ namespace UniverseGeneration
             if (Epoch < Epoch.Auto || Epoch > Epoch.Old)
             {
                 throw new ArgumentException($"{nameof(Epoch)} must be Auto, Young, Mature or Old; you asked for {(int)Epoch}.", nameof(Epoch));
+            }
+
+            if (Names != NameStyle.Catalogue && Names != NameStyle.Invented)
+            {
+                throw new ArgumentException($"{nameof(Names)} must be Catalogue or Invented; you asked for {(int)Names}.", nameof(Names));
             }
 
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)
