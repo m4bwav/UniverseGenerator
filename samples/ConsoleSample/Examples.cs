@@ -128,6 +128,18 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void UnitConversions()
+        {
+            #region readme
+            var world = Planet.Generate("my-seed");
+            var km = Units.Convert(world.Orbit, LengthUnit.AstronomicalUnits, LengthUnit.Kilometres);
+            var celsius = Units.Convert(world.Temperature, TemperatureUnit.Kelvin, TemperatureUnit.Celsius);
+            Console.WriteLine($"{(int)Math.Round(km / 1e6)} million km out, {(int)Math.Round(celsius)} C");   // 229 million km out, -37 C
+            var across = Units.Map(MapLevel.Galaxy, 2000, LengthUnit.Parsecs);   // a galaxy map edge to edge: about 30,660
+            #endregion
+            Console.WriteLine((int)across);
+        }
+
         /// <summary>Runs every example in README order.</summary>
         public static void All()
         {
@@ -141,6 +153,7 @@ namespace ConsoleSample
             LoneObjects();
             Links();
             Export();
+            UnitConversions();
         }
     }
 }
