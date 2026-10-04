@@ -4,7 +4,9 @@ All notable changes to this package are documented here. The format follows [Kee
 
 The seed promise: from 1.0.0, a seed and a generator version give the same output on every supported runtime for the whole major version. A change that would alter any seed's output adds a generator version and keeps the old one selectable.
 
-## [Unreleased]
+## [1.0.0] - 2026-10-03
+
+The first stable release. Everything in 1.0.0-beta.1, plus the features below; no seed that 1.0.0-beta.1 generated changes, and every golden file of 1.0.0-beta.1 is unchanged. From here the seed promise holds for the whole 1.x line.
 
 ### Added
 
@@ -22,6 +24,10 @@ The seed promise: from 1.0.0, a seed and a generator version give the same outpu
 - `GeneratorTables`, `WeightTable` and `WeightEntry`: the weight tables behind star classes (by region age, and for `StarMix.Plausible`), rocky planet kinds per orbit zone and giant planets' moons, editable by id (`star-classes.mature`, `planet-kinds.temperate`, ...). `With` changes the built-in tables, `FromJson` reads a set (a hand-written reader: no reflection, nothing parsed in a static constructor) and `ToJson` writes one; `Register` makes a set findable by its id, and `GeneratorOptions.Tables` names it (option code `tables=my-mod`, so links carry it). The built-in tables give exactly the output of no tables. In the new golden file `tables.json`.
 - Unity: a second assembly, `UniverseGenerator.Unity` (in the UPM package only, not in the NuGet package), with `TablesAsset`, a ScriptableObject holding a table set to edit in the Inspector. Compiled in Unity 6000.6.4f1.
 - Unity: `UnityVectors` in `UniverseGenerator.Unity`: `ToVector2` and `ToVector3` (XZ or XY plane, with a scale) for map entries, cluster entries, universe nodes, voids and hazard areas; `Lane.Ends(galaxy)`; `Planet.OrbitPosition(days)` by Kepler's equation from the orbital elements. Floats for drawing only. Compiled and run in Unity 6000.6.4f1, where a galaxy's export matched .NET 10's.
+
+### Size
+
+Measured by the size gate (`scripts/size-gate.py`) in `ci` run 37171661790 on `master` (4260ff5), every metric green: nupkg 441.0 KB (green under 1 MB), largest DLL 563.0 KB (green under 750 KB), Unity package 606.7 KB unpacked (green under 2 MB) and 143.2 KB compressed, 46 Runtime source files and 13,423 lines.
 
 ## [1.0.0-beta.1] - 2026-10-03
 
