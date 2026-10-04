@@ -7,7 +7,7 @@ A seeded universe, galaxy cluster, galaxy, star system, planet and moon generato
 ## Install
 
 - NuGet: `dotnet add package UniverseGenerator` (netstandard2.0 and net10.0; trimmable and AOT-compatible).
-- Unity 6: add `com.m4bwav.universe-generator` from OpenUPM, or by git URL `https://github.com/m4bwav/UniverseGenerator.git?path=Packages/com.m4bwav.universe-generator`. No engine references, so it also runs on servers and in tools.
+- Unity 6: Package Manager, +, "Install package from git URL", then `https://github.com/m4bwav/UniverseGenerator.git?path=Packages/com.m4bwav.universe-generator#v1.0.0` (the `#v1.0.0` pins the release; leave it off to follow `master`). OpenUPM (`com.m4bwav.universe-generator`) comes next. No engine references, so it also runs on servers and in tools.
 
 ## First example
 
