@@ -622,6 +622,13 @@ namespace UniverseGeneration
                 Write(w, item, children);
             }
             w.EndArray();
+            w.Name("warnings");
+            w.BeginArray();
+            foreach (var item in v.Warnings)
+            {
+                Write(w, item, children);
+            }
+            w.EndArray();
         }
 
         public static void Write(JsonWriter w, GalaxyCluster v, bool children, string type)
@@ -753,6 +760,22 @@ namespace UniverseGeneration
             w.String(v.Theme);
             w.Name("centre");
             w.Int(v.Centre);
+        }
+
+        public static void Write(JsonWriter w, GeneratorWarning v, bool children)
+        {
+            w.BeginObject();
+            Fields(w, v, children);
+            w.EndObject();
+        }
+
+        private static void Fields(JsonWriter w, GeneratorWarning v, bool children)
+        {
+            _ = children;
+            w.Name("code");
+            w.String(v.Code.ToString());
+            w.Name("message");
+            w.String(v.Message);
         }
 
         public static void Write(JsonWriter w, Landmark v, bool children)

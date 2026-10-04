@@ -102,6 +102,9 @@ namespace UniverseGeneration
         /// <summary>Two to four beacons seen from anywhere in the galaxy, spread across the map (plan D24).</summary>
         public IReadOnlyList<Beacon> Beacons { get; init; } = Array.Empty<Beacon>();
 
+        /// <summary>What generation had to change or ignore (fewer systems than asked, an ignored option, a numbered name); usually empty.</summary>
+        public IReadOnlyList<GeneratorWarning> Warnings { get; init; } = Array.Empty<GeneratorWarning>();
+
         /// <summary>System <paramref name="index"/> in full, the same as <c>Systems[index]</c>.</summary>
         /// <exception cref="ArgumentOutOfRangeException">The galaxy has no system with that index; the message gives the range.</exception>
         public StarSystem System(int index)
@@ -273,13 +276,35 @@ namespace UniverseGeneration
             var map = new MapEntry[n];
             var contexts = new SystemContext[n];
             var names = new HashSet<string>(StringComparer.Ordinal);
+            var warnings = new List<GeneratorWarning>();
+            var requested = context.Systems ?? options.Systems;
+            if (n < requested)
+            {
+                warnings.Add(new GeneratorWarning
+                {
+                    Code = WarningCode.SystemsTrimmed,
+                    Message = $"The {layout.Shape.ToString().ToLowerInvariant()} shape held {n} of the {requested} systems asked for.",
+                });
+            }
+
+            Diagnostics.Shape(warnings, context.Shape ?? options.Shape, requested, options.Arms);
+            if (options.Arms.HasValue && (context.Shape ?? options.Shape) == GalaxyShape.Auto && requested >= Diagnostics.FirstSpiralCount
+                && layout.Shape != GalaxyShape.Spiral && layout.Shape != GalaxyShape.Barred)
+            {
+                warnings.Add(new GeneratorWarning
+                {
+                    Code = WarningCode.ArmsIgnored,
+                    Message = $"Arms = {options.Arms.Value} changes nothing: Auto drew a {layout.Shape.ToString().ToLowerInvariant()} galaxy, which has no arms.",
+                });
+            }
+
             var richness = context.Richness == GalaxyRichness.Rich ? 160 : context.Richness == GalaxyRichness.Poor ? 50 : 100;
             for (var i = 0; i < n; i++)
             {
                 var systemSeed = GalaxyLayout.SystemSeed(seed, i);
                 var age = regions[layout.Region[i]].Age;
                 var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
-                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i, options.Names);
+                var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i, options.Names, warnings);
                 contexts[i] = new SystemContext(name, age, danger[i], richness);
                 map[i] = new MapEntry
                 {
@@ -332,10 +357,11 @@ namespace UniverseGeneration
                 Hazards = extras.Hazards,
                 Monuments = extras.Monuments,
                 Beacons = extras.Beacons,
+                Warnings = warnings,
             };
         }
 
-        private static string UniqueName(Pcg32 rng, StarClass c, HashSet<string> used, int index, NameStyle style)
+        private static string UniqueName(Pcg32 rng, StarClass c, HashSet<string> used, int index, NameStyle style, List<GeneratorWarning> warnings)
         {
             for (var tries = 0; tries < 100; tries++)
             {
@@ -349,6 +375,7 @@ namespace UniverseGeneration
             // Out of reach in practice (hundreds of thousands of catalogue names); kept so generation never loops forever.
             var fallback = InventedNames.SystemName(rng, c, style) + " " + (index + 1).ToString(global::System.Globalization.CultureInfo.InvariantCulture);
             used.Add(fallback);
+            warnings.Add(new GeneratorWarning { Code = WarningCode.NameNumbered, Message = $"System {index} is named {fallback}: 100 draws found no unused name." });
             return fallback;
         }
     }

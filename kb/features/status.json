@@ -969,7 +969,7 @@
   "seeds": "no",
   "package": "core",
   "size": "2 KB",
-  "why": "D15: Validate() and budget trims report what changed"
+  "why": "built for 1.0.0: GeneratorOptions.Check() and Galaxy.Warnings as GeneratorWarning (WarningCode SystemsTrimmed, ArmsIgnored, ShapeTooSmall, NameNumbered); MaxSystems remains the budget; planned as: D15: Validate() and budget trims report what changed"
  },
  "cited-assumptions": {
   "group": "Seeds and API",

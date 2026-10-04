@@ -20,8 +20,7 @@ namespace UniverseGeneration
         /// <summary>The default share of extra lanes, in percent (<see cref="GeneratorOptions.ExtraLanes"/>).</summary>
         internal const int DefaultExtraLanes = 25;
 
-        /// <summary>Spirals and bars read only from this many systems (plan D16, Stage 1 contact sheets).</summary>
-        private const int FirstSpiralCount = 80;
+        private const int FirstSpiralCount = Diagnostics.FirstSpiralCount;
 
         private static readonly GalaxyShape[] s_shapes = { GalaxyShape.Spiral, GalaxyShape.Barred, GalaxyShape.Elliptical, GalaxyShape.Ring, GalaxyShape.Irregular };
         private static readonly int[] s_shapeWeights = { 40, 20, 15, 10, 15 };

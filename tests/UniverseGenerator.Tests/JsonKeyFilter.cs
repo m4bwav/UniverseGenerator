@@ -14,6 +14,7 @@ namespace UniverseGeneration.Tests
         public static readonly HashSet<string> AddedLater = new HashSet<string>
         {
             "eccentricity", "inclination", "periapsisAngle", // orbital-elements.json
+            "warnings", // diagnostics.json
         };
 
         public static string Without(string json, ISet<string> keys)
