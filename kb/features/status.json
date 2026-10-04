@@ -51,7 +51,7 @@
   "seeds": "no",
   "package": "core",
   "size": "3 KB",
-  "why": "D15: SpaceOpera, Pocket, Roguelike, Plausible, Cozy, Epic"
+  "why": "built for 1.0.0: Preset.Pocket, Roguelike, Cozy and Epic beside Default, SpaceOpera and Plausible; the DangerShift option they need; planned as: D15: SpaceOpera, Pocket, Roguelike, Plausible, Cozy, Epic"
  },
  "options-sliders": {
   "group": "Seeds and API",
@@ -213,7 +213,7 @@
   "seeds": "yes",
   "package": "core",
   "size": "0",
-  "why": "prototyped (2 to 4)"
+  "why": "built for 1.0.0: GeneratorOptions.Arms (2 to 4, null draws); planned as: prototyped (2 to 4)"
  },
  "min-spacing": {
   "group": "Universe, cluster and galaxy",
@@ -267,7 +267,7 @@
   "seeds": "no",
   "package": "core",
   "size": "0",
-  "why": "prototyped; the extra-edge roll is drawn for every pair, so the option shifts nothing else"
+  "why": "built for 1.0.0: GeneratorOptions.ExtraLanes (0 to 100, default 25); planned as: prototyped; the extra-edge roll is drawn for every pair, so the option shifts nothing else"
  },
  "chokepoints": {
   "group": "Universe, cluster and galaxy",

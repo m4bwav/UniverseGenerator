@@ -9,6 +9,7 @@ The seed promise: from 1.0.0, a seed and a generator version give the same outpu
 ### Added
 
 - `GeneratorOptions.ToCode()` and `GeneratorOptions.FromCode(code)`: the settings that differ from the defaults as short text (`systems=120&shape=barred`), and links: `Universe.Link(address, options)` writes the address, `?` and the code, and `Universe.At(link)` regenerates the object with those options, so a shared address carries its options.
+- Presets `Pocket` (20 systems, at most 6 planets), `Roguelike` (30 systems, few extra lanes, danger +2, more outliers), `Cozy` (40 well-connected systems, danger -3, few outliers) and `Epic` (300 systems), and the options they use: `Arms` (2 to 4 arms for spirals and bars; null draws), `ExtraLanes` (0 to 100, the chance of a lane beyond the connected network; default 25) and `DangerShift` (-5 to 5, added to every system's danger). Each changes values after every draw, so the defaults give the same output as before; their galaxies are in the new golden file `presets.json`.
 
 ## [1.0.0-beta.1] - 2026-10-03
 

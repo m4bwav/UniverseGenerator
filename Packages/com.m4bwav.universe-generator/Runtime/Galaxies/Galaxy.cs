@@ -211,7 +211,7 @@ namespace UniverseGeneration
         public static Galaxy Generate(Address address, GeneratorOptions options, GalaxyContext context)
         {
             var seed = address.ObjectSeed;
-            var layout = GalaxyLayout.Generate(seed, context.Systems ?? options.Systems, context.Shape ?? options.Shape, context.Tuning);
+            var layout = GalaxyLayout.Generate(seed, context.Systems ?? options.Systems, context.Shape ?? options.Shape, context.Tuning, options);
             var n = layout.Count;
 
             var regions = new GalaxyRegion[layout.Regions.Count];

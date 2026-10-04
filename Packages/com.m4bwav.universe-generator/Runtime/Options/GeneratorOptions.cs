@@ -64,12 +64,31 @@ namespace UniverseGeneration
         /// <summary>The age of a universe or of a cluster generated alone; <see cref="Epoch.Auto"/> draws one.</summary>
         public Epoch Epoch { get; init; } = Epoch.Auto;
 
+        /// <summary>The number of arms of spiral and barred galaxies (2 to 4); null draws it from the seed.</summary>
+        public int? Arms { get; init; }
+
+        /// <summary>
+        /// The chance, in percent (0 to 100), that two neighbouring systems get a lane beyond the network that keeps every
+        /// system reachable; higher means more routes and fewer chokepoints. The default is 25.
+        /// </summary>
+        public int ExtraLanes { get; init; } = GalaxyLayout.DefaultExtraLanes;
+
+        /// <summary>Added to every system's danger (-5 to 5), which stays within 1 to 10; negative for a safer galaxy.</summary>
+        public int DangerShift { get; init; }
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
             CheckRange(nameof(Weirdness), Weirdness, 0, 100);
             CheckRange(nameof(MaxPlanetsPerSystem), MaxPlanetsPerSystem, 0, 20);
             CheckRange(nameof(Systems), Systems, 1, MaxSystems);
+            if (Arms.HasValue)
+            {
+                CheckRange(nameof(Arms), Arms.Value, 2, 4);
+            }
+
+            CheckRange(nameof(ExtraLanes), ExtraLanes, 0, 100);
+            CheckRange(nameof(DangerShift), DangerShift, -5, 5);
             if (Shape < GalaxyShape.Auto || Shape > GalaxyShape.Irregular)
             {
                 throw new ArgumentException($"{nameof(Shape)} must be a GalaxyShape such as Auto or Spiral; you asked for {(int)Shape}.", nameof(Shape));
@@ -146,5 +165,17 @@ namespace UniverseGeneration
 
         /// <summary>Real star shares and few outliers, for hard science fiction.</summary>
         public static GeneratorOptions Plausible { get; } = new GeneratorOptions { StarMix = StarMix.Plausible, Weirdness = 1 };
+
+        /// <summary>A small map for a short game or one session: 20 systems with at most 6 planets each.</summary>
+        public static GeneratorOptions Pocket { get; } = new GeneratorOptions { Systems = 20, MaxPlanetsPerSystem = 6 };
+
+        /// <summary>A run: 30 systems, few extra lanes (so more chokepoints), danger two levels higher, more outliers.</summary>
+        public static GeneratorOptions Roguelike { get; } = new GeneratorOptions { Systems = 30, ExtraLanes = 10, DangerShift = 2, Weirdness = 15 };
+
+        /// <summary>Gentle: 40 well-connected systems, danger three levels lower, few outliers.</summary>
+        public static GeneratorOptions Cozy { get; } = new GeneratorOptions { Systems = 40, ExtraLanes = 50, DangerShift = -3, Weirdness = 3 };
+
+        /// <summary>A long campaign: 300 systems, so spirals and bars read (Auto picks them from 80).</summary>
+        public static GeneratorOptions Epic { get; } = new GeneratorOptions { Systems = 300 };
     }
 }
