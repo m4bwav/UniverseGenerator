@@ -117,6 +117,9 @@ namespace UniverseGeneration
         /// <summary>What generation had to change or ignore (fewer systems than asked, an ignored option, a numbered name); usually empty.</summary>
         public IReadOnlyList<GeneratorWarning> Warnings { get; init; } = Array.Empty<GeneratorWarning>();
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>System <paramref name="index"/> in full, the same as <c>Systems[index]</c>.</summary>
         /// <exception cref="ArgumentOutOfRangeException">The galaxy has no system with that index; the message gives the range.</exception>
         public StarSystem System(int index)
@@ -131,11 +134,15 @@ namespace UniverseGeneration
 
         /// <summary>Generates a galaxy from any seed text, such as "my-seed".</summary>
         /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
-        public static Galaxy Generate(string seed, GeneratorOptions? options = null)
+        public static Galaxy Generate(string seed, GeneratorOptions? options = null) => Generate(seed, options, null);
+
+        /// <summary>Generates a galaxy from any seed text, running <paramref name="hooks"/> on it and on each system as it is first read.</summary>
+        /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
+        public static Galaxy Generate(string seed, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var o = options ?? Preset.Default;
             o.Validate();
-            return GalaxyGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "galaxy"), o, GalaxyContext.Alone);
+            return GalaxyGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "galaxy"), o, GalaxyContext.Alone, hooks);
         }
 
         /// <summary>Generates a galaxy from a number; the same as passing the number's digits as text.</summary>
@@ -223,7 +230,7 @@ namespace UniverseGeneration
 
         public const string FrontierTheme = "tidal frontier";
 
-        public static Galaxy Generate(Address address, GeneratorOptions options, GalaxyContext context)
+        public static Galaxy Generate(Address address, GeneratorOptions options, GalaxyContext context, GeneratorHooks? hooks = null)
         {
             var seed = address.ObjectSeed;
             var layout = GalaxyLayout.Generate(seed, context.Systems ?? options.Systems, context.Shape ?? options.Shape, context.Tuning, options);
@@ -355,7 +362,7 @@ namespace UniverseGeneration
             var extras = GalaxyExtrasGenerator.Generate(seed, layout, regions, map, context.CoreActivity, ClusterGenerator.HazardRadius(context.CoreActivity));
             extras.Points = Constraints.Precursor(constraints, options.Require, extras.Points, map, warnings);
             var type = context.Type ?? GalaxyTypes.Derive(layout.Shape, layout.Pitch, layout.Ellipse);
-            return new Galaxy
+            return Hook.Galaxy(hooks, new Galaxy
             {
                 Address = address.ToString(),
                 Name = context.Name ?? ClusterGenerator.LoneName(Seeds.Stream(seed, "name")),
@@ -374,14 +381,14 @@ namespace UniverseGeneration
                 Map = map,
                 Lanes = lanes,
                 Regions = regions,
-                Systems = new LazySystems(address, contexts, options, made),
+                Systems = new LazySystems(address, contexts, options, made, hooks),
                 Factions = extras.Factions,
                 PointsOfInterest = extras.Points,
                 Hazards = extras.Hazards,
                 Monuments = extras.Monuments,
                 Beacons = extras.Beacons,
                 Warnings = warnings,
-            };
+            });
         }
 
         private static string UniqueName(Pcg32 rng, StarClass c, HashSet<string> used, int index, NameStyle style, List<GeneratorWarning> warnings)
@@ -410,13 +417,18 @@ namespace UniverseGeneration
         private readonly SystemContext[] _contexts;
         private readonly GeneratorOptions _options;
         private readonly StarSystem?[] _made;
+        private readonly StarSystem?[]? _raw;
+        private readonly GeneratorHooks? _hooks;
 
-        public LazySystems(Address galaxy, SystemContext[] contexts, GeneratorOptions options, StarSystem?[]? made = null)
+        // raw: systems already generated (by Constraints), before hooks.
+        public LazySystems(Address galaxy, SystemContext[] contexts, GeneratorOptions options, StarSystem?[]? raw = null, GeneratorHooks? hooks = null)
         {
             _galaxy = galaxy;
             _contexts = contexts;
             _options = options;
-            _made = made ?? new StarSystem?[contexts.Length];
+            _made = new StarSystem?[contexts.Length];
+            _raw = raw;
+            _hooks = hooks;
         }
 
         public int Count => _made.Length;
@@ -431,7 +443,7 @@ namespace UniverseGeneration
                     throw new ArgumentOutOfRangeException(nameof(index), index, $"This galaxy has {_made.Length} systems, numbered 0 to {_made.Length - 1}; you asked for {index}.");
                 }
 
-                return _made[index] ??= StarSystemGenerator.Generate(_galaxy.Child("system", index), _contexts[index], _options);
+                return _made[index] ??= Hook.System(_hooks, _raw?[index] ?? StarSystemGenerator.Generate(_galaxy.Child("system", index), _contexts[index], _options));
             }
         }
 

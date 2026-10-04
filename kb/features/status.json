@@ -78,7 +78,7 @@
   "seeds": "no",
   "package": "core",
   "size": "1 KB",
-  "why": "D7: OnSystemGenerated-style hooks and a per-object Tags dictionary"
+  "why": "built for 1.0.0: GeneratorHooks (OnPlanet, OnSystem, OnGalaxy, OnCluster, OnUniverse) passed beside the options, run wherever an object is made and again by Universe.At; kept out of GeneratorOptions (value equality, ToCode); planned as: D7: OnSystemGenerated-style hooks and a per-object Tags dictionary"
  },
  "constraints": {
   "group": "Seeds and API",
@@ -987,7 +987,7 @@
   "seeds": "no",
   "package": "core",
   "size": "0",
-  "why": "D7: per-object Tags dictionary"
+  "why": "built for 1.0.0: Custom, a read-only string dictionary on every exported record (StarSystem.Tags already holds story tags), set by hooks, exported in ordinal order; planned as: D7: per-object Tags dictionary"
  },
  "rpg-system-profiles": {
   "group": "Seeds and API",

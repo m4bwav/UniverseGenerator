@@ -143,6 +143,9 @@ namespace UniverseGeneration
         /// <summary>A second line of plain words, such as "1 g, breathable air at 1.2 bar, 17 °C, 64% ocean, mostly temperate forest, complex life; hazard 1".</summary>
         public string Summary { get; init; } = "";
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>How well <paramref name="species"/> could live here, from its temperature, gravity, pressure and air.</summary>
         public Habitability HabitabilityFor(Species species)
         {
@@ -156,12 +159,16 @@ namespace UniverseGeneration
 
         /// <summary>Generates a planet on its own, with its star drawn from the same seed, from any seed text such as "my-seed".</summary>
         /// <exception cref="System.ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
-        public static Planet Generate(string seed, GeneratorOptions? options = null)
+        public static Planet Generate(string seed, GeneratorOptions? options = null) => Generate(seed, options, null);
+
+        /// <summary>Generates a planet on its own from any seed text, running <paramref name="hooks"/> on it.</summary>
+        /// <exception cref="System.ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
+        public static Planet Generate(string seed, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var o = options ?? Preset.Default;
             o.Validate();
             var address = new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "planet");
-            return PlanetGenerator.Generate(address, o);
+            return Hook.Planet(hooks, PlanetGenerator.Generate(address, o));
         }
 
         /// <summary>Generates a planet from a number; the same as passing the number's digits as text.</summary>

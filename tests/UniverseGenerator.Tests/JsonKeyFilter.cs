@@ -15,6 +15,7 @@ namespace UniverseGeneration.Tests
         {
             "eccentricity", "inclination", "periapsisAngle", // orbital-elements.json
             "warnings", // diagnostics.json
+            "custom", // hooks.json
         };
 
         public static string Without(string json, ISet<string> keys)

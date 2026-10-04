@@ -155,6 +155,23 @@ var all = galaxy.ToJson(children: true);    // every system in full as well
 Console.WriteLine(all.Length > map.Length); // True
 ```
 
+## Hooks and custom fields
+
+`GeneratorHooks` runs your own post-processing on every planet, system, galaxy, cluster and universe as it is made: rename a system, mark a colony, attach a faction. Every generated object has `Custom`, a dictionary of your own text fields (empty from the generator), which `ToJson` writes; `Custom.With(name, value)` returns a copy with one field set. Pass the same hooks to `Generate` and to `Universe.At`, which runs them again on everything it regenerates. Hooks are code, so they stay out of `GeneratorOptions` and out of links. A hook must give the same result for the same object, and it never changes what the generator draws.
+
+```csharp
+var hooks = new GeneratorHooks
+{
+    OnPlanet = p => p.Kind == PlanetKind.Garden ? p with { Custom = p.Custom.With("colony", "yes") } : p,
+    OnSystem = s => s with { Custom = s.Custom.With("faction", s.Danger >= 7 ? "pirates" : "league") },
+};
+var galaxy = Galaxy.Generate("my-seed", null, hooks);
+var system = galaxy.System(0);
+Console.WriteLine(system.Custom["faction"]);                         // pirates
+var again = (StarSystem)Universe.At(system.Address, null, hooks);   // At runs the same hooks
+Console.WriteLine(again.Custom["faction"]);                          // pirates
+```
+
 ## Units
 
 Values are plain doubles in the unit each field's documentation names: orbits in au, planet radii and masses in Earths, stars in Suns, moons and belts in kilometres, temperatures in kelvin, rotation in hours and orbital periods in days; maps in their own units (`Distances`). `Units.Convert` turns any of them into another unit (`LengthUnit`, `MassUnit`, `TemperatureUnit`, `TimeUnit`), and `Units.Map` turns map units into a length. No units library, so nothing to install and nothing added to a WebGL build.

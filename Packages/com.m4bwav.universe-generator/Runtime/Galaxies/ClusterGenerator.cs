@@ -290,7 +290,7 @@ namespace UniverseGeneration
         public static GalaxyCluster Generate(Address address, GeneratorOptions options) =>
             Generate(address, options, ClusterContext.Alone);
 
-        public static GalaxyCluster Generate(Address address, GeneratorOptions options, ClusterContext context)
+        public static GalaxyCluster Generate(Address address, GeneratorOptions options, ClusterContext context, GeneratorHooks? hooks = null)
         {
             var seed = address.ObjectSeed;
             var kindStream = Seeds.Stream(seed, "kind");
@@ -406,7 +406,7 @@ namespace UniverseGeneration
                 Radius = Radius,
                 Map = map,
                 Links = links,
-                Galaxies = new LazyGalaxies(address, contexts, options),
+                Galaxies = new LazyGalaxies(address, contexts, options, hooks),
             };
         }
 

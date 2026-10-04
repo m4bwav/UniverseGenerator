@@ -110,6 +110,9 @@ namespace UniverseGeneration
         /// <summary>Every galaxy in full, in the order of <see cref="Map"/>; each is generated when first read.</summary>
         public IReadOnlyList<Galaxy> Galaxies { get; init; } = Array.Empty<Galaxy>();
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>Galaxy <paramref name="index"/> in full, the same as <c>Galaxies[index]</c>.</summary>
         /// <exception cref="ArgumentOutOfRangeException">The cluster has no galaxy with that index; the message gives the range.</exception>
         public Galaxy Galaxy(int index)
@@ -124,11 +127,16 @@ namespace UniverseGeneration
 
         /// <summary>Generates a group or cluster of galaxies from any seed text, such as "my-seed".</summary>
         /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
-        public static GalaxyCluster Generate(string seed, GeneratorOptions? options = null)
+        public static GalaxyCluster Generate(string seed, GeneratorOptions? options = null) => Generate(seed, options, null);
+
+        /// <summary>Generates a group or cluster from any seed text, running <paramref name="hooks"/> on it and on each galaxy as it is first read.</summary>
+        /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
+        public static GalaxyCluster Generate(string seed, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var o = options ?? Preset.Default;
             o.Validate();
-            return ClusterGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "cluster"), o);
+            var address = new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "cluster");
+            return Hook.Cluster(hooks, ClusterGenerator.Generate(address, o, ClusterContext.Alone, hooks));
         }
 
         /// <summary>Generates a cluster from a number; the same as passing the number's digits as text.</summary>
@@ -240,13 +248,15 @@ namespace UniverseGeneration
         private readonly GalaxyContext[] _contexts;
         private readonly GeneratorOptions _options;
         private readonly Galaxy?[] _made;
+        private readonly GeneratorHooks? _hooks;
 
-        public LazyGalaxies(Address cluster, GalaxyContext[] contexts, GeneratorOptions options)
+        public LazyGalaxies(Address cluster, GalaxyContext[] contexts, GeneratorOptions options, GeneratorHooks? hooks)
         {
             _cluster = cluster;
             _contexts = contexts;
             _options = options;
             _made = new Galaxy?[contexts.Length];
+            _hooks = hooks;
         }
 
         public int Count => _made.Length;
@@ -264,7 +274,7 @@ namespace UniverseGeneration
                     throw new ArgumentOutOfRangeException(nameof(index), index, $"This cluster has {_made.Length} galaxies, numbered 0 to {_made.Length - 1}; you asked for {index}.");
                 }
 
-                return _made[index] ??= GalaxyGenerator.Generate(_cluster.Child("galaxy", index), _options, _contexts[index]);
+                return _made[index] ??= GalaxyGenerator.Generate(_cluster.Child("galaxy", index), _options, _contexts[index], _hooks);
             }
         }
 
