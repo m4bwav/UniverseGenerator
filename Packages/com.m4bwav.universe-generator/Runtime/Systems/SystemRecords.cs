@@ -188,7 +188,7 @@ namespace UniverseGeneration
     /// keeps one face to its planet. The fields after <see cref="Radius"/> are the moon level
     /// (ai-docs/notes/2026-10-03-moon-and-belt-level-design.md).
     /// </summary>
-    public sealed record Moon
+    public sealed partial record Moon
     {
         /// <summary>Where it is, such as <c>v1-my-seed/system/planet/3/moon/0</c>.</summary>
         public string Address { get; init; } = "";
@@ -323,7 +323,7 @@ namespace UniverseGeneration
     /// A belt of asteroids or icy bodies, from <see cref="Inner"/> to <see cref="Outer"/> au. The fields after
     /// <see cref="Outer"/> are the belt level (ai-docs/notes/2026-10-03-moon-and-belt-level-design.md).
     /// </summary>
-    public sealed record Belt
+    public sealed partial record Belt
     {
         /// <summary>Rocky or icy.</summary>
         public BeltKind Kind { get; init; }
@@ -379,7 +379,7 @@ namespace UniverseGeneration
     }
 
     /// <summary>A station.</summary>
-    public sealed record Station
+    public sealed partial record Station
     {
         /// <summary>Where it is, such as <c>v1-my-seed/system/station/0</c>.</summary>
         public string Address { get; init; } = "";

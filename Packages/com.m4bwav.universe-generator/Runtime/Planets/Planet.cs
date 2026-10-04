@@ -8,7 +8,7 @@ namespace UniverseGeneration
     /// <c>Planet.Generate("my-seed")</c> makes one on its own; a star system makes them in place. The fields after
     /// <see cref="Descriptor"/> are the planet level (ai-docs/notes/2026-10-02-planet-level-design.md).
     /// </summary>
-    public sealed record Planet
+    public sealed partial record Planet
     {
         /// <summary>Where it is, such as <c>v1-my-seed/galaxy/system/31/planet/2</c> or <c>v1-my-seed/planet</c>.</summary>
         public string Address { get; init; } = "";

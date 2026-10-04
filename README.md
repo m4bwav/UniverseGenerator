@@ -131,6 +131,20 @@ var again = (StarSystem)Universe.At(link);            // the link carries the op
 Console.WriteLine(again.Name == system.Name);         // True
 ```
 
+## Export to JSON
+
+`ToJson()` on a universe, cluster, void, galaxy, system, planet, moon, belt or station writes every field as JSON, with `"schema": "universe-generator/1"` and the object's type first, enum values as names and numbers as stored. The text is the same on every runtime, written by hand with no reflection. Lists that are generated when first read (a galaxy's systems, a cluster's galaxies, a void's systems) are null unless you pass `children: true`, which generates everything below; each map entry carries the address of what it leaves out.
+
+```csharp
+var planet = Planet.Generate("my-seed");
+var json = planet.ToJson(indented: true);   // every field, after "schema" and "type"
+Console.WriteLine(json.Split('\n')[3]);       //   "address": "v1-my-seed/planet",
+var galaxy = Galaxy.Generate("my-seed", Preset.Pocket);
+var map = galaxy.ToJson();                  // the map and extras; "systems" is null
+var all = galaxy.ToJson(children: true);    // every system in full as well
+Console.WriteLine(all.Length > map.Length); // True
+```
+
 ## The seed promise
 
 From 1.0, a seed and a generator version (the `v1` in every address) give the same output on Windows, Linux and macOS (.NET 10 and .NET Framework 4.8) and in Unity (Mono and IL2CPP) for the whole major version, so a server and its clients can share a world by its seed alone. The golden files in `tests/Golden/v1/` are the proof, and the rules that make it true are in [kb/rules/determinism.md](kb/rules/determinism.md). A change that would alter any seed's output adds a generator version and keeps the old one.

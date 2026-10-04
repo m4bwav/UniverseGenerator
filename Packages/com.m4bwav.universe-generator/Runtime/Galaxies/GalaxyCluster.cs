@@ -84,7 +84,7 @@ namespace UniverseGeneration
     /// <see cref="Radius"/> of the centre. <c>GalaxyCluster.Generate("my-seed")</c> makes one; each galaxy is generated
     /// when first read, and equals what its address alone regenerates.
     /// </summary>
-    public sealed record GalaxyCluster
+    public sealed partial record GalaxyCluster
     {
         /// <summary>Where it is, such as <c>v1-my-seed/cluster</c>.</summary>
         public string Address { get; init; } = "";
