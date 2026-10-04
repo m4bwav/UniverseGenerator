@@ -166,3 +166,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-04] handoff | rewritten: Stage 5 waits for Mark's OpenUPM submission; next-session-prompt.md rewritten
 ## [2026-10-04] index | rebuilt (21 entries)
 ## [2026-10-04] index | rebuilt (21 entries)
+## [2026-10-04] add | OpenUPM cover image docs/images/openupm-cover.png (my-seed Epic barred galaxy from 1.0.0, 1200x600) with a note holding the dump and render scripts; topic stays Procedural Generation only
+## [2026-10-04] index | rebuilt (22 entries)
+## [2026-10-04] index | rebuilt (22 entries)
