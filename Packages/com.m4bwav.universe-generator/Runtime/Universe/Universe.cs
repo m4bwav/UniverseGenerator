@@ -43,7 +43,7 @@ namespace UniverseGeneration
     /// <summary>
     /// A small universe at game scale: four to seven galaxy groups and clusters joined by filaments, with named voids
     /// holding lone systems, four landmark galaxies, a merging pair and an epoch that sets every cluster's age.
-    /// <c>Universe.Generate("my-seed")</c> makes one; <see cref="At"/> regenerates any object of any level from its address.
+    /// <c>Universe.Generate("my-seed")</c> makes one; <see cref="At(string, GeneratorOptions?)"/> regenerates any object of any level from its address.
     /// Positions are in universe units (100,000 light-years) within about <see cref="Radius"/> of the centre.
     /// </summary>
     public sealed partial record Universe
@@ -78,6 +78,9 @@ namespace UniverseGeneration
         /// <summary>Every group and cluster, in the order of <see cref="Nodes"/>; their galaxies are generated when first read.</summary>
         public IReadOnlyList<GalaxyCluster> Clusters { get; init; } = Array.Empty<GalaxyCluster>();
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>Cluster <paramref name="index"/>, the same as <c>Clusters[index]</c>.</summary>
         /// <exception cref="ArgumentOutOfRangeException">The universe has no cluster with that index; the message gives the range.</exception>
         public GalaxyCluster Cluster(int index)
@@ -92,11 +95,15 @@ namespace UniverseGeneration
 
         /// <summary>Generates a universe from any seed text, such as "my-seed".</summary>
         /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
-        public static Universe Generate(string seed, GeneratorOptions? options = null)
+        public static Universe Generate(string seed, GeneratorOptions? options = null) => Generate(seed, options, null);
+
+        /// <summary>Generates a universe from any seed text, running <paramref name="hooks"/> on it and on every object below it as each is made.</summary>
+        /// <exception cref="ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
+        public static Universe Generate(string seed, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var o = options ?? Preset.Default;
             o.Validate();
-            return UniverseGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "universe"), o);
+            return UniverseGenerator.Generate(new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "universe"), o, hooks);
         }
 
         /// <summary>Generates a universe from a number; the same as passing the number's digits as text.</summary>
@@ -106,7 +113,7 @@ namespace UniverseGeneration
         /// <summary>
         /// A link to the object at <paramref name="address"/> made with <paramref name="options"/>: the address, then
         /// <c>?</c> and <see cref="GeneratorOptions.ToCode"/>, such as <c>v1-my-seed/galaxy/system/31?systems=120</c>, or the
-        /// address alone for the defaults. <see cref="At"/> regenerates the object from the link with no options passed.
+        /// address alone for the defaults. <see cref="At(string, GeneratorOptions?)"/> regenerates the object from the link with no options passed.
         /// </summary>
         /// <exception cref="ArgumentException">The address cannot be read, or an option is out of range.</exception>
         public static string Link(string address, GeneratorOptions options)
@@ -137,7 +144,15 @@ namespace UniverseGeneration
         /// <see cref="Link"/> (the address, <c>?</c> and the options' code), which carries them.
         /// </summary>
         /// <exception cref="ArgumentException">The address cannot be read, names a level or object that does not exist, or an option is out of range, or a link was passed together with options; the message says which.</exception>
-        public static object At(string address, GeneratorOptions? options = null)
+        public static object At(string address, GeneratorOptions? options = null) => At(address, options, null);
+
+        /// <summary>
+        /// Regenerates the object at <paramref name="address"/> (or a link) as <see cref="At(string, GeneratorOptions?)"/>
+        /// does, running <paramref name="hooks"/> on every object on the way down, so it equals what the same hooks gave
+        /// when the object was first generated.
+        /// </summary>
+        /// <exception cref="ArgumentException">The address cannot be read, names a level or object that does not exist, or an option is out of range; the message says which.</exception>
+        public static object At(string address, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var q = address is null ? -1 : address.IndexOf('?');
             if (q >= 0)
@@ -173,7 +188,7 @@ namespace UniverseGeneration
             switch (a.Root)
             {
                 case "universe":
-                    var universe = UniverseGenerator.Generate(where, o);
+                    var universe = UniverseGenerator.Generate(where, o, hooks);
                     if (path.Count == 0)
                     {
                         return universe;
@@ -197,10 +212,10 @@ namespace UniverseGeneration
                     where = where.Child("cluster", path[0].Index);
                     break;
                 case "cluster":
-                    cluster = ClusterGenerator.Generate(where, o);
+                    cluster = Hook.Cluster(hooks, ClusterGenerator.Generate(where, o, ClusterContext.Alone, hooks));
                     break;
                 case "galaxy":
-                    var galaxy = GalaxyGenerator.Generate(where, o, GalaxyContext.Alone);
+                    var galaxy = GalaxyGenerator.Generate(where, o, GalaxyContext.Alone, hooks);
                     if (path.Count == 0)
                     {
                         return galaxy;
@@ -210,9 +225,9 @@ namespace UniverseGeneration
                     where = where.Child("system", path[0].Index);
                     return Below(system, path, step, where);
                 case "system":
-                    return Below(StarSystemGenerator.Generate(where, SystemContext.Alone, o), path, step, where);
+                    return Below(Hook.System(hooks, StarSystemGenerator.Generate(where, SystemContext.Alone, o)), path, step, where);
                 case "planet":
-                    var lone = PlanetGenerator.Generate(where, o);
+                    var lone = Hook.Planet(hooks, PlanetGenerator.Generate(where, o));
                     if (path.Count == 0)
                     {
                         return lone;
@@ -376,6 +391,9 @@ namespace UniverseGeneration
 
         /// <summary>Its lone systems: old, quiet and poor in metals; each generated when first read.</summary>
         public IReadOnlyList<StarSystem> Systems { get; init; } = Array.Empty<StarSystem>();
+
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
     }
 
     /// <summary>One of the universe's landmarks.</summary>

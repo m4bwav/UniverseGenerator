@@ -173,6 +173,20 @@ namespace UniverseGeneration
             w.Number(v, decimals);
         }
 
+        // Custom fields as an object, names in ordinal order, so the text never depends on insertion order.
+        private static void Strings(JsonWriter w, global::System.Collections.Generic.IReadOnlyDictionary<string, string> fields)
+        {
+            var names = new global::System.Collections.Generic.List<string>(fields.Keys);
+            names.Sort(global::System.StringComparer.Ordinal);
+            w.BeginObject();
+            foreach (var name in names)
+            {
+                w.Name(name).String(fields[name]);
+            }
+
+            w.EndObject();
+        }
+
         public static void Write(JsonWriter w, Atmosphere v, bool children)
         {
             w.BeginObject();
@@ -269,6 +283,8 @@ namespace UniverseGeneration
             Write(w, v.Resources, children);
             w.Name("summary");
             w.String(v.Summary);
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, BeltComposition v, bool children)
@@ -448,6 +464,8 @@ namespace UniverseGeneration
             {
                 w.Null();
             }
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, Faction v, bool children)
@@ -629,6 +647,8 @@ namespace UniverseGeneration
                 Write(w, item, children);
             }
             w.EndArray();
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, GalaxyCluster v, bool children, string type)
@@ -685,6 +705,8 @@ namespace UniverseGeneration
             {
                 w.Null();
             }
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, GalaxyGate v, bool children)
@@ -1002,6 +1024,8 @@ namespace UniverseGeneration
             w.String(v.Habitability.ToString());
             w.Name("summary");
             w.String(v.Summary);
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, Planet v, bool children, string type)
@@ -1131,6 +1155,8 @@ namespace UniverseGeneration
             w.String(v.Habitability.ToString());
             w.Name("summary");
             w.String(v.Summary);
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, PointOfInterest v, bool children)
@@ -1333,6 +1359,8 @@ namespace UniverseGeneration
             w.EndArray();
             w.Name("descriptor");
             w.String(v.Descriptor);
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, Station v, bool children, string type)
@@ -1367,6 +1395,8 @@ namespace UniverseGeneration
             {
                 w.Int(v.Planet.Value);
             }
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, Universe v, bool children, string type)
@@ -1430,6 +1460,8 @@ namespace UniverseGeneration
                 Write(w, item, children);
             }
             w.EndArray();
+            w.Name("custom");
+            Strings(w, v.Custom);
         }
 
         public static void Write(JsonWriter w, UniverseLandmark v, bool children)

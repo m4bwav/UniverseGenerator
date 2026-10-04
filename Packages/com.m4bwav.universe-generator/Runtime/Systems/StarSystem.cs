@@ -54,14 +54,21 @@ namespace UniverseGeneration
         /// <summary>One line in plain words, such as "a yellow star with 6 planets and an asteroid belt".</summary>
         public string Descriptor { get; init; } = "";
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>Generates a star system on its own from any seed text, such as "my-seed".</summary>
         /// <exception cref="System.ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
-        public static StarSystem Generate(string seed, GeneratorOptions? options = null)
+        public static StarSystem Generate(string seed, GeneratorOptions? options = null) => Generate(seed, options, null);
+
+        /// <summary>Generates a star system on its own from any seed text, running <paramref name="hooks"/> on its planets and on it.</summary>
+        /// <exception cref="System.ArgumentException">The seed is too long or an option is out of range; the message says which.</exception>
+        public static StarSystem Generate(string seed, GeneratorOptions? options, GeneratorHooks? hooks)
         {
             var o = options ?? Preset.Default;
             o.Validate();
             var address = new Address(GeneratorVersion.Current, GeneratorOptions.CheckSeed(seed), "system");
-            return StarSystemGenerator.Generate(address, SystemContext.Alone, o);
+            return Hook.System(hooks, StarSystemGenerator.Generate(address, SystemContext.Alone, o));
         }
 
         /// <summary>Generates a star system from a number; the same as passing the number's digits as text.</summary>

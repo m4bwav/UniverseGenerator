@@ -85,6 +85,8 @@ def value(t, expr, records, enums, record, prop):
         if (record, prop) in LAZY:
             return ["if (children)", "{"] + ["    " + l for l in lines] + ["}", "else", "{", "    w.Null();", "}"]
         return lines
+    if base == "IReadOnlyDictionary<string,string>":
+        return [f"Strings(w, {expr});"]
     if base in ("int", "long"):
         write = f"w.Int({expr}{'.Value' if nullable else ''});"
     elif base == "double":
@@ -157,6 +159,20 @@ def main():
     out.append("            }")
     out.append("")
     out.append("            w.Number(v, decimals);")
+    out.append("        }")
+    out.append("")
+    out.append("        // Custom fields as an object, names in ordinal order, so the text never depends on insertion order.")
+    out.append("        private static void Strings(JsonWriter w, global::System.Collections.Generic.IReadOnlyDictionary<string, string> fields)")
+    out.append("        {")
+    out.append("            var names = new global::System.Collections.Generic.List<string>(fields.Keys);")
+    out.append("            names.Sort(global::System.StringComparer.Ordinal);")
+    out.append("            w.BeginObject();")
+    out.append("            foreach (var name in names)")
+    out.append("            {")
+    out.append("                w.Name(name).String(fields[name]);")
+    out.append("            }")
+    out.append("")
+    out.append("            w.EndObject();")
     out.append("        }")
     for name in sorted(records):
         props = records[name]

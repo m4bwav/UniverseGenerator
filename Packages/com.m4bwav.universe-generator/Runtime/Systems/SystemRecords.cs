@@ -307,6 +307,9 @@ namespace UniverseGeneration
         /// <summary>A second line of plain words, such as "0.13 g, dense nitrogen air at 1.5 bar, -176 °C, an ocean under the ice, prebiotic chemistry; hazard 3".</summary>
         public string Summary { get; init; } = "";
 
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
+
         /// <summary>How well <paramref name="species"/> could live here, from its temperature, gravity, pressure and air.</summary>
         public Habitability HabitabilityFor(Species species)
         {
@@ -360,6 +363,9 @@ namespace UniverseGeneration
 
         /// <summary>One line in plain words, such as "65% carbonaceous rock, 25% silicate rock, 10% metal; largest body 470 km in radius; -103 °C; richest in organics".</summary>
         public string Summary { get; init; } = "";
+
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
     }
 
     /// <summary>What a belt's bodies are made of, in whole percent summing to 100.</summary>
@@ -392,6 +398,9 @@ namespace UniverseGeneration
 
         /// <summary>The index of the planet it orbits, or null when it orbits the star.</summary>
         public int? Planet { get; init; }
+
+        /// <summary>Your own fields, by name, set by a <see cref="GeneratorHooks"/> hook or your code; empty from the generator.</summary>
+        public IReadOnlyDictionary<string, string> Custom { get; init; } = CustomFields.Empty;
     }
 
     /// <summary>Something memorable in a system (plan D24).</summary>

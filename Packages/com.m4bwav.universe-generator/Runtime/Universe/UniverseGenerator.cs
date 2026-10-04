@@ -55,7 +55,7 @@ namespace UniverseGeneration
             "New stars are born on the frontier every year, and every claim to them is disputed.",
         };
 
-        public static Universe Generate(Address address, GeneratorOptions options)
+        public static Universe Generate(Address address, GeneratorOptions options, GeneratorHooks? hooks = null)
         {
             var seed = address.ObjectSeed;
             var drawnAge = s_ages[Seeds.Stream(seed, "epoch").Weighted(s_ageWeights)];
@@ -138,7 +138,7 @@ namespace UniverseGeneration
                     }
                 }
 
-                clusters[i] = ClusterGenerator.Generate(address.Child("cluster", i), options, bases[i] with
+                clusters[i] = ClusterGenerator.Generate(address.Child("cluster", i), options, hooks: hooks, context: bases[i] with
                 {
                     Filaments = ends,
                     LandmarkName = landmark.Name,
@@ -146,6 +146,7 @@ namespace UniverseGeneration
                     LandmarkX = landmarkX,
                     LandmarkY = landmarkY,
                 });
+                clusters[i] = Hook.Cluster(hooks, clusters[i]);
                 nodes[i] = new UniverseNode
                 {
                     Index = i,
@@ -159,7 +160,7 @@ namespace UniverseGeneration
                 };
             }
 
-            var voids = Voids(address, options, names, voidSlots, voidSystems, x, y, filaments);
+            var voids = Voids(address, options, hooks, names, voidSlots, voidSystems, x, y, filaments);
 
             var pairA = clusters[2].Map[0];
             var pairB = clusters[2].Map[1];
@@ -191,7 +192,7 @@ namespace UniverseGeneration
                 new UniverseLandmark { Kind = UniverseLandmarkKind.Merger, Name = merger.Name, Address = clusters[2].Address },
             };
 
-            return new Universe
+            return Hook.Universe(hooks, new Universe
             {
                 Address = address.ToString(),
                 Name = name,
@@ -203,7 +204,7 @@ namespace UniverseGeneration
                 Landmarks = landmarks,
                 Merger = merger,
                 Clusters = clusters,
-            };
+            });
         }
 
         /// <summary>Node 0 near the centre, the rest over the disc, at least the node spacing apart (relaxed by a tenth after 200 refusals).</summary>
@@ -303,7 +304,7 @@ namespace UniverseGeneration
         /// The voids (plan U11): the grid point with the most room from every cluster, filament and earlier void, that room
         /// its radius; a slot with under one grid step of room makes no void. Their systems are lone, old, quiet and poor.
         /// </summary>
-        private static CosmicVoid[] Voids(Address address, GeneratorOptions options, Pcg32 names, int slots, int[] systems, double[] x, double[] y, Filament[] filaments)
+        private static CosmicVoid[] Voids(Address address, GeneratorOptions options, GeneratorHooks? hooks, Pcg32 names, int slots, int[] systems, double[] x, double[] y, Filament[] filaments)
         {
             var voids = new List<CosmicVoid>();
             var usedRoots = new HashSet<int>();
@@ -353,7 +354,7 @@ namespace UniverseGeneration
                     X = bestX,
                     Y = bestY,
                     Radius = DMath.Round(best, 3),
-                    Systems = new LazySystems(where, contexts, options),
+                    Systems = new LazySystems(where, contexts, options, null, hooks),
                 });
             }
 

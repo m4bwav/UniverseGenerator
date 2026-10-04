@@ -139,6 +139,22 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Hooks()
+        {
+            #region readme
+            var hooks = new GeneratorHooks
+            {
+                OnPlanet = p => p.Kind == PlanetKind.Garden ? p with { Custom = p.Custom.With("colony", "yes") } : p,
+                OnSystem = s => s with { Custom = s.Custom.With("faction", s.Danger >= 7 ? "pirates" : "league") },
+            };
+            var galaxy = Galaxy.Generate("my-seed", null, hooks);
+            var system = galaxy.System(0);
+            Console.WriteLine(system.Custom["faction"]);                         // pirates
+            var again = (StarSystem)Universe.At(system.Address, null, hooks);   // At runs the same hooks
+            Console.WriteLine(again.Custom["faction"]);                          // pirates
+            #endregion
+        }
+
         public static void UnitConversions()
         {
             #region readme
@@ -165,6 +181,7 @@ namespace ConsoleSample
             LoneObjects();
             Links();
             Export();
+            Hooks();
             UnitConversions();
         }
     }
