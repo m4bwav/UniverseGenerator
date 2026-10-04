@@ -138,3 +138,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] handoff | rewritten: tag v1.0.0 and the nuget approval wait for Mark; next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (18 entries)
 ## [2026-10-03] index | rebuilt
+## [2026-10-03] update | docs PR #36 merged (14b3b7c); the tag command names 3505547 by hash, since master moved on (release.yml accepts any master ancestor whose ci passed)
