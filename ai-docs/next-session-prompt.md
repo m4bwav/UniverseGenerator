@@ -10,7 +10,7 @@ summary: "paste into a fresh session to continue the run; every session rewrites
 
 # Next session prompt
 
-Continue the UniverseGenerator run (C#; the F# port is deferred). This is the end of Stage 4: the 1.0.0 release. 1.0.0-beta.1 is on nuget.org and verified; every N1 row is on `master` (4260ff5). The release pull request is #34 (branch `release/1.0.0`), waiting for Mark to merge it, tag `v1.0.0` and approve the `nuget` deployment.
+Continue the UniverseGenerator run (C#; the F# port is deferred). This is the end of Stage 4: the 1.0.0 release. 1.0.0-beta.1 is on nuget.org and verified. Mark merged the release pull request #34 on 2026-10-03 (merge commit 3505547; `ci` run 37172716089 green on every OS, size gate all green). The tag `v1.0.0` and the approval of the `nuget` deployment wait for Mark.
 
 Mark wants estimates in agent time, never human working days.
 
@@ -23,10 +23,10 @@ In the UniverseGenerator clone, read in this order:
 Open the Runtime folder and the tests only if a step needs them. Re-check any nuget.org or GitHub fact older than three months against the official docs before using it (AGENTS.md, "Research beats recall").
 
 1. Check where the release stands:
-   - `gh pr view 34 -R m4bwav/UniverseGenerator --json state,mergedAt,mergeCommit`;
-   - `git ls-remote --tags origin v1.0.0`;
+   - `git ls-remote --tags origin v1.0.0`, and that it points at 3505547 (or at a later `master` commit whose `ci` passed, if a pull request re-dated the CHANGELOG);
    - `gh run list -R m4bwav/UniverseGenerator --workflow release.yml --limit 3`, and whether its `nuget` job ran or still waits for approval.
-   - If #34 is still open, or there is no tag, or the deployment still waits: do nothing that needs Mark. Tell him which of merge, tag and approval waits, and stop. Do not merge #34, tag or approve yourself unless he says so in your session.
+   - If there is no tag, or the deployment still waits: do nothing that needs Mark. Tell him which of tag and approval waits, and stop. Do not tag or approve yourself unless he says so in your session.
+   - If Mark asks you to tag on a later local day than 2026-10-03, first open a small pull request re-dating `## [1.0.0] - 2026-10-03` in CHANGELOG.md (`release.yml` only checks that a date is there, but the release ritual wants the tag day); tag its merge after `ci` is green.
    - If the release run failed, or Trusted Publishing was refused, stop and tell Mark at once with the failing job's log lines.
 2. When the release run has pushed 1.0.0, verify it from nuget.org exactly as checklist step 7 did for beta.1, and record each result in step 7's table (a new 1.0.0 block, the beta.1 rows stay):
    - the flat container lists `1.0.0`; registration says listed (`curl --compressed`; it can lag 25 minutes or more);

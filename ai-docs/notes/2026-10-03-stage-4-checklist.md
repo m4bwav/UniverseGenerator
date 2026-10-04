@@ -120,7 +120,7 @@ Done 2026-10-03 for 1.0.0-beta.1, about ten minutes after the push; everything m
 
 `dotnet add package` refuses `--version` and `--prerelease` together ("not supported in the same command"): use `--prerelease` alone (latest prerelease) or `--version 1.0.0-beta.1` alone.
 
-- [ ] Then 1.0.0 (after N1, plan "Before 1.0.0") the same way, and `PackageValidationBaselineVersion` 1.0.0 after it.
+- [ ] Then 1.0.0 (after N1, plan "Before 1.0.0") the same way, and `PackageValidationBaselineVersion` 1.0.0 after it. Status 2026-10-03: release PR #34 merged by Mark (3505547), `ci` run 37172716089 green on all three OSes; no `v1.0.0` tag and no release run yet, so the tag (step 6, `v1.0.0` in place of `v1.0.0-beta.1`) and the approval wait for Mark. For 1.0.0, use `dotnet add package UniverseGenerator --version 1.0.0` alone, and `gh release view v1.0.0` must show a full release, not a prerelease.
 - [ ] Optional now that the first push bound the policy: narrow the Trusted Publishing scope to "push only new package versions" (step 3).
 
 Related: builds on [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md) (Stage 4, Security); see also [history scan](2026-10-03-history-scan.md), [package size budget](2026-10-02-package-size-budget.md).
