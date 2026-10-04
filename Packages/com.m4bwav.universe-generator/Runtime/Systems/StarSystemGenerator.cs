@@ -57,7 +57,7 @@ namespace UniverseGeneration
             // A galaxy's map already holds the shifted danger; a system alone shifts its own draw.
             var danger = context.Danger ?? DMath.Clamp(Seeds.Stream(seed, "danger").Range(1, 10) + options.DangerShift, 1, 10);
             var (star, companion) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
-            var name = context.Name ?? StarNames.Draw(Seeds.Stream(seed, "names"), star.Class);
+            var name = context.Name ?? InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
 
             var close = companion != null && companion.Orbit == CompanionOrbit.Close;
             var totalMass = star.Mass + (close ? companion!.Star.Mass : 0);

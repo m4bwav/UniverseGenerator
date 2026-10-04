@@ -744,7 +744,7 @@
   "seeds": "no",
   "package": "core (one syllable set); UniverseGenerator.Names (culture sets)",
   "size": "5 KB core, 50 to 150 KB satellite",
-  "why": "names on their own stream, so additive"
+  "why": "built for 1.0.0: GeneratorOptions.Names = NameStyle.Invented: one syllable set in core (InventedNames), drawn on each system's own names stream; planned as: names on their own stream, so additive"
  },
  "names-hierarchical": {
   "group": "Content and story",

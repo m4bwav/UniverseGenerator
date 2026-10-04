@@ -19,7 +19,7 @@ namespace UniverseGeneration
             var seed = address.ObjectSeed;
             var age = StarSystemGenerator.DrawAge(seed);
             var (star, _) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
-            var starName = StarNames.Draw(Seeds.Stream(seed, "names"), star.Class);
+            var starName = InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
             var light = Math.Max(star.Luminosity, 0.0001);
             var (hzInner, hzOuter, frost) = StarSystemGenerator.Zones(light);
 
