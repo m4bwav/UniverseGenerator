@@ -221,7 +221,7 @@ Effort: S under a day, M one to three days, L more. Seeds: "yes" means it must b
 |---|---|
 | Physics simulation (accretion, n-body), chi-square fits to astronomy | D18: game and fiction scale; test the preset's own targets instead |
 | 3D rendering, meshes, textures | visual, not data; engines render |
-| Real star catalogues (SIMBAD, HYG) | large data; game scale; a few real stars go in as pinned systems |
+| Real star catalogues (SIMBAD, HYG) | large data; game scale; a few real stars go in as pinned systems. **Reopened 2026-10-03** by Mark in a bounded form: [the real stars track](../notes/2026-10-03-real-stars-track.md) |
 | Visited-place cache | versioned seeds keep old places without storage |
 | Language-model text | not deterministic, needs a service |
 | Live player view, visibility helpers, NPC generation, import of other tools' formats | belong to the game, the VTT, RandomNameGeneratorLibrary or a converter |
@@ -298,6 +298,11 @@ Every level has the same pair of entry points: `Universe.Generate`, `GalaxyClust
 - [ ] Scratch Unity 6 project: install by git URL, run the sample, EditMode golden tests in Mono and an IL2CPP player (one ARM64 build for the fused multiply-add check); measure the WebGL build-size delta.
 - [ ] Prepare the OpenUPM submission; Mark opens it.
 - [ ] The game's switch on a branch, with the galaxy seed saved and shown (D10). **Stop 3.**
+
+### Real stars track (Mark, 2026-10-03; 1.x, after 1.0.0)
+- [ ] Research pass, docs only: catalogues of the nearest stars, known exoplanets, licences (no share-alike data without Mark), sizes at 12 to 33 light-years, the Milky Way, Local Group and Laniakea as small tables, competitors and tabletop settings, 2D maps from 3D positions; a report in `kb/sources/` with feature keys. Stop for Mark: sources, core or add-on, default count.
+- [ ] Pinned systems (the hook), then the `Neighbourhood` level (real near, seeded fill-in), real-and-generated galaxies, the Milky Way preset and the Local Group; each additive, with its own golden files and a data version in addresses.
+- Design and reasons: [the real stars track note](../notes/2026-10-03-real-stars-track.md).
 
 ### Stage 6: lab page and post (markdavidrogers-web). **Stop 4.**
 

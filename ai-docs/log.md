@@ -115,3 +115,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] verify | N1 list checked against status.json and the Runtime on master a3bedd9: every listed row unbuilt; four more 1.0 rows only partly built (orbital-elements, galaxy-shapes, constraints, diagnostics' GenerationBudget); cost table in the Stop 2 note
 ## [2026-10-03] decision | Mark ruled N1: every unbuilt and partial 1.0 row goes in 1.0.0 (Do all the things), the Unity float adapter included; nothing moves to 1.x. He rejected the effort column in human working days: estimate in agent time
 ## [2026-10-03] index | rebuilt (17 entries)
+## [2026-10-03] decision | Mark asked for a real-stars track (maps approximating Sol's real neighbourhood, a module if large); recorded as a 1.x research and features track after 1.0.0: note 2026-10-03-real-stars-track, plan section, six new 1.x rows, real-star-catalogue moved from rejected to 1.x (add-on)
+## [2026-10-03] index | rebuilt (18 entries)
