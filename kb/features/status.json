@@ -1001,11 +1001,11 @@
  "real-star-catalogue": {
   "group": "Universe, cluster and galaxy",
   "means": "maps from real catalogue stars",
-  "status": "rejected",
+  "status": "1.x",
   "seeds": "no",
-  "package": "-",
-  "size": "-",
-  "why": "game and fiction scale (D16, D18); catalogue data is large; a hand-made-systems hook covers a few real stars"
+  "package": "UniverseGenerator.RealStars (add-on, working name)",
+  "size": "tens to hundreds of KB, outside core",
+  "why": "Mark 2026-10-03 reverses the 2026-10-02 rejection in a bounded form: larger catalogues (10 pc census, Gaia nearby stars) go to an add-on, a small nearest-stars table to core; licences first (ai-docs/notes/2026-10-03-real-stars-track.md); was rejected: game and fiction scale (D16, D18); catalogue data is large; a hand-made-systems hook covers a few real stars"
  },
  "connected-graph": {
   "group": "Universe, cluster and galaxy",
@@ -1195,5 +1195,59 @@
   "package": "docs",
   "size": "-",
   "why": "the wiki can print the tables for table play"
+ },
+ "pinned-systems": {
+  "group": "Seeds and API",
+  "means": "place hand-made or real systems into a generated map",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 KB",
+  "why": "Mark 2026-10-03 (real stars track): the hook every real-data feature needs; a pinned star and known planets, the rest generated around them"
+ },
+ "real-neighbourhood": {
+  "group": "Universe, cluster and galaxy",
+  "means": "a map of the real stars around Sol",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "3 to 10 KB (nearest 30 to 60 systems)",
+  "why": "Mark 2026-10-03: the nearest real systems with real positions, classes, companions and names, unknowns generated from the seed; research first (ai-docs/notes/2026-10-03-real-stars-track.md)"
+ },
+ "real-exoplanets": {
+  "group": "Universe, cluster and galaxy",
+  "means": "known exoplanets placed as known",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 to 3 KB",
+  "why": "Mark 2026-10-03: Proxima b, epsilon Eridani b and the rest keep their known orbits; generated planets fill the gaps"
+ },
+ "real-and-generated": {
+  "group": "Universe, cluster and galaxy",
+  "means": "real stars near home, generated ones far away",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "0",
+  "why": "Mark 2026-10-03: Elite Dangerous's model; a generated or Milky Way galaxy with Sol's neighbourhood at home"
+ },
+ "milky-way-preset": {
+  "group": "Universe, cluster and galaxy",
+  "means": "an approximation of the Milky Way",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "1 KB",
+  "why": "Mark 2026-10-03: a barred spiral with its real arms and the Sun's place; tens of numbers, not a star field"
+ },
+ "real-local-group": {
+  "group": "Universe, cluster and galaxy",
+  "means": "the real Local Group as a cluster",
+  "status": "1.x",
+  "seeds": "no",
+  "package": "core",
+  "size": "2 to 5 KB",
+  "why": "Mark 2026-10-03: the Milky Way, Andromeda, Triangulum, the Magellanic Clouds and the dwarfs (about 80 rows)"
  }
 }
