@@ -14,7 +14,7 @@ namespace UniverseGeneration
     internal static class OptionsCode
     {
         // The names, in the order ToCode writes them. Add a setting at the end and in both methods below.
-        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch" };
+        private static readonly string[] Names = { "systems", "shape", "starmix", "weirdness", "planets", "cluster", "epoch", "arms", "lanes", "danger" };
 
         public static string Write(GeneratorOptions o)
         {
@@ -53,6 +53,21 @@ namespace UniverseGeneration
             if (o.Epoch != d.Epoch)
             {
                 Add(text, "epoch", EpochName(o.Epoch));
+            }
+
+            if (o.Arms.HasValue)
+            {
+                Add(text, "arms", Int(o.Arms.Value));
+            }
+
+            if (o.ExtraLanes != d.ExtraLanes)
+            {
+                Add(text, "lanes", Int(o.ExtraLanes));
+            }
+
+            if (o.DangerShift != d.DangerShift)
+            {
+                Add(text, "danger", Int(o.DangerShift));
             }
 
             return text.ToString();
@@ -110,8 +125,17 @@ namespace UniverseGeneration
                     case "cluster":
                         o = o with { ClusterKind = value == "auto" ? ClusterKind.Auto : value == "group" ? ClusterKind.Group : value == "cluster" ? ClusterKind.Cluster : throw Choice(name, value, "auto, group, cluster") };
                         break;
-                    default:
+                    case "epoch":
                         o = o with { Epoch = ReadEpoch(value) };
+                        break;
+                    case "arms":
+                        o = o with { Arms = ReadInt(name, value) };
+                        break;
+                    case "lanes":
+                        o = o with { ExtraLanes = ReadInt(name, value) };
+                        break;
+                    default:
+                        o = o with { DangerShift = ReadInt(name, value) };
                         break;
                 }
             }

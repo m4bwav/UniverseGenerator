@@ -54,7 +54,8 @@ namespace UniverseGeneration
         {
             var seed = address.ObjectSeed;
             var age = context.Age ?? DrawAge(seed);
-            var danger = context.Danger ?? Seeds.Stream(seed, "danger").Range(1, 10);
+            // A galaxy's map already holds the shifted danger; a system alone shifts its own draw.
+            var danger = context.Danger ?? DMath.Clamp(Seeds.Stream(seed, "danger").Range(1, 10) + options.DangerShift, 1, 10);
             var (star, companion) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
             var name = context.Name ?? StarNames.Draw(Seeds.Stream(seed, "names"), star.Class);
 

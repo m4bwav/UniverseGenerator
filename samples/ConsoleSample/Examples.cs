@@ -33,6 +33,16 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Presets()
+        {
+            #region readme
+            var run = Galaxy.Generate("my-seed", Preset.Roguelike);
+            var cozy = Galaxy.Generate("my-seed", Preset.Cozy);
+            Console.WriteLine($"{run.Map.Count(m => m.Danger >= 8)} of {run.Map.Count} systems at danger 8 or more");    // 15 of 30 systems at danger 8 or more
+            Console.WriteLine($"{cozy.Map.Count(m => m.Danger >= 8)} of {cozy.Map.Count} systems at danger 8 or more");  // 6 of 40 systems at danger 8 or more
+            #endregion
+        }
+
         public static void Validation()
         {
             #region readme
@@ -110,6 +120,7 @@ namespace ConsoleSample
         {
             FirstExample();
             PresetsAndAddresses();
+            Presets();
             Validation();
             ClustersAndUniverses();
             GalaxyExtras();

@@ -40,7 +40,14 @@ var same = (Planet)Universe.At(planet.Address, options);   // any object regener
 Console.WriteLine(same.Summary == planet.Summary);         // True
 ```
 
-The presets are `Default`, `SpaceOpera` (more outliers) and `Plausible` (real star shares, few outliers). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind` and `Epoch`. Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws.
+The presets are `Default`, `SpaceOpera` (more outliers), `Plausible` (real star shares, few outliers), `Pocket` (20 systems for a short game), `Roguelike` (30 systems, more chokepoints, more danger), `Cozy` (40 well-connected, safer systems) and `Epic` (300 systems). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular), `Arms` (2 to 4 for spirals and bars), `ExtraLanes` (the chance of a lane beyond the connected network, 0 to 100), `DangerShift` (-5 to 5 on every system's danger), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind` and `Epoch`. Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws.
+
+```csharp
+var run = Galaxy.Generate("my-seed", Preset.Roguelike);
+var cozy = Galaxy.Generate("my-seed", Preset.Cozy);
+Console.WriteLine($"{run.Map.Count(m => m.Danger >= 8)} of {run.Map.Count} systems at danger 8 or more");    // 15 of 30 systems at danger 8 or more
+Console.WriteLine($"{cozy.Map.Count(m => m.Danger >= 8)} of {cozy.Map.Count} systems at danger 8 or more");  // 6 of 40 systems at danger 8 or more
+```
 
 ```csharp
 try
