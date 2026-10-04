@@ -155,6 +155,19 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Tables()
+        {
+            #region readme
+            var tables = GeneratorTables.Default.With("red-sky",
+                new WeightTable { Id = "star-classes.mature", Entries = new[] { new WeightEntry { Name = "M", Weight = 1 } } });
+            GeneratorTables.Register(tables);   // once, before generating; every program that reads the links does the same
+            var galaxy = Galaxy.Generate("my-seed", Preset.Default with { Tables = "red-sky" });
+            Console.WriteLine(galaxy.Map.Count(m => m.StarClass == StarClass.M));   // 26 red dwarfs of 60
+            var json = tables.ToJson(indented: true);   // edit it, ship it, read it back with GeneratorTables.FromJson
+            Console.WriteLine(GeneratorTables.FromJson(json).Table("star-classes.mature").Entries[0].Weight);   // 1
+            #endregion
+        }
+
         public static void UnitConversions()
         {
             #region readme
@@ -182,6 +195,7 @@ namespace ConsoleSample
             Links();
             Export();
             Hooks();
+            Tables();
             UnitConversions();
         }
     }

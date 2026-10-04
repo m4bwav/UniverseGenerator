@@ -17,16 +17,16 @@ namespace UniverseGeneration
 
         private static readonly StellarAge[] s_ages = { StellarAge.Young, StellarAge.Mature, StellarAge.Old };
         private static readonly int[] s_ageWeights = { 30, 45, 25 };
-        private static readonly PlanetKind[] s_hotKinds = { PlanetKind.Lava, PlanetKind.Iron, PlanetKind.Barren, PlanetKind.Greenhouse };
-        private static readonly int[] s_hotWeights = { 30, 20, 40, 10 };
-        private static readonly PlanetKind[] s_warmKinds = { PlanetKind.Barren, PlanetKind.Desert, PlanetKind.Greenhouse, PlanetKind.Rocky };
-        private static readonly int[] s_warmWeights = { 25, 30, 20, 25 };
-        private static readonly PlanetKind[] s_temperateKinds = { PlanetKind.Rocky, PlanetKind.Ocean, PlanetKind.Garden, PlanetKind.Desert, PlanetKind.Barren };
-        private static readonly int[] s_temperateWeights = { 22, 25, 22, 15, 10 };
-        private static readonly PlanetKind[] s_coldKinds = { PlanetKind.Barren, PlanetKind.Rocky, PlanetKind.Ice, PlanetKind.Desert };
-        private static readonly int[] s_coldWeights = { 30, 15, 40, 10 };
-        private static readonly MoonKind[] s_giantMoonKinds = { MoonKind.Ice, MoonKind.Barren, MoonKind.Volcanic, MoonKind.Ocean, MoonKind.Hazy };
-        private static readonly int[] s_giantMoonWeights = { 45, 20, 10, 15, 10 };
+        internal static readonly PlanetKind[] HotKinds = { PlanetKind.Lava, PlanetKind.Iron, PlanetKind.Barren, PlanetKind.Greenhouse };
+        internal static readonly int[] HotWeights = { 30, 20, 40, 10 };
+        internal static readonly PlanetKind[] WarmKinds = { PlanetKind.Barren, PlanetKind.Desert, PlanetKind.Greenhouse, PlanetKind.Rocky };
+        internal static readonly int[] WarmWeights = { 25, 30, 20, 25 };
+        internal static readonly PlanetKind[] TemperateKinds = { PlanetKind.Rocky, PlanetKind.Ocean, PlanetKind.Garden, PlanetKind.Desert, PlanetKind.Barren };
+        internal static readonly int[] TemperateWeights = { 22, 25, 22, 15, 10 };
+        internal static readonly PlanetKind[] ColdKinds = { PlanetKind.Barren, PlanetKind.Rocky, PlanetKind.Ice, PlanetKind.Desert };
+        internal static readonly int[] ColdWeights = { 30, 15, 40, 10 };
+        internal static readonly MoonKind[] GiantMoonKinds = { MoonKind.Ice, MoonKind.Barren, MoonKind.Volcanic, MoonKind.Ocean, MoonKind.Hazy };
+        internal static readonly int[] GiantMoonWeights = { 45, 20, 10, 15, 10 };
         private static readonly int[] s_stationCountWeights = { 60, 30, 10 };
         private static readonly string[] s_romanNumerals = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
         private static readonly int[] s_romanValues = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
@@ -56,7 +56,7 @@ namespace UniverseGeneration
             var age = context.Age ?? DrawAge(seed);
             // A galaxy's map already holds the shifted danger; a system alone shifts its own draw.
             var danger = context.Danger ?? DMath.Clamp(Seeds.Stream(seed, "danger").Range(1, 10) + options.DangerShift, 1, 10);
-            var (star, companion) = context.Star != null ? (context.Star, null) : StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
+            var (star, companion) = context.Star != null ? (context.Star, null) : StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options);
             var name = context.Name ?? InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
 
             var close = companion != null && companion.Orbit == CompanionOrbit.Close;
@@ -64,7 +64,8 @@ namespace UniverseGeneration
             var light = Math.Max(star.Luminosity + (close ? companion!.Star.Luminosity : 0), 0.0001);
             var (hzInner, hzOuter, frost) = Zones(light);
 
-            var drafts = Planets(Seeds.Stream(seed, "planets"), star, companion, totalMass, hzInner, hzOuter, frost, context.Richness);
+            var tables = GeneratorTables.For(options);
+            var drafts = Planets(Seeds.Stream(seed, "planets"), star, companion, totalMass, hzInner, hzOuter, frost, context.Richness, tables);
             if (drafts.Count > options.MaxPlanetsPerSystem)
             {
                 drafts.RemoveRange(options.MaxPlanetsPerSystem, drafts.Count - options.MaxPlanetsPerSystem);
@@ -82,7 +83,7 @@ namespace UniverseGeneration
             for (var i = 0; i < drafts.Count; i++)
             {
                 var elements = new OrbitShape(drafts.Count > 1, EccentricityCap(drafts, i));
-                planets[i] = BuildPlanet(drafts[i], i, Seeds.Child(seed, "planet", i), address.Child("planet", i), name + " " + letters[i], host, options.Weirdness, elements);
+                planets[i] = BuildPlanet(drafts[i], i, Seeds.Child(seed, "planet", i), address.Child("planet", i), name + " " + letters[i], host, options.Weirdness, elements, tables);
             }
 
             var belts = Belts(Seeds.Stream(seed, "belts"), planets, frost);
@@ -179,7 +180,7 @@ namespace UniverseGeneration
         /// other streams (<see cref="PlanetDetail"/>), then each moon's detail from the moon's own seed
         /// (<see cref="MoonDetail"/>). <paramref name="planetSeed"/> is the seed of <paramref name="planetAddress"/>.
         /// </summary>
-        internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness, OrbitShape shape)
+        internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness, OrbitShape shape, GeneratorTables tables)
         {
             var (eccentricity, inclination, periapsis) = Elements(Seeds.Stream(planetSeed, "elements"), d.Orbit, shape);
             var moons = Seeds.Stream(planetSeed, "moons");
@@ -199,7 +200,7 @@ namespace UniverseGeneration
                 Mass = DMath.Round(d.Mass, 3),
                 Radius = DMath.Round(d.Radius, 3),
                 Rings = rings,
-                Moons = Moons(moons, d, host.TotalMass, planetAddress, planetName),
+                Moons = Moons(moons, d, host.TotalMass, planetAddress, planetName, tables),
                 Descriptor = Story.PlanetDescriptor(d.Kind, d.Zone, rings, host.Star),
             };
             planet = PlanetDetail.Apply(planet, host, planetSeed, weirdness);
@@ -221,7 +222,7 @@ namespace UniverseGeneration
             c == StarClass.O || c == StarClass.B || c == StarClass.Giant || c == StarClass.Supergiant || c == StarClass.WhiteDwarf
             || c == StarClass.NeutronStar || c == StarClass.BlackHole;
 
-        private static List<Draft> Planets(Pcg32 rng, Star star, Companion? companion, double totalMass, double hzInner, double hzOuter, double frost, int richness)
+        private static List<Draft> Planets(Pcg32 rng, Star star, Companion? companion, double totalMass, double hzInner, double hzOuter, double frost, int richness, GeneratorTables tables)
         {
             var (innerMin, innerMax, outerMin, outerMax) = Counts(star.Class);
             var innerCount = rng.Range(innerMin, innerMax);
@@ -248,7 +249,7 @@ namespace UniverseGeneration
             var orbit = Math.Max(rng.Range(0.04, 0.3) * DMath.Pow(totalMass, 1.0 / 3), minOrbit);
             for (var i = 0; i < innerCount && orbit <= frost; i++)
             {
-                var p = Draw(rng, orbit, totalMass, Zone(orbit, hzInner, hzOuter, frost), giantWeight, false, pod, noGarden);
+                var p = Draw(rng, orbit, totalMass, Zone(orbit, hzInner, hzOuter, frost), giantWeight, false, pod, noGarden, tables);
                 planets.Add(p);
                 if (p.Mass >= 2 && p.Mass <= 20)
                 {
@@ -270,7 +271,7 @@ namespace UniverseGeneration
             orbit = Math.Max(Math.Max(last * 1.4, minOrbit), frost * rng.Range(0.8, 1.5));
             for (var j = 0; j < outerCount; j++)
             {
-                planets.Add(Draw(rng, orbit, totalMass, Zone(orbit, hzInner, hzOuter, frost), giantWeight, innerLink, pod, noGarden));
+                planets.Add(Draw(rng, orbit, totalMass, Zone(orbit, hzInner, hzOuter, frost), giantWeight, innerLink, pod, noGarden, tables));
                 orbit *= rng.Range(1.5, 2.3);
             }
 
@@ -309,7 +310,7 @@ namespace UniverseGeneration
             : orbit <= frost ? OrbitZone.Cold
             : OrbitZone.Outer;
 
-        internal static Draft Draw(Pcg32 rng, double orbit, double totalMass, OrbitZone zone, int g, bool innerLink, (double Rocky, double Gassy) pod, bool noGarden)
+        internal static Draft Draw(Pcg32 rng, double orbit, double totalMass, OrbitZone zone, int g, bool innerLink, (double Rocky, double Gassy) pod, bool noGarden, GeneratorTables tables)
         {
             // Weights [dwarf, terrestrial, sub-Neptune, ice giant, gas giant] per zone; giants follow the star's mass.
             int[] weights;
@@ -356,28 +357,28 @@ namespace UniverseGeneration
                 case SizeClass.SubNeptune: kind = PlanetKind.SubNeptune; break;
                 case SizeClass.IceGiant: kind = PlanetKind.IceGiant; break;
                 case SizeClass.GasGiant: kind = zone == OrbitZone.Hot ? PlanetKind.HotJupiter : PlanetKind.GasGiant; break;
-                default: kind = TerrestrialKind(rng, zone, mass, noGarden); break;
+                default: kind = TerrestrialKind(rng, zone, mass, noGarden, tables); break;
             }
 
             return new Draft { Orbit = orbit, Period = period, Mass = mass, Radius = Radius(mass, kind), Kind = kind, Zone = zone };
         }
 
-        private static PlanetKind TerrestrialKind(Pcg32 rng, OrbitZone zone, double mass, bool noGarden)
+        private static PlanetKind TerrestrialKind(Pcg32 rng, OrbitZone zone, double mass, bool noGarden, GeneratorTables tables)
         {
             PlanetKind kind;
             switch (zone)
             {
                 case OrbitZone.Hot:
-                    kind = s_hotKinds[rng.Weighted(s_hotWeights)];
+                    kind = HotKinds[rng.Weighted(tables.Weights(GeneratorTables.PlanetHot))];
                     break;
                 case OrbitZone.Warm:
-                    kind = s_warmKinds[rng.Weighted(s_warmWeights)];
+                    kind = WarmKinds[rng.Weighted(tables.Weights(GeneratorTables.PlanetWarm))];
                     break;
                 case OrbitZone.Temperate:
-                    kind = s_temperateKinds[rng.Weighted(s_temperateWeights)];
+                    kind = TemperateKinds[rng.Weighted(tables.Weights(GeneratorTables.PlanetTemperate))];
                     break;
                 case OrbitZone.Cold:
-                    kind = s_coldKinds[rng.Weighted(s_coldWeights)];
+                    kind = ColdKinds[rng.Weighted(tables.Weights(GeneratorTables.PlanetCold))];
                     break;
                 default:
                     kind = rng.Chance(70, 100) ? PlanetKind.Ice : PlanetKind.Barren;
@@ -432,7 +433,7 @@ namespace UniverseGeneration
             }
         }
 
-        private static Moon[] Moons(Pcg32 rng, Draft planet, double totalMass, Address planetAddress, string planetName)
+        private static Moon[] Moons(Pcg32 rng, Draft planet, double totalMass, Address planetAddress, string planetName, GeneratorTables tables)
         {
             int count;
             var giant = planet.Kind == PlanetKind.GasGiant || planet.Kind == PlanetKind.IceGiant;
@@ -457,7 +458,7 @@ namespace UniverseGeneration
                 MoonKind kind;
                 if (giant)
                 {
-                    kind = s_giantMoonKinds[rng.Weighted(s_giantMoonWeights)];
+                    kind = GiantMoonKinds[rng.Weighted(tables.Weights(GeneratorTables.GiantMoons))];
                     if (!garden && planet.Zone == OrbitZone.Temperate && rng.Chance(25, 100))
                     {
                         kind = MoonKind.Garden;

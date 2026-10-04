@@ -172,6 +172,20 @@ var again = (StarSystem)Universe.At(system.Address, null, hooks);   // At runs t
 Console.WriteLine(again.Custom["faction"]);                          // pirates
 ```
 
+## Editable tables
+
+Some of the generator's choices come from weight tables you can edit: which star classes a region holds (by its age, and for `StarMix.Plausible`), which rocky planet kinds each orbit zone holds, and the moons of giant planets. `GeneratorTables.Ids` lists them. Change the built-in tables with `With`, or load a set from JSON with `GeneratorTables.FromJson` (`ToJson` writes the format, every choice listed). Register the set under an id and name it in `GeneratorOptions.Tables`; a link carries the id, so every program that registers the same tables regenerates the same objects. The built-in tables (id `default`) give exactly the output of no tables. In Unity, the `TablesAsset` ScriptableObject (Assets > Create > Universe Generator > Tables) holds a set you edit in the Inspector; call its `Register()` before generating.
+
+```csharp
+var tables = GeneratorTables.Default.With("red-sky",
+    new WeightTable { Id = "star-classes.mature", Entries = new[] { new WeightEntry { Name = "M", Weight = 1 } } });
+GeneratorTables.Register(tables);   // once, before generating; every program that reads the links does the same
+var galaxy = Galaxy.Generate("my-seed", Preset.Default with { Tables = "red-sky" });
+Console.WriteLine(galaxy.Map.Count(m => m.StarClass == StarClass.M));   // 26 red dwarfs of 60
+var json = tables.ToJson(indented: true);   // edit it, ship it, read it back with GeneratorTables.FromJson
+Console.WriteLine(GeneratorTables.FromJson(json).Table("star-classes.mature").Entries[0].Weight);   // 1
+```
+
 ## Units
 
 Values are plain doubles in the unit each field's documentation names: orbits in au, planet radii and masses in Earths, stars in Suns, moons and belts in kilometres, temperatures in kelvin, rotation in hours and orbital periods in days; maps in their own units (`Distances`). `Units.Convert` turns any of them into another unit (`LengthUnit`, `MassUnit`, `TemperatureUnit`, `TimeUnit`), and `Units.Map` turns map units into a length. No units library, so nothing to install and nothing added to a WebGL build.

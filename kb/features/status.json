@@ -69,7 +69,7 @@
   "seeds": "no",
   "package": "core",
   "size": "4 KB",
-  "why": "D7: C# records plus JSON tables by id; ScriptableObject adapter in the Unity package"
+  "why": "built for 1.0.0: GeneratorTables with public WeightTable/WeightEntry records, nine tables by id, JSON read by a hand-written reader, registered by id and named in GeneratorOptions.Tables; TablesAsset ScriptableObject in the UniverseGenerator.Unity assembly; planned as: D7: C# records plus JSON tables by id; ScriptableObject adapter in the Unity package"
  },
  "hooks-plugins": {
   "group": "Seeds and API",

@@ -87,6 +87,13 @@ namespace UniverseGeneration
         /// </summary>
         public Guarantee Require { get; init; }
 
+        /// <summary>
+        /// The id of registered <see cref="GeneratorTables"/> to draw star classes, planet kinds and giant planets' moons
+        /// from, such as <c>my-mod</c>; null (the default) uses the built-in tables. Register the tables before
+        /// generating, in every program that regenerates from a link.
+        /// </summary>
+        public string? Tables { get; init; }
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
@@ -124,6 +131,15 @@ namespace UniverseGeneration
             if ((Require & ~all) != 0)
             {
                 throw new ArgumentException($"{nameof(Require)} must combine Guarantee flags such as GardenWorld | BlackHole; you asked for {(int)Require}.", nameof(Require));
+            }
+
+            if (Tables != null)
+            {
+                GeneratorTables.CheckId(Tables);
+                if (GeneratorTables.Find(Tables) is null)
+                {
+                    throw new ArgumentException($"No tables are registered as \"{Tables}\"; call GeneratorTables.Register first.", nameof(Tables));
+                }
             }
 
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)

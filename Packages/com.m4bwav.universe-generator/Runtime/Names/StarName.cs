@@ -47,7 +47,7 @@ namespace UniverseGeneration
             for (var i = 0; i < count; i++)
             {
                 var own = Seeds.Child(root, "name", i);
-                var c = starClass ?? StarGenerator.Roll(Seeds.Stream(own, "star"), StellarAge.Mature, o.StarMix).Star.Class;
+                var c = starClass ?? StarGenerator.Roll(Seeds.Stream(own, "star"), StellarAge.Mature, o).Star.Class;
                 var rng = Seeds.Stream(own, "names");
                 var name = StarNames.Draw(rng, c);
                 for (var tries = 0; !used.Add(name); tries++)

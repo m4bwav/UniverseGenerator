@@ -321,7 +321,7 @@ namespace UniverseGeneration
             var stars = new (Star Star, Companion? Companion)[n];
             for (var i = 0; i < n; i++)
             {
-                stars[i] = StarGenerator.Roll(Seeds.Stream(GalaxyLayout.SystemSeed(seed, i), "star"), regions[layout.Region[i]].Age, options.StarMix);
+                stars[i] = StarGenerator.Roll(Seeds.Stream(GalaxyLayout.SystemSeed(seed, i), "star"), regions[layout.Region[i]].Age, options);
             }
 
             // Guarantees (options.Require) draw only from the galaxy's constraints stream and with none set draw nothing.
