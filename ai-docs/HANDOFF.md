@@ -1,10 +1,10 @@
 # Handoff
 
 ## Current state
-2026-10-03 (evening, US Central; 2026-10-04 UTC), Stage 4: **Mark merged the 1.0.0 release pull request #34** (merge commit 3505547, 2026-10-04 02:59 UTC). `ci` run 37172716089 on that `master` commit is green on Linux, Windows and macOS. Size gate on that run, all green: nupkg 441.0 KB, largest DLL 563.0 KB, UPM 606.6 KB unpacked and 143.2 KB compressed, 46 Runtime files, 13,423 lines. **No `v1.0.0` tag yet, so no 1.0.0 release run**: the tag and then the `nuget` approval wait for Mark.
+2026-10-03 (evening, US Central; 2026-10-04 UTC), end of Stage 4. **1.0.0 is released and verified.** On Mark's explicit instruction in the session the agent pushed tag `v1.0.0` on 3505547 and approved the `nuget` deployment; release run 37173982448 passed every job (Trusted Publishing accepted, GitHub Release a full release with nupkg and snupkg). Verified from nuget.org as [checklist](notes/2026-10-03-stage-4-checklist.md) step 7 (the 1.0.0 block): listed, repository signature, DLLs identical to the attested artifact, snupkg served, attestation verified, fresh net10.0 and net48 consoles print the README's first example identically. Docs PR #40 merged (dd08aeb). **The GitHub wiki for 1.0.0 is live** (11 pages, wiki commit 170339b; [the wiki note](notes/2026-10-03-github-wiki.md)).
 
 ## In progress
-Nothing half-done. `master` already says 1.0.0 everywhere (CHANGELOG `## [1.0.0] - 2026-10-03`, `<Version>`, `package.json`, README and AGENTS.md status lines). AGENTS.md calls 1.0.0 "the current release on nuget.org", which is true only once the push runs.
+**PR #39 (`chore/package-validation-baseline`) waits for Mark**: `PackageValidationBaselineVersion` 1.0.0 and a new csproj comment; local pack validated against the nuget.org 1.0.0 with 0 warnings, tests green (net10.0 272, net48 271), `ci` green on all three OSes. Assigned to m4bwav, label needs-review.
 
 ## Dead ends hit
 - Stacked pull requests: when a merged base branch is not deleted, GitHub does not retarget the next pull request, and it merges into the old branch, not `master` (#18 to #25 landed in `feat/seed-url`; #28 carried them). After a base merges, retarget the next pull request to `master` (`gh pr edit N --base master`) or ask Mark to delete the branch.
@@ -20,13 +20,14 @@ Nothing half-done. `master` already says 1.0.0 everywhere (CHANGELOG `## [1.0.0]
 - The size gate's "UPM compressed" wobbles by about 0.1 KB between builds; quote `master`'s run.
 - Mark rejects effort estimates in human working days: estimate in agent time.
 - `release.yml` only checks that the version's CHANGELOG heading has a date, not which date: a tag on a later day does not fail the run, but the release ritual wants the heading to match the tag day.
+- Right after a push, `dotnet add package X --version N` can fail with NU1102 although the flat container lists N: NuGet's HTTP cache holds the old index. Use an empty `NUGET_HTTP_CACHE_PATH` (and `NUGET_PACKAGES`) for fresh-consumer checks.
+- Auto mode's permission classifier refused the tag push even with Mark's go-ahead; it ran once Mark switched the session to manual mode and approved the prompt.
 
 ## Left / follow-ups
-1. Mark: tag `v1.0.0` on 3505547 and push it (`git fetch origin && git tag v1.0.0 3505547 && git push origin v1.0.0`; `master` has moved on with docs-only merges, and `release.yml` accepts any commit on `master` whose `ci` passed); then approve the `nuget` deployment on the release run. If he tags on a day after 2026-10-03 (local), a small pull request should re-date the CHANGELOG heading first, and the tag goes on that merge after `ci` is green.
-2. Agent, after the release run: verify 1.0.0 from nuget.org as [checklist](notes/2026-10-03-stage-4-checklist.md) step 7 did for beta.1; then a pull request setting `PackageValidationBaselineVersion` 1.0.0 and replacing the csproj comment about no baseline.
-3. Agent, after the baseline pull request: fill out the GitHub wiki for 1.0.0 with wikiwright (Mark asked 2026-10-03; plan Stage 4). The wiki has only a placeholder Home page.
-4. After 1.0.0 and the wiki: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope. Start neither unless Mark asks.
-5. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
+1. Mark: merge PR #39. Then Stage 4 is done.
+2. Corrections the wiki run found ([the wiki note](notes/2026-10-03-github-wiki.md), "Inaccuracies"): the README's Unity install line names OpenUPM before the listing exists; about 30 XML doc summaries cite internal plan IDs ("(plan D17)") that ship in IntelliSense; `ToJson` docs say "This galaxyCluster as JSON"; `kb/rules/plausibility-rules.md` lists the conservative habitable zone while 1.0.0 uses sqrt(L/1.776) to sqrt(L/0.32), and its "Proto" column describes the Stage 1 prototype. The kb fix needs no release; the README and XML docs ship with the next release.
+3. After 1.0.0: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope to "push only new package versions" (checklist step 3). Start none unless Mark asks. Stage 7 adds the Unity and OpenUPM wiki pages (update mode; the wiki note has the procedure).
+4. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
 
 ## Next single action
-When Mark has tagged `v1.0.0` and approved the deployment: verify 1.0.0 from nuget.org. The prompt is [next-session-prompt.md](next-session-prompt.md).
+Mark merges PR #39. The next session checks that merge and `ci` on `master`, then asks Mark which track comes next. The prompt is [next-session-prompt.md](next-session-prompt.md).

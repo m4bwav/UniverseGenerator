@@ -1,0 +1,351 @@
+## installed
+.NET 10.0.12
+UniverseGenerator 1.0.0 (file 1.0.0.0, lib .NETCoreApp,Version=v10.0)
+
+## installed (net10.0)
+.NET 10.0.12
+UniverseGenerator 1.0.0 (file 1.0.0.0, lib .NETCoreApp,Version=v10.0)
+
+## home: the first example (net10.0)
+HD 147927: K star, 6 planets, danger 9
+HD 165595: M star, 1 planets, danger 6
+HD 28101: K star, 6 planets, danger 6
+
+## getting started: a galaxy at a glance (net10.0)
+Wyvern Galaxy
+a ring galaxy
+Ring, 60 systems, 71 lanes, 7 regions
+an orange dwarf and red dwarf pair with 6 planets and an asteroid belt
+orange dwarf
+  HD 147927 e: a warm desert world under an orange dwarf
+  HD 147927 c: a warm rocky world under an orange dwarf
+  HD 147927 d: a warm mini-Neptune under an orange dwarf
+  HD 147927 f: an ice giant far from an orange dwarf
+  HD 147927 g: a gas giant far from an orange dwarf
+  HD 147927 b: an ice giant far from an orange dwarf
+
+## getting started: every level on its own (net10.0)
+the Pale Reach
+Halcyon Group
+Wyvern Galaxy
+a red dwarf with 3 planets and an asteroid belt
+1.3 g, nitrogen air at 0.6 bar, -37 °C; hazard 2
+HD 45528
+
+## getting started: number seeds (net10.0)
+v1-42/galaxy
+True
+
+## same seed: twice, and a part alone (net10.0)
+True
+True
+
+## same seed: a fingerprint (net10.0)
+909995 characters, SHA-256 D486B72BA56ACAEF...
+
+## same seed: seeds that look alike (net10.0)
+"my-seed": v1-my-seed/galaxy, Wyvern Galaxy, first system HD 147927
+"My-Seed": v1-My-Seed/galaxy, Pallas Galaxy, first system 5 Trianguli
+"my-seed ": v1-my-seed%20/galaxy, Quill Galaxy, first system HD 129976
+"hello world": v1-hello%20world/galaxy, Wyvern Galaxy, first system Southern Crab
+
+## same seed: options are part of the answer (net10.0)
+HD 147927, HD 147927, HD 147927
+danger 9, 10, 7
+True
+
+## same seed: hooks never move a draw (net10.0)
+HD 147927 / New HD 147927
+True
+
+## plausibility: stars and their zones (net10.0)
+HD 147927: K5V, 0.631 Suns, luminosity 0.15823, radius 0.691601, 4382 K, #ffd2a1
+  habitable zone 0.2985 to 0.7032 au, frost line 1.074 au
+HD 165595: M8V, 0.083 Suns, luminosity 0.00075, radius 0.136319, 2588 K, #ffad51
+  habitable zone 0.0205 to 0.0484 au, frost line 0.0739 au
+HD 28101: K0V, 0.819 Suns, luminosity 0.4504, radius 0.85255, 5126 K, #ffd2a1
+  habitable zone 0.5036 to 1.1864 au, frost line 1.812 au
+HD 157953: M5V, 0.19 Suns, luminosity 0.00503, radius 0.264638, 2992 K, #ffad51
+  habitable zone 0.0532 to 0.1254 au, frost line 0.1915 au
+
+## plausibility: planets agree with their star (net10.0)
+HD 147927 e: Desert, Warm, 0.1653 au, 1.266 Earth radii, 402 K, eccentricity 0.05
+HD 147927 c: Rocky, Warm, 0.2022 au, 1.333 Earth radii, 488 K, eccentricity 0.05
+HD 147927 d: SubNeptune, Warm, 0.2604 au, 2.816 Earth radii, 304 K, eccentricity 0.026
+HD 147927 f: IceGiant, Outer, 1.3447 au, 8.06 Earth radii, 140 K, eccentricity 0.079
+HD 147927 g: GasGiant, Outer, 2.9526 au, 10.331 Earth radii, 93 K, eccentricity 0.029
+HD 147927 b: IceGiant, Outer, 4.4515 au, 5.946 Earth radii, 75 K, eccentricity 0.101
+
+## plausibility: the star mix of two presets (net10.0)
+Default: M 608, K 408, G 324, F 193, A 138, Giant 113, WhiteDwarf 110, B 56, Supergiant 23, BlackHole 12, NeutronStar 8, O 7
+Plausible: M 1431, K 254, WhiteDwarf 118, G 116, F 60, A 10, Giant 8, NeutronStar 2, Supergiant 1
+
+## errors: what is refused (net10.0)
+Systems = 0: ArgumentException: Systems must be 1 to 2000; you asked for 0. (Parameter 'Systems')
+Systems = 2001: ArgumentException: Systems must be 1 to 2000; you asked for 2001. (Parameter 'Systems')
+Weirdness = 101: ArgumentException: Weirdness must be 0 to 100; you asked for 101. (Parameter 'Weirdness')
+Arms = 5: ArgumentException: Arms must be 2 to 4; you asked for 5. (Parameter 'Arms')
+DangerShift = 6: ArgumentException: DangerShift must be -5 to 5; you asked for 6. (Parameter 'DangerShift')
+a 201-character seed: ArgumentException: A seed must be at most 200 characters; yours has 201. (Parameter 'seed')
+an empty seed: no error
+a null seed: ArgumentNullException: A seed is any text, such as "my-seed" or "42"; it cannot be null. (Parameter 'seed')
+System(60) of 60: ArgumentOutOfRangeException: This galaxy has 60 systems, numbered 0 to 59; you asked for 60. (Parameter 'index')
+Actual value was 60.
+an unknown level: ArgumentException: Below v1-my-seed/galaxy comes a system; the address has "nebula". (Parameter 'address')
+system 60 of 60: ArgumentException: v1-my-seed/galaxy has 60 systems (numbered 0 to 59); the address asks for system 60. Were the same options passed as when it was generated? (Parameter 'address')
+generator version 2: ArgumentException: This package generates version 1; the address asks for version 2. (Parameter 'address')
+a link and options: ArgumentException: This link carries its options after the ?; pass a link or options, not both. (Parameter 'address')
+an unknown option code: ArgumentException: "colour" is not a setting; the settings are systems, shape, starmix, weirdness, planets, cluster, epoch, arms, lanes, danger, names, require, tables.
+unregistered tables: ArgumentException: No tables are registered as "nobody-registered-this"; call GeneratorTables.Register first. (Parameter 'Tables')
+StarName count 0: ArgumentException: Count must be 1 to 1000; you asked for 0. (Parameter 'count')
+StarName count 1001: ArgumentException: Count must be 1 to 1000; you asked for 1001. (Parameter 'count')
+tables from broken JSON: FormatException: Tables JSON, at character 1: expected ".
+
+## errors: warnings, never errors (net10.0)
+ArmsIgnored: Arms = 3 changes nothing: a ring galaxy has no arms.
+ShapeTooSmall: A spiral galaxy of 12 systems: arms read on a map only from 80 systems.
+GuaranteeUnmet: Require GardenWorld is not met: no system has a temperate rocky planet to hold it.
+
+## recipes: save and restore a run (net10.0)
+systems=30&weirdness=15&lanes=10&danger=2&names=invented
+True
+v1-run-2817/galaxy/system/5?systems=30&weirdness=15&lanes=10&danger=2&names=invented
+
+## recipes: compare the presets (net10.0)
+Default: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code ""
+SpaceOpera: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code "weirdness=10"
+Plausible: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code "starmix=plausible&weirdness=1"
+Pocket: 20 systems, Ring, 20 lanes, 8 at danger 8 or more, code "systems=20&planets=6"
+Roguelike: 30 systems, Ring, 32 lanes, 15 at danger 8 or more, code "systems=30&weirdness=15&lanes=10&danger=2"
+Cozy: 40 systems, Ring, 51 lanes, 6 at danger 8 or more, code "systems=40&weirdness=3&lanes=50&danger=-3"
+Epic: 300 systems, Spiral, 415 lanes, 134 at danger 8 or more, code "systems=300"
+
+## recipes: draw the map as SVG (net10.0)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1000 -1000 2000 2000">
+71 lanes, 6 of them bridges
+
+## recipes: travel times (net10.0)
+HD 147927 to LHS 4081: 2635 light-years, 1 days
+HD 147927 to GJ 829: 6062 light-years, 2 days
+HD 165595 to Ross 128: 2691 light-years, 1 days
+
+## recipes: find a seed (net10.0)
+colony-3
+
+## recipes: export to a file (net10.0)
+{
+  "schema": "universe-generator/1",
+  "type": "starSystem",
+  "address": "v1-my-seed/galaxy/system/0",
+  "name": "HD 147927",
+  "star": {
+
+## recipes: the type field of each export (net10.0)
+{"schema":"universe-generator/1","type":"universe"}
+{"schema":"universe-generator/1","type":"galaxyCluster"}
+{"schema":"universe-generator/1","type":"cosmicVoid","index":0}
+{"schema":"universe-generator/1","type":"galaxy"}
+{"schema":"universe-generator/1","type":"starSystem"}
+{"schema":"universe-generator/1","type":"planet"}
+v1-my-seed/universe/cluster/0/galaxy/0/system/0
+
+## recipes: your own system names (net10.0)
+Avalon, first planet HD 147927 e
+Brigid, first planet HD 165595 b
+Caer Sidi, first planet HD 28101 c
+HD 157953, first planet HD 157953 d
+
+## recipes: an ocean-heavy temperate zone (net10.0)
+star-classes.young, star-classes.mature, star-classes.old, star-classes.plausible, planet-kinds.hot, planet-kinds.warm, planet-kinds.temperate, planet-kinds.cold, moon-kinds.giant
+Rocky 22, Ocean 25, Garden 22, Desert 15, Barren 10
+6 ocean worlds, then 13
+
+## versions: every system of my-seed (net10.0)
+60 systems, 20910 characters, SHA-256 8D325689851D2D82...
+1.5 g, thin carbon dioxide air at 0.099 bar, 190 °C by day, -13 °C by night, tidally locked; hazard 3
+
+## installed (net48)
+.NET Framework 4.8.9345.0
+UniverseGenerator 1.0.0 (file 1.0.0.0, lib .NETStandard,Version=v2.0)
+
+## home: the first example (net48)
+HD 147927: K star, 6 planets, danger 9
+HD 165595: M star, 1 planets, danger 6
+HD 28101: K star, 6 planets, danger 6
+
+## getting started: a galaxy at a glance (net48)
+Wyvern Galaxy
+a ring galaxy
+Ring, 60 systems, 71 lanes, 7 regions
+an orange dwarf and red dwarf pair with 6 planets and an asteroid belt
+orange dwarf
+  HD 147927 e: a warm desert world under an orange dwarf
+  HD 147927 c: a warm rocky world under an orange dwarf
+  HD 147927 d: a warm mini-Neptune under an orange dwarf
+  HD 147927 f: an ice giant far from an orange dwarf
+  HD 147927 g: a gas giant far from an orange dwarf
+  HD 147927 b: an ice giant far from an orange dwarf
+
+## getting started: every level on its own (net48)
+the Pale Reach
+Halcyon Group
+Wyvern Galaxy
+a red dwarf with 3 planets and an asteroid belt
+1.3 g, nitrogen air at 0.6 bar, -37 °C; hazard 2
+HD 45528
+
+## getting started: number seeds (net48)
+v1-42/galaxy
+True
+
+## same seed: twice, and a part alone (net48)
+True
+True
+
+## same seed: a fingerprint (net48)
+909995 characters, SHA-256 D486B72BA56ACAEF...
+
+## same seed: seeds that look alike (net48)
+"my-seed": v1-my-seed/galaxy, Wyvern Galaxy, first system HD 147927
+"My-Seed": v1-My-Seed/galaxy, Pallas Galaxy, first system 5 Trianguli
+"my-seed ": v1-my-seed%20/galaxy, Quill Galaxy, first system HD 129976
+"hello world": v1-hello%20world/galaxy, Wyvern Galaxy, first system Southern Crab
+
+## same seed: options are part of the answer (net48)
+HD 147927, HD 147927, HD 147927
+danger 9, 10, 7
+True
+
+## same seed: hooks never move a draw (net48)
+HD 147927 / New HD 147927
+True
+
+## plausibility: stars and their zones (net48)
+HD 147927: K5V, 0.631 Suns, luminosity 0.15823, radius 0.691601, 4382 K, #ffd2a1
+  habitable zone 0.2985 to 0.7032 au, frost line 1.074 au
+HD 165595: M8V, 0.083 Suns, luminosity 0.00075, radius 0.136319, 2588 K, #ffad51
+  habitable zone 0.0205 to 0.0484 au, frost line 0.0739 au
+HD 28101: K0V, 0.819 Suns, luminosity 0.4504, radius 0.85255, 5126 K, #ffd2a1
+  habitable zone 0.5036 to 1.1864 au, frost line 1.812 au
+HD 157953: M5V, 0.19 Suns, luminosity 0.00503, radius 0.264638, 2992 K, #ffad51
+  habitable zone 0.0532 to 0.1254 au, frost line 0.1915 au
+
+## plausibility: planets agree with their star (net48)
+HD 147927 e: Desert, Warm, 0.1653 au, 1.266 Earth radii, 402 K, eccentricity 0.05
+HD 147927 c: Rocky, Warm, 0.2022 au, 1.333 Earth radii, 488 K, eccentricity 0.05
+HD 147927 d: SubNeptune, Warm, 0.2604 au, 2.816 Earth radii, 304 K, eccentricity 0.026
+HD 147927 f: IceGiant, Outer, 1.3447 au, 8.06 Earth radii, 140 K, eccentricity 0.079
+HD 147927 g: GasGiant, Outer, 2.9526 au, 10.331 Earth radii, 93 K, eccentricity 0.029
+HD 147927 b: IceGiant, Outer, 4.4515 au, 5.946 Earth radii, 75 K, eccentricity 0.101
+
+## plausibility: the star mix of two presets (net48)
+Default: M 608, K 408, G 324, F 193, A 138, Giant 113, WhiteDwarf 110, B 56, Supergiant 23, BlackHole 12, NeutronStar 8, O 7
+Plausible: M 1431, K 254, WhiteDwarf 118, G 116, F 60, A 10, Giant 8, NeutronStar 2, Supergiant 1
+
+## errors: what is refused (net48)
+Systems = 0: ArgumentException: Systems must be 1 to 2000; you asked for 0.
+Parameter name: Systems
+Systems = 2001: ArgumentException: Systems must be 1 to 2000; you asked for 2001.
+Parameter name: Systems
+Weirdness = 101: ArgumentException: Weirdness must be 0 to 100; you asked for 101.
+Parameter name: Weirdness
+Arms = 5: ArgumentException: Arms must be 2 to 4; you asked for 5.
+Parameter name: Arms
+DangerShift = 6: ArgumentException: DangerShift must be -5 to 5; you asked for 6.
+Parameter name: DangerShift
+a 201-character seed: ArgumentException: A seed must be at most 200 characters; yours has 201.
+Parameter name: seed
+an empty seed: no error
+a null seed: ArgumentNullException: A seed is any text, such as "my-seed" or "42"; it cannot be null.
+Parameter name: seed
+System(60) of 60: ArgumentOutOfRangeException: This galaxy has 60 systems, numbered 0 to 59; you asked for 60.
+Parameter name: index
+Actual value was 60.
+an unknown level: ArgumentException: Below v1-my-seed/galaxy comes a system; the address has "nebula".
+Parameter name: address
+system 60 of 60: ArgumentException: v1-my-seed/galaxy has 60 systems (numbered 0 to 59); the address asks for system 60. Were the same options passed as when it was generated?
+Parameter name: address
+generator version 2: ArgumentException: This package generates version 1; the address asks for version 2.
+Parameter name: address
+a link and options: ArgumentException: This link carries its options after the ?; pass a link or options, not both.
+Parameter name: address
+an unknown option code: ArgumentException: "colour" is not a setting; the settings are systems, shape, starmix, weirdness, planets, cluster, epoch, arms, lanes, danger, names, require, tables.
+unregistered tables: ArgumentException: No tables are registered as "nobody-registered-this"; call GeneratorTables.Register first.
+Parameter name: Tables
+StarName count 0: ArgumentException: Count must be 1 to 1000; you asked for 0.
+Parameter name: count
+StarName count 1001: ArgumentException: Count must be 1 to 1000; you asked for 1001.
+Parameter name: count
+tables from broken JSON: FormatException: Tables JSON, at character 1: expected ".
+
+## errors: warnings, never errors (net48)
+ArmsIgnored: Arms = 3 changes nothing: a ring galaxy has no arms.
+ShapeTooSmall: A spiral galaxy of 12 systems: arms read on a map only from 80 systems.
+GuaranteeUnmet: Require GardenWorld is not met: no system has a temperate rocky planet to hold it.
+
+## recipes: save and restore a run (net48)
+systems=30&weirdness=15&lanes=10&danger=2&names=invented
+True
+v1-run-2817/galaxy/system/5?systems=30&weirdness=15&lanes=10&danger=2&names=invented
+
+## recipes: compare the presets (net48)
+Default: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code ""
+SpaceOpera: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code "weirdness=10"
+Plausible: 60 systems, Ring, 71 lanes, 15 at danger 8 or more, code "starmix=plausible&weirdness=1"
+Pocket: 20 systems, Ring, 20 lanes, 8 at danger 8 or more, code "systems=20&planets=6"
+Roguelike: 30 systems, Ring, 32 lanes, 15 at danger 8 or more, code "systems=30&weirdness=15&lanes=10&danger=2"
+Cozy: 40 systems, Ring, 51 lanes, 6 at danger 8 or more, code "systems=40&weirdness=3&lanes=50&danger=-3"
+Epic: 300 systems, Spiral, 415 lanes, 134 at danger 8 or more, code "systems=300"
+
+## recipes: draw the map as SVG (net48)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1000 -1000 2000 2000">
+71 lanes, 6 of them bridges
+
+## recipes: travel times (net48)
+HD 147927 to LHS 4081: 2635 light-years, 1 days
+HD 147927 to GJ 829: 6062 light-years, 2 days
+HD 165595 to Ross 128: 2691 light-years, 1 days
+
+## recipes: find a seed (net48)
+colony-3
+
+## recipes: export to a file (net48)
+{
+  "schema": "universe-generator/1",
+  "type": "starSystem",
+  "address": "v1-my-seed/galaxy/system/0",
+  "name": "HD 147927",
+  "star": {
+
+## recipes: the type field of each export (net48)
+{"schema":"universe-generator/1","type":"universe"}
+{"schema":"universe-generator/1","type":"galaxyCluster"}
+{"schema":"universe-generator/1","type":"cosmicVoid","index":0}
+{"schema":"universe-generator/1","type":"galaxy"}
+{"schema":"universe-generator/1","type":"starSystem"}
+{"schema":"universe-generator/1","type":"planet"}
+v1-my-seed/universe/cluster/0/galaxy/0/system/0
+
+## recipes: your own system names (net48)
+Avalon, first planet HD 147927 e
+Brigid, first planet HD 165595 b
+Caer Sidi, first planet HD 28101 c
+HD 157953, first planet HD 157953 d
+
+## recipes: an ocean-heavy temperate zone (net48)
+star-classes.young, star-classes.mature, star-classes.old, star-classes.plausible, planet-kinds.hot, planet-kinds.warm, planet-kinds.temperate, planet-kinds.cold, moon-kinds.giant
+Rocky 22, Ocean 25, Garden 22, Desert 15, Barren 10
+6 ocean worlds, then 13
+
+## versions: every system of my-seed (net48)
+60 systems, 20910 characters, SHA-256 8D325689851D2D82...
+1.5 g, thin carbon dioxide air at 0.099 bar, 190 °C by day, -13 °C by night, tidally locked; hazard 3
+
+## installed (net10.0 with 1.0.0-beta.1)
+.NET 10.0.12
+UniverseGenerator 1.0.0-beta.1 (file 1.0.0.0, lib .NETCoreApp,Version=v10.0)
+
+## versions: every system of my-seed (net10.0 with 1.0.0-beta.1)
+60 systems, 20910 characters, SHA-256 8D325689851D2D82...
+1.5 g, thin carbon dioxide air at 0.099 bar, 190 °C by day, -13 °C by night, tidally locked; hazard 3
+
