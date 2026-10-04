@@ -120,7 +120,23 @@ Done 2026-10-03 for 1.0.0-beta.1, about ten minutes after the push; everything m
 
 `dotnet add package` refuses `--version` and `--prerelease` together ("not supported in the same command"): use `--prerelease` alone (latest prerelease) or `--version 1.0.0-beta.1` alone.
 
-- [ ] Then 1.0.0 (after N1, plan "Before 1.0.0") the same way, and `PackageValidationBaselineVersion` 1.0.0 after it. Status 2026-10-03: release PR #34 merged by Mark (3505547), `ci` run 37172716089 green on all three OSes; no `v1.0.0` tag and no release run yet, so the tag (step 6, `v1.0.0` in place of `v1.0.0-beta.1`) and the approval wait for Mark. For 1.0.0, use `dotnet add package UniverseGenerator --version 1.0.0` alone, and `gh release view v1.0.0` must show a full release, not a prerelease.
+- [x] Then 1.0.0 (after N1, plan "Before 1.0.0") the same way, and `PackageValidationBaselineVersion` 1.0.0 after it. Done 2026-10-03 (evening, US Central): on Mark's explicit instruction in the session the agent pushed tag `v1.0.0` on 3505547 (Mark's login bypassed the tag-creation ruleset, which the push reported) and approved the `nuget` deployment through the API. Release run 37173982448: build and test, Windows (net48 and net10.0), attest, `push to nuget.org (after approval)` in 10 s, `GitHub Release` in 8 s, all green. The baseline pull request is #39 (waits for Mark).
+
+Verified 2026-10-03 for 1.0.0, about fifteen minutes after the push (the beta.1 rows above stay):
+
+| Check | Result |
+|---|---|
+| Flat container | `{"versions":["1.0.0-beta.1","1.0.0"]}`, about 15 minutes after the push |
+| Registration (`curl --compressed`) | `1.0.0-beta.1` listed true, `1.0.0` listed true, at the same time as the flat container |
+| `dotnet nuget verify --all` on the nupkg from the flat container (464,636 bytes) | exit 0; repository signature, NuGet.org Repository by Microsoft, certificate valid to 2027-05-18; content hash `Ttnj06HW...` |
+| Contents | nuspec, README.md, icon.png, `lib/net10.0` and `lib/netstandard2.0` DLL and XML docs; both DLLs byte-identical to the run's attested artifact |
+| snupkg | `www.nuget.org/api/v2/symbolpackage/UniverseGenerator/1.0.0` redirects (302) to the symbol-packages CDN, which serves it (200, 96,094 bytes, the same size as the release asset) |
+| `gh release view v1.0.0` | a full release (not prerelease, not draft), notes from the CHANGELOG ("The first stable release..."), assets `UniverseGenerator.1.0.0.nupkg` (451,549 bytes) and `.snupkg` (96,094 bytes) |
+| `gh attestation verify` on the run's `release` artifact | nupkg verified: signer `release.yml@refs/tags/v1.0.0`, run 37173982448 attempt 1; the snupkg has no attestation (HTTP 404), as designed |
+| Console projects (dotnet SDK 10.0.401, a scratch folder outside the repository, a `nuget.config` with only nuget.org, empty `NUGET_PACKAGES` and `NUGET_HTTP_CACHE_PATH`) | net10.0 and net48 (`dotnet add package UniverseGenerator --version 1.0.0` alone; net48 a .NET Framework exe) both print the README's first example, 60 lines starting `HD 147927: K star, 6 planets, danger 9`; the two outputs are byte-identical |
+| Package validation baseline (branch `chore/package-validation-baseline`, PR #39) | local `dotnet pack -c Release` downloaded the 1.0.0 nupkg from nuget.org as the baseline and passed, 0 warnings, 0 errors; `dotnet test -c Release` net10.0 272 passed, net48 271 passed |
+
+The first `dotnet add package --version 1.0.0` failed with NU1102 ("Nearest version: 1.0.0-beta.1") minutes after the flat container already listed 1.0.0: NuGet's HTTP cache (`v3-cache`, about 30 minutes) still held the index from the beta.1 checks, and the failed add wrote no PackageReference. Point `NUGET_HTTP_CACHE_PATH` at an empty folder too (or run `dotnet nuget locals http-cache --clear`), then add again.
 - [ ] Optional now that the first push bound the policy: narrow the Trusted Publishing scope to "push only new package versions" (step 3).
 
 Related: builds on [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md) (Stage 4, Security); see also [history scan](2026-10-03-history-scan.md), [package size budget](2026-10-02-package-size-budget.md).
