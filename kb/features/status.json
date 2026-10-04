@@ -960,7 +960,7 @@
   "seeds": "no",
   "package": "core",
   "size": "2 KB",
-  "why": "D16: Units option (game units, AU, ly, pc) on plain doubles; no UnitsNet dependency (size)"
+  "why": "built for 1.0.0: Units.Convert for LengthUnit, MassUnit, TemperatureUnit and TimeUnit, and Units.Map for map units; conversions, not an option, so stored values and golden files never fork; planned as: D16: Units option (game units, AU, ly, pc) on plain doubles; no UnitsNet dependency (size)"
  },
  "diagnostics": {
   "group": "Seeds and API",

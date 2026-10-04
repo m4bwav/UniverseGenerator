@@ -145,6 +145,18 @@ var all = galaxy.ToJson(children: true);    // every system in full as well
 Console.WriteLine(all.Length > map.Length); // True
 ```
 
+## Units
+
+Values are plain doubles in the unit each field's documentation names: orbits in au, planet radii and masses in Earths, stars in Suns, moons and belts in kilometres, temperatures in kelvin, rotation in hours and orbital periods in days; maps in their own units (`Distances`). `Units.Convert` turns any of them into another unit (`LengthUnit`, `MassUnit`, `TemperatureUnit`, `TimeUnit`), and `Units.Map` turns map units into a length. No units library, so nothing to install and nothing added to a WebGL build.
+
+```csharp
+var world = Planet.Generate("my-seed");
+var km = Units.Convert(world.Orbit, LengthUnit.AstronomicalUnits, LengthUnit.Kilometres);
+var celsius = Units.Convert(world.Temperature, TemperatureUnit.Kelvin, TemperatureUnit.Celsius);
+Console.WriteLine($"{(int)Math.Round(km / 1e6)} million km out, {(int)Math.Round(celsius)} C");   // 229 million km out, -37 C
+var across = Units.Map(MapLevel.Galaxy, 2000, LengthUnit.Parsecs);   // a galaxy map edge to edge: about 30,660
+```
+
 ## The seed promise
 
 From 1.0, a seed and a generator version (the `v1` in every address) give the same output on Windows, Linux and macOS (.NET 10 and .NET Framework 4.8) and in Unity (Mono and IL2CPP) for the whole major version, so a server and its clients can share a world by its seed alone. The golden files in `tests/Golden/v1/` are the proof, and the rules that make it true are in [kb/rules/determinism.md](kb/rules/determinism.md). A change that would alter any seed's output adds a generator version and keeps the old one.
