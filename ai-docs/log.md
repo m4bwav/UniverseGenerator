@@ -139,3 +139,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] index | rebuilt (18 entries)
 ## [2026-10-03] index | rebuilt
 ## [2026-10-03] update | docs PR #36 merged (14b3b7c); the tag command names 3505547 by hash, since master moved on (release.yml accepts any master ancestor whose ci passed)
+## [2026-10-03] decision | Mark: don't forget to fill out the wiki. Moved the 1.0.0 wiki (wikiwright, NuGet examples verified against 1.0.0, public kb parts) into Stage 4 after the baseline PR, before Stage 5; Stage 7 keeps the Unity and OpenUPM page update. Wiki repo exists with a placeholder Home page
+## [2026-10-03] index | rebuilt (18 entries)

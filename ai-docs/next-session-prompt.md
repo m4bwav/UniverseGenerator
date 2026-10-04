@@ -36,6 +36,7 @@ Open the Runtime folder and the tests only if a step needs them. Re-check any nu
    - `gh attestation verify` on the run's `release` artifact;
    - fresh net10.0 and net48 consoles in a scratch folder outside the repository, with a nuget.org-only `nuget.config` and an empty package cache, using `dotnet add package UniverseGenerator --version 1.0.0` alone; both print the README's first example identically.
 3. Then a pull request (branch `chore/package-validation-baseline`) that sets `<PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>` in `src/UniverseGenerator/UniverseGenerator.csproj` and replaces the comment that says there is no baseline yet. Build and pack locally first to see that package validation passes against 1.0.0. Assign m4bwav, label needs-review. The checklist step 7 update can go in a separate docs-only pull request you merge yourself once its checks pass.
+4. Then fill out the GitHub wiki for 1.0.0 (Mark asked for it on 2026-10-03; plan Stage 4) with the wikiwright skill: library kind, NuGet, every example verified against the published 1.0.0 package, plus the public parts of `kb/` (feature matrix, determinism and plausibility rules, how-to pages). The wiki's git repository exists with one placeholder Home page. No local path or private name on any page; leave Unity and OpenUPM pages for Stage 5. Record the run in the log and the plan.
 
 Rules:
 

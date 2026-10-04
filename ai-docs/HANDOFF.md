@@ -24,8 +24,9 @@ Nothing half-done. `master` already says 1.0.0 everywhere (CHANGELOG `## [1.0.0]
 ## Left / follow-ups
 1. Mark: tag `v1.0.0` on 3505547 and push it (`git fetch origin && git tag v1.0.0 3505547 && git push origin v1.0.0`; `master` has moved on with docs-only merges, and `release.yml` accepts any commit on `master` whose `ci` passed); then approve the `nuget` deployment on the release run. If he tags on a day after 2026-10-03 (local), a small pull request should re-date the CHANGELOG heading first, and the tag goes on that merge after `ci` is green.
 2. Agent, after the release run: verify 1.0.0 from nuget.org as [checklist](notes/2026-10-03-stage-4-checklist.md) step 7 did for beta.1; then a pull request setting `PackageValidationBaselineVersion` 1.0.0 and replacing the csproj comment about no baseline.
-3. After 1.0.0: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope. Start neither unless Mark asks.
-4. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
+3. Agent, after the baseline pull request: fill out the GitHub wiki for 1.0.0 with wikiwright (Mark asked 2026-10-03; plan Stage 4). The wiki has only a placeholder Home page.
+4. After 1.0.0 and the wiki: Stage 5 (Unity, OpenUPM; the throwaway-project recipe above covers the compile check), the real stars research pass, optional narrowing of the Trusted Publishing scope. Start neither unless Mark asks.
+5. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
 
 ## Next single action
 When Mark has tagged `v1.0.0` and approved the deployment: verify 1.0.0 from nuget.org. The prompt is [next-session-prompt.md](next-session-prompt.md).
