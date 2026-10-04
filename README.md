@@ -1,5 +1,7 @@
 # UniverseGenerator
 
+![A generated barred spiral galaxy of 300 star systems joined by lanes, from the seed my-seed](https://raw.githubusercontent.com/m4bwav/UniverseGenerator/6e87ad4586ce6e32986bb3619d2cc25e3e8656db/docs/images/openupm-cover.png)
+
 A seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, for .NET and Unity. One seed gives the same galaxy on every platform and runtime: names, star types, planets, moons, lanes, regions, factions, danger and story tags, as plain C# records with no dependencies.
 
 **Status: 1.0.0, the first stable release, on nuget.org. The OpenUPM listing comes next; until then, install in Unity by git URL.**

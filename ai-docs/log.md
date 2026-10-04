@@ -176,3 +176,4 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-04] add | on Mark's instruction: OpenUPM submission finished from his account as openupm/openupm PR #7044 (fork m4bwav/openupm, the form's YAML unchanged, matches the submission note); data validation passed, Mergify merged it 17:34 UTC
 ## [2026-10-04] verify | OpenUPM published 1.0.0 (build 76656 from 3505547, only version, latest); tarball shasum matches the registry and its 116 files equal the tag's package folder except OpenUPM's added repository and publishConfig fields in package.json; openupm.com page still 404 right after
 ## [2026-10-04] index | rebuilt (22 entries)
+## [2026-10-04] add | PR: README shows the cover image (absolute raw.githubusercontent.com URL pinned to 6e87ad4, on nuget.org's allowed image domains per its readme docs, updated 2026-07-07), so it renders on GitHub, nuget.org (next release) and OpenUPM; waits for Mark
