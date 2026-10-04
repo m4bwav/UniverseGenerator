@@ -25,10 +25,10 @@ Researched on 2026-10-04 from OpenUPM's docs and source: openupm.com/docs/adding
 | License | MIT (the YAML needs the exact SPDX name, "MIT License") |
 | Hunter | `m4bwav` |
 | Tracking mode | `git` (tags) |
-| Topics | `procedural-generation`, only that one: OpenUPM treats unrelated topics as spam |
+| Topics | Procedural Generation (`procedural-generation`), only that one: OpenUPM treats unrelated topics as spam |
 | README | `master:README.md` |
 | Min version | `1.0.0` (recommended, so `v1.0.0-beta.1` is not published; otherwise it builds harmlessly under a prerelease dist-tag) |
-| Cover image URL | the raw GitHub URL of `docs/images/openupm-cover.png` pinned to its commit ([the cover note](2026-10-04-openupm-cover-image.md)) |
+| Cover image URL | the raw GitHub URL of `docs/images/openupm-cover.png` pinned to its commit, https://raw.githubusercontent.com/m4bwav/UniverseGenerator/6e87ad4586ce6e32986bb3619d2cc25e3e8656db/docs/images/openupm-cover.png ([the cover note](2026-10-04-openupm-cover-image.md)) |
 | Git tag prefix, tag ignore | empty |
 
    The name, display name and description come from package.json.
