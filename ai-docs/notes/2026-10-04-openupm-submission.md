@@ -10,7 +10,7 @@ summary: "read when submitting the package to OpenUPM or checking its build: the
 
 # OpenUPM submission
 
-Researched on 2026-10-04 from OpenUPM's docs and source: openupm.com/docs/adding-upm-package.html (page source changed 2026-06-19), troubleshooting-build-errors.html, getting-started.html and getting-started-cli.html (2026-05), the form `PackageAddLayout.vue` in openupm/openupm-next, the data validator, `.mergify.yml` and `data/topics.yml` in openupm/openupm, and `findPackage.js` in openupm/openupm-pipelines. Unity's package naming rules come from docs.unity3d.com/Manual/cus-naming.html (6000.6). **Mark submits; the agent never does.**
+Researched on 2026-10-04 from OpenUPM's docs and source: openupm.com/docs/adding-upm-package.html (page source changed 2026-06-19), troubleshooting-build-errors.html, getting-started.html and getting-started-cli.html (2026-05), the form `PackageAddLayout.vue` in openupm/openupm-next, the data validator, `.mergify.yml` and `data/topics.yml` in openupm/openupm, and `findPackage.js` in openupm/openupm-pipelines. Unity's package naming rules come from docs.unity3d.com/Manual/cus-naming.html (6000.6). **Mark submits; the agent never does without his instruction.** Submitted 2026-10-04 as openupm/openupm PR #7044, merged by Mergify at 17:34 UTC: Mark filled in the form, and on his instruction the agent turned the GitHub new-file link the form produced into a fork (m4bwav/openupm), a branch and the pull request with `gh`, the YAML unchanged. The form only builds a GitHub new-file link: nothing reaches OpenUPM until that page is committed and the pull request created.
 
 ## What Mark does
 
