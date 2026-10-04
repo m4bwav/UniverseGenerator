@@ -117,3 +117,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] index | rebuilt (17 entries)
 ## [2026-10-03] decision | Mark asked for a real-stars track (maps approximating Sol's real neighbourhood, a module if large); recorded as a 1.x research and features track after 1.0.0: note 2026-10-03-real-stars-track, plan section, six new 1.x rows, real-star-catalogue moved from rejected to 1.x (add-on)
 ## [2026-10-03] index | rebuilt (18 entries)
+## [2026-10-03] add | N1 built so far as stacked PRs for Mark: #17 seed-url, #18 presets Pocket/Roguelike/Cozy/Epic with Arms/ExtraLanes/DangerShift, #19 export-json (scripts/gen-json-export.py), #20 orbital elements, #21 invented names, #22 units, #23 diagnostics, #25 shapes; golden v1 unchanged, a new golden file per new output; size at #25 nupkg 409.3 KB, DLL 536.0 KB
+## [2026-10-03] learn | export.json must not change when fields are added: the export golden test strips later keys (JsonKeyFilter.AddedLater) and each field gets its own golden file; a reflection test guards that every GeneratorOptions property has an options-code name
+## [2026-10-03] handoff | rewritten: N1 has four rows left (constraints, hooks and custom fields, editable tables, Unity float adapter); stack #17 to #25 waits for Mark in order; next-session-prompt.md rewritten
+## [2026-10-03] index | rebuilt (18 entries)

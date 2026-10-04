@@ -63,6 +63,29 @@ Totals, as first written in human working days (relative size only, see the ruli
 
 Every row is additive: none changes an existing seed's output or an existing golden file, so any of them can also land in a 1.x minor after 1.0.0.
 
+### N1 progress (2026-10-03, end of session)
+
+The pull requests are stacked: each one's base is the one before it, so Mark merges them in order, #17 first. When a base branch is deleted on merge, GitHub retargets the next pull request to `master`. All are assigned to m4bwav with `needs-review`. Each was green on Linux, Windows and macOS when last checked, or green locally (the last one, #25).
+
+| Row | Pull request | New golden file |
+|---|---|---|
+| `seed-url` | #17 | none (no new output) |
+| presets Pocket, Roguelike, Cozy, Epic; `lane-density`; `spiral-arm-count` (plus `DangerShift`, which Roguelike and Cozy need) | #18 | `presets.json` |
+| `export-json` | #19 | `export.json` |
+| `orbital-elements` | #20 | `orbital-elements.json` |
+| `names-fantasy` | #21 | `names.json` |
+| `typed-units` (conversions, not an option: see #22) | #22 | none |
+| `diagnostics` | #23 | `diagnostics.json` |
+| `galaxy-shapes` | #25 | `shapes.json` |
+| `constraints` | not started | |
+| `hooks-plugins` and `custom-fields` | not started | |
+| `data-tables-editable` | not started | |
+| Unity float adapter | not started | |
+
+`export.json` holds the export as written in #19. A field added later is stripped from it by `JsonKeyFilter.AddedLater` in the tests, and gets its own golden file, so `export.json` never changes. `scripts/gen-json-export.py` regenerates the writer after a field is added; `ExportTests` fails until it is run.
+
+Mark's real-stars request (maps approximating Sol's neighbourhood) is recorded as a 1.x track: [the real stars track](2026-10-03-real-stars-track.md), PR #24, merged.
+
 PR #1 (https://github.com/m4bwav/UniverseGenerator/pull/1) holds all of Stage 3. These are the decisions for Mark before 1.0.0-beta.1. After the first release tag, a seed-changing answer needs a new generator version instead, so these are cheapest now. The recommendation comes first in each row. Sources: the "Open for tuning" parts of the [star system](2026-10-02-star-system-level-design.md), [galaxy](2026-10-02-galaxy-level-design.md), [planet](2026-10-02-planet-level-design.md), [moon and belt](2026-10-03-moon-and-belt-level-design.md), [cluster](2026-10-03-galaxy-cluster-level-design.md), [universe](2026-10-03-universe-level-design.md) and [galaxy extras](2026-10-03-galaxy-extras-design.md) notes.
 
 What the golden files hold decides what moves: `system.json` writes lone systems; `galaxy.json`, `cluster.json` and `universe.json` write maps plus a few systems in full; `planet.json` and `moon-belt.json` write planets and moons of lone systems and of the `my-seed` galaxy; `galaxy-extras.json` writes the extras of galaxies, a cluster and a universe. "Every system file" below means system, galaxy, cluster, universe, planet and moon-belt. A changed golden file is deleted and rewritten on purpose, said in the commit message (AGENTS.md); `core.json` and `star-name.json` move in none of these.
