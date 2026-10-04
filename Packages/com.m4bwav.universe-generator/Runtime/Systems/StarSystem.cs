@@ -74,12 +74,15 @@ namespace UniverseGeneration
     {
         public static readonly SystemContext Alone = new SystemContext(null, null, null);
 
-        public SystemContext(string? name, StellarAge? age, int? danger, int richness = 100)
+        public SystemContext(string? name, StellarAge? age, int? danger, int richness = 100, Star? star = null, int forcedPlanet = -1, PlanetKind forcedKind = PlanetKind.Rocky)
         {
             Name = name;
             Age = age;
             Danger = danger;
             Richness = richness;
+            Star = star;
+            ForcedPlanet = forcedPlanet;
+            ForcedKind = forcedKind;
         }
 
         public string? Name { get; }
@@ -90,5 +93,15 @@ namespace UniverseGeneration
 
         /// <summary>The galaxy's metallicity as a percentage of the gas giant weight: 50 poor, 100 normal, 160 rich.</summary>
         public int Richness { get; }
+
+        /// <summary>A lone star a galaxy's guarantee gave this system (<see cref="Constraints"/>), or null to roll one.</summary>
+        public Star? Star { get; }
+
+        /// <summary>The index of the planet a guarantee turns into <see cref="ForcedKind"/>, or -1.</summary>
+        public int ForcedPlanet { get; }
+
+        public PlanetKind ForcedKind { get; }
+
+        public SystemContext Forcing(int planet, PlanetKind kind) => new SystemContext(Name, Age, Danger, Richness, Star, planet, kind);
     }
 }

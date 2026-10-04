@@ -40,7 +40,7 @@ var same = (Planet)Universe.At(planet.Address, options);   // any object regener
 Console.WriteLine(same.Summary == planet.Summary);         // True
 ```
 
-The presets are `Default`, `SpaceOpera` (more outliers), `Plausible` (real star shares, few outliers), `Pocket` (20 systems for a short game), `Roguelike` (30 systems, more chokepoints, more danger), `Cozy` (40 well-connected, safer systems) and `Epic` (300 systems). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular, and by name only Colliding, Starburst and Clustered), `Arms` (2 to 4 for spirals and bars), `ExtraLanes` (the chance of a lane beyond the connected network, 0 to 100), `DangerShift` (-5 to 5 on every system's danger), `Names` (`Catalogue` star names, or `Invented` names such as Olmex or Zertron), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind` and `Epoch`. Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws. Settings that are valid but change nothing or read badly (arms on a ring galaxy, a spiral of 40 systems) are listed by `options.Check()`, and `galaxy.Warnings` says what generation had to change; both are `GeneratorWarning` values with a `WarningCode` and a message.
+The presets are `Default`, `SpaceOpera` (more outliers), `Plausible` (real star shares, few outliers), `Pocket` (20 systems for a short game), `Roguelike` (30 systems, more chokepoints, more danger), `Cozy` (40 well-connected, safer systems) and `Epic` (300 systems). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular, and by name only Colliding, Starburst and Clustered), `Arms` (2 to 4 for spirals and bars), `ExtraLanes` (the chance of a lane beyond the connected network, 0 to 100), `DangerShift` (-5 to 5 on every system's danger), `Names` (`Catalogue` star names, or `Invented` names such as Olmex or Zertron), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind`, `Epoch` and `Require` (below). Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws. Settings that are valid but change nothing or read badly (arms on a ring galaxy, a spiral of 40 systems) are listed by `options.Check()`, and `galaxy.Warnings` says what generation had to change; both are `GeneratorWarning` values with a `WarningCode` and a message.
 
 ```csharp
 var run = Galaxy.Generate("my-seed", Preset.Roguelike);
@@ -48,6 +48,16 @@ var cozy = Galaxy.Generate("my-seed", Preset.Cozy);
 Console.WriteLine($"{run.Map.Count(m => m.Danger >= 8)} of {run.Map.Count} systems at danger 8 or more");    // 15 of 30 systems at danger 8 or more
 Console.WriteLine($"{cozy.Map.Count(m => m.Danger >= 8)} of {cozy.Map.Count} systems at danger 8 or more");  // 6 of 40 systems at danger 8 or more
 ```
+
+```csharp
+var options = Preset.Pocket with { Require = Guarantee.GardenWorld | Guarantee.BlackHole };
+var galaxy = Galaxy.Generate("my-seed", options);
+var garden = galaxy.Systems.SelectMany(s => s.Planets).First(p => p.Kind == PlanetKind.Garden);
+Console.WriteLine(garden.Address);                           // v1-my-seed/galaxy/system/13/planet/1
+Console.WriteLine(Universe.Link(galaxy.Address, options));   // v1-my-seed/galaxy?systems=20&planets=6&require=garden,blackhole
+```
+
+`Require` guarantees that every galaxy holds at least one of each thing it names: a garden or ocean world, a precursor site, or a blue star, giant, white dwarf, neutron star, black hole or Sun-like star. A galaxy that already has one is unchanged; one that lacks it gets it in a single system its own seed picks, and every other system stays as it was. A guarantee that cannot be met (a garden world with no planets allowed) is a warning, never an error.
 
 ```csharp
 try

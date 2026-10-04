@@ -80,6 +80,13 @@ namespace UniverseGeneration
         /// <summary>Catalogue names (the default) or invented ones; planets and moons take their system's name either way.</summary>
         public NameStyle Names { get; init; } = NameStyle.Catalogue;
 
+        /// <summary>
+        /// What every galaxy must hold at least one of, such as <c>Guarantee.GardenWorld | Guarantee.BlackHole</c>
+        /// (default none). A galaxy missing one gets it in a system its own stream picks; the rest of the map is unchanged,
+        /// and <see cref="Galaxy.Warnings"/> says when a guarantee cannot be met. Lone systems and planets ignore it.
+        /// </summary>
+        public Guarantee Require { get; init; }
+
         /// <summary>Throws an <see cref="ArgumentException"/> naming the first invalid setting and what it must be.</summary>
         public void Validate()
         {
@@ -110,6 +117,13 @@ namespace UniverseGeneration
             if (Names != NameStyle.Catalogue && Names != NameStyle.Invented)
             {
                 throw new ArgumentException($"{nameof(Names)} must be Catalogue or Invented; you asked for {(int)Names}.", nameof(Names));
+            }
+
+            const Guarantee all = Guarantee.GardenWorld | Guarantee.OceanWorld | Guarantee.PrecursorSite | Guarantee.BlueStar | Guarantee.Giant
+                | Guarantee.WhiteDwarf | Guarantee.NeutronStar | Guarantee.BlackHole | Guarantee.SunLikeStar;
+            if ((Require & ~all) != 0)
+            {
+                throw new ArgumentException($"{nameof(Require)} must combine Guarantee flags such as GardenWorld | BlackHole; you asked for {(int)Require}.", nameof(Require));
             }
 
             if (StarMix != StarMix.Game && StarMix != StarMix.Plausible)
@@ -148,6 +162,15 @@ namespace UniverseGeneration
             Validate();
             var warnings = new List<GeneratorWarning>();
             Diagnostics.Shape(warnings, Shape, Systems, Arms);
+            if (MaxPlanetsPerSystem == 0 && (Require & (Guarantee.GardenWorld | Guarantee.OceanWorld)) != 0)
+            {
+                warnings.Add(new GeneratorWarning
+                {
+                    Code = WarningCode.GuaranteeUnmet,
+                    Message = "Require asks for a world, but MaxPlanetsPerSystem = 0 allows no planets.",
+                });
+            }
+
             return warnings;
         }
 

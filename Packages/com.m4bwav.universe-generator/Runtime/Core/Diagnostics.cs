@@ -17,6 +17,9 @@ namespace UniverseGeneration
 
         /// <summary>A system's name had to take a number to stay unique in its galaxy.</summary>
         NameNumbered,
+
+        /// <summary>A galaxy could not meet a <see cref="GeneratorOptions.Require"/> guarantee, such as a garden world with no planets allowed.</summary>
+        GuaranteeUnmet,
     }
 
     /// <summary>A soft problem: generation went on, and this says what was changed or ignored, and why.</summary>

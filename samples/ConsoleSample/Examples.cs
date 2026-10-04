@@ -43,6 +43,17 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Guarantees()
+        {
+            #region readme
+            var options = Preset.Pocket with { Require = Guarantee.GardenWorld | Guarantee.BlackHole };
+            var galaxy = Galaxy.Generate("my-seed", options);
+            var garden = galaxy.Systems.SelectMany(s => s.Planets).First(p => p.Kind == PlanetKind.Garden);
+            Console.WriteLine(garden.Address);                           // v1-my-seed/galaxy/system/13/planet/1
+            Console.WriteLine(Universe.Link(galaxy.Address, options));   // v1-my-seed/galaxy?systems=20&planets=6&require=garden,blackhole
+            #endregion
+        }
+
         public static void Validation()
         {
             #region readme
@@ -146,6 +157,7 @@ namespace ConsoleSample
             FirstExample();
             PresetsAndAddresses();
             Presets();
+            Guarantees();
             Validation();
             ClustersAndUniverses();
             GalaxyExtras();

@@ -19,6 +19,7 @@ namespace UniverseGeneration.Tests
             ("h4", Preset.Default with { Systems = 200, Shape = GalaxyShape.Spiral }),
             ("h5", Preset.Default with { Systems = 1 }),
             ("hé/ü 5", Preset.Default),
+            ("h6", Preset.Pocket with { Require = Guarantee.GardenWorld | Guarantee.OceanWorld | Guarantee.BlackHole | Guarantee.PrecursorSite | Guarantee.BlueStar }),
         };
 
         [Test]

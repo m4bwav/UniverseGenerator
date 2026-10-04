@@ -311,13 +311,22 @@ namespace UniverseGeneration
             }
 
             var richness = context.Richness == GalaxyRichness.Rich ? 160 : context.Richness == GalaxyRichness.Poor ? 50 : 100;
+            var stars = new (Star Star, Companion? Companion)[n];
+            for (var i = 0; i < n; i++)
+            {
+                stars[i] = StarGenerator.Roll(Seeds.Stream(GalaxyLayout.SystemSeed(seed, i), "star"), regions[layout.Region[i]].Age, options.StarMix);
+            }
+
+            // Guarantees (options.Require) draw only from the galaxy's constraints stream and with none set draw nothing.
+            var constraints = Constraints.Stream(seed);
+            var forcedStar = Constraints.Stars(constraints, options.Require, seed, layout.Core, stars, warnings);
             for (var i = 0; i < n; i++)
             {
                 var systemSeed = GalaxyLayout.SystemSeed(seed, i);
                 var age = regions[layout.Region[i]].Age;
-                var (star, _) = StarGenerator.Roll(Seeds.Stream(systemSeed, "star"), age, options.StarMix);
+                var star = stars[i].Star;
                 var name = UniqueName(Seeds.Stream(systemSeed, "names"), star.Class, names, i, options.Names, warnings);
-                contexts[i] = new SystemContext(name, age, danger[i], richness);
+                contexts[i] = new SystemContext(name, age, danger[i], richness, forcedStar[i] ? star : null);
                 map[i] = new MapEntry
                 {
                     Index = i,
@@ -342,7 +351,9 @@ namespace UniverseGeneration
 
             // The extras (factions, points of interest, hazards, monuments, beacons) read the finished map, add each entry's
             // faction, and draw only from their own streams: no system's context changes.
+            var made = Constraints.Planets(constraints, options.Require, address, contexts, options, warnings);
             var extras = GalaxyExtrasGenerator.Generate(seed, layout, regions, map, context.CoreActivity, ClusterGenerator.HazardRadius(context.CoreActivity));
+            extras.Points = Constraints.Precursor(constraints, options.Require, extras.Points, map, warnings);
             var type = context.Type ?? GalaxyTypes.Derive(layout.Shape, layout.Pitch, layout.Ellipse);
             return new Galaxy
             {
@@ -363,7 +374,7 @@ namespace UniverseGeneration
                 Map = map,
                 Lanes = lanes,
                 Regions = regions,
-                Systems = new LazySystems(address, contexts, options),
+                Systems = new LazySystems(address, contexts, options, made),
                 Factions = extras.Factions,
                 PointsOfInterest = extras.Points,
                 Hazards = extras.Hazards,
@@ -400,12 +411,12 @@ namespace UniverseGeneration
         private readonly GeneratorOptions _options;
         private readonly StarSystem?[] _made;
 
-        public LazySystems(Address galaxy, SystemContext[] contexts, GeneratorOptions options)
+        public LazySystems(Address galaxy, SystemContext[] contexts, GeneratorOptions options, StarSystem?[]? made = null)
         {
             _galaxy = galaxy;
             _contexts = contexts;
             _options = options;
-            _made = new StarSystem?[contexts.Length];
+            _made = made ?? new StarSystem?[contexts.Length];
         }
 
         public int Count => _made.Length;
