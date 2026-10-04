@@ -5,10 +5,9 @@
 
 ## In progress
 - Merged by Mark: **PR #44** (`tests/Unity/` harness and the results note, 480ba5e) and **PR #45** (README Unity line by git URL pinned to `#v1.0.0`, d5560a0). The scratch projects live outside the repository, next to the clone (`ug-unity-scratch/`).
-- **PR #46** (`chore/package-license`, waits for Mark): `LICENSE.md` in the package folder, because OpenUPM's tarball is `npm pack` of that folder. It ships with the next release.
-- **PR #47** (`fix/unity-flag-name`, waits for Mark): `--local` renamed to `--working-tree`; the history scan read the old flag's attribute name (args, a dot, then the flag) as a host name.
-- **OpenUPM: ready for Mark to submit.** Form values in [the submission note](notes/2026-10-04-openupm-submission.md): branch master, the package.json path, MIT License, hunter m4bwav, tracking git, topic procedural-generation, min version 1.0.0.
-- Not run: a Windows x64 IL2CPP player (no `windows-il2cpp` module and no C++ build tools; both need an elevated install, which Mark approves or clicks) and the ARM64 fused multiply-add check (no device).
+- Merged by Mark on 2026-10-04: **PR #46** (268bc70, `LICENSE.md` in the package folder, because OpenUPM's tarball is `npm pack` of that folder; it ships with the next release, so the 1.0.0 tarball still has no LICENSE) and **PR #47** (21780c3, `--local` renamed to `--working-tree`; the history scan read the old flag's attribute name as a host name).
+- **OpenUPM: ready for Mark to submit; not submitted as of 2026-10-04 afternoon** (no pull request from m4bwav in openupm/openupm, no data file, registry and page 404). Form values in [the submission note](notes/2026-10-04-openupm-submission.md): branch master, the package.json path, MIT License, hunter m4bwav, tracking git, topic procedural-generation, min version 1.0.0.
+- Not run: a Windows x64 IL2CPP player (no `windows-il2cpp` module and no C++ build tools, re-checked 2026-10-04 afternoon: the Windows player has only Mono variations and Visual Studio is absent; both need an elevated install, which Mark approves or clicks) and the ARM64 fused multiply-add check (no device).
 
 ## Dead ends hit
 - Stacked pull requests: when a merged base branch is not deleted, GitHub does not retarget the next pull request, and it merges into the old branch, not `master` (#18 to #25 landed in `feat/seed-url`; #28 carried them). After a base merges, retarget the next pull request to `master` (`gh pr edit N --base master`) or ask Mark to delete the branch.
@@ -37,4 +36,4 @@
 4. Optional for Mark: turn on "Automatically delete head branches" so stacked pull requests retarget themselves.
 
 ## Next single action
-Mark: submit to OpenUPM with the note's values, review PR #46 and PR #47, and decide on the Windows IL2CPP module with C++ build tools (elevated install) and an ARM64 device. The next session checks the OpenUPM build and page. The prompt is [next-session-prompt.md](next-session-prompt.md).
+Mark: submit to OpenUPM with the note's values, and decide on the Windows IL2CPP module with C++ build tools (elevated install) and an ARM64 device. The next session checks the OpenUPM build and page. The prompt is [next-session-prompt.md](next-session-prompt.md).

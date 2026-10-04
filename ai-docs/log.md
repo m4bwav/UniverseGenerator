@@ -162,3 +162,7 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-04] add | OpenUPM submission prepared (form values, min version 1.0.0, topic procedural-generation); PR #46 LICENSE.md in the package folder (npm pack of the folder drops the root LICENSE); PR #47 renames --local to --working-tree (scan false positive); PR #45 README git-URL line merged by Mark
 ## [2026-10-04] handoff | rewritten: Stage 5 under way; Mark submits to OpenUPM and reviews #46 and #47; next-session-prompt.md rewritten
 ## [2026-10-04] index | rebuilt (21 entries)
+## [2026-10-04] verify | Mark merged PR #46 (268bc70) and PR #47 (21780c3), ci run 37209226487 green on Linux, Windows and macOS; OpenUPM not submitted yet (no PR in openupm/openupm, registry and page 404); no windows-il2cpp module or C++ build tools; nothing to run until Mark acts
+## [2026-10-04] handoff | rewritten: Stage 5 waits for Mark's OpenUPM submission; next-session-prompt.md rewritten
+## [2026-10-04] index | rebuilt (21 entries)
+## [2026-10-04] index | rebuilt (21 entries)
