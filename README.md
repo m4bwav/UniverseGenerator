@@ -198,6 +198,10 @@ Console.WriteLine($"{(int)Math.Round(km / 1e6)} million km out, {(int)Math.Round
 var across = Units.Map(MapLevel.Galaxy, 2000, LengthUnit.Parsecs);   // a galaxy map edge to edge: about 30,660
 ```
 
+## Unity
+
+The Unity package adds a second assembly, `UniverseGenerator.Unity`, that only Unity compiles (the NuGet package holds the engine-free core alone). `UnityVectors` turns map positions into `Vector2` or `Vector3` (`galaxy.Map[i].ToVector3(scale)`, on the XZ ground plane or the XY screen plane), gives a lane's two ends for a line renderer (`lane.Ends(galaxy)`) and places a planet on its orbit (`planet.OrbitPosition(days)`, from its eccentricity, inclination and periapsis angle). These floats are for drawing; the generated doubles are what the seed promise covers. `TablesAsset` holds editable tables (see "Editable tables").
+
 ## The seed promise
 
 From 1.0, a seed and a generator version (the `v1` in every address) give the same output on Windows, Linux and macOS (.NET 10 and .NET Framework 4.8) and in Unity (Mono and IL2CPP) for the whole major version, so a server and its clients can share a world by its seed alone. The golden files in `tests/Golden/v1/` are the proof, and the rules that make it true are in [kb/rules/determinism.md](kb/rules/determinism.md). A change that would alter any seed's output adds a generator version and keeps the old one.

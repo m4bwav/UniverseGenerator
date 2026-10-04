@@ -54,6 +54,18 @@ namespace UniverseGeneration.Tests
         }
 
         [Test]
+        public void The_unity_assembly_is_in_the_upm_package_only()
+        {
+            // The NuGet build compiles the Runtime folder alone; Unity/ references UnityEngine and the Runtime assembly.
+            var project = File.ReadAllText(Repo.PathTo("src/UniverseGenerator/UniverseGenerator.csproj"));
+            Assert.That(Regex.Matches(project, "<Compile Include=\"([^\"]+)\"").Cast<Match>().Select(m => m.Groups[1].Value), Is.EqualTo(new[] { "$(RuntimeFolder)**/*.cs" }));
+            Assert.That(project, Does.Contain("Packages/com.m4bwav.universe-generator/Runtime/</RuntimeFolder>"));
+            var asmdef = File.ReadAllText(Repo.PathTo(Package + "/Unity/UniverseGenerator.Unity.asmdef"));
+            Assert.That(asmdef, Does.Contain("\"UniverseGenerator\"").And.Contain("\"noEngineReferences\": false"));
+            Assert.That(Directory.GetFiles(Repo.PathTo(Package + "/Unity"), "*.cs").Select(Path.GetFileName), Is.EquivalentTo(new[] { "TablesAsset.cs", "UnityVectors.cs" }));
+        }
+
+        [Test]
         public void The_unity_package_and_the_nuget_package_have_one_version()
         {
             var csproj = File.ReadAllText(Repo.PathTo("src/UniverseGenerator/UniverseGenerator.csproj"));

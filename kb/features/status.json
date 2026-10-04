@@ -105,7 +105,7 @@
   "seeds": "-",
   "package": "core",
   "size": "0",
-  "why": "no Unity types; float adapters in the Unity package"
+  "why": "built for 1.0.0: UnityVectors (Vector2/Vector3 positions, lane ends, orbit positions) in the UniverseGenerator.Unity assembly, UPM only; planned as: no Unity types; float adapters in the Unity package"
  },
  "deterministic-cross-platform": {
   "group": "Seeds and API",
