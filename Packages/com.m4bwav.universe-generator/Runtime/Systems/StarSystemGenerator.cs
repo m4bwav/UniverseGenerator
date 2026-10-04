@@ -54,9 +54,10 @@ namespace UniverseGeneration
         {
             var seed = address.ObjectSeed;
             var age = context.Age ?? DrawAge(seed);
-            var danger = context.Danger ?? Seeds.Stream(seed, "danger").Range(1, 10);
+            // A galaxy's map already holds the shifted danger; a system alone shifts its own draw.
+            var danger = context.Danger ?? DMath.Clamp(Seeds.Stream(seed, "danger").Range(1, 10) + options.DangerShift, 1, 10);
             var (star, companion) = StarGenerator.Roll(Seeds.Stream(seed, "star"), age, options.StarMix);
-            var name = context.Name ?? StarNames.Draw(Seeds.Stream(seed, "names"), star.Class);
+            var name = context.Name ?? InventedNames.SystemName(Seeds.Stream(seed, "names"), star.Class, options.Names);
 
             var close = companion != null && companion.Orbit == CompanionOrbit.Close;
             var totalMass = star.Mass + (close ? companion!.Star.Mass : 0);
@@ -74,7 +75,8 @@ namespace UniverseGeneration
             var planets = new Planet[drafts.Count];
             for (var i = 0; i < drafts.Count; i++)
             {
-                planets[i] = BuildPlanet(drafts[i], i, Seeds.Child(seed, "planet", i), address.Child("planet", i), name + " " + letters[i], host, options.Weirdness);
+                var elements = new OrbitShape(drafts.Count > 1, EccentricityCap(drafts, i));
+                planets[i] = BuildPlanet(drafts[i], i, Seeds.Child(seed, "planet", i), address.Child("planet", i), name + " " + letters[i], host, options.Weirdness, elements);
             }
 
             var belts = Belts(Seeds.Stream(seed, "belts"), planets, frost);
@@ -105,13 +107,75 @@ namespace UniverseGeneration
             };
         }
 
+        /// <summary>What a planet's orbital elements depend on: whether it shares the system, and the largest eccentricity its neighbours allow.</summary>
+        internal readonly struct OrbitShape
+        {
+            public OrbitShape(bool multi, double cap)
+            {
+                Multi = multi;
+                Cap = cap;
+            }
+
+            public bool Multi { get; }
+
+            public double Cap { get; }
+        }
+
+        /// <summary>
+        /// Half the largest eccentricity that keeps planet <paramref name="i"/>'s orbit clear of its nearest neighbours when
+        /// they take as much: for semi-major axes a &lt; b, a(1 + k) &lt; b(1 - k) while k &lt; (b - a) / (b + a).
+        /// </summary>
+        internal static double EccentricityCap(List<Draft> drafts, int i)
+        {
+            var a = drafts[i].Orbit;
+            var cap = 0.6;
+            for (var j = 0; j < drafts.Count; j++)
+            {
+                if (j != i)
+                {
+                    var b = drafts[j].Orbit;
+                    cap = Math.Min(cap, 0.5 * Math.Abs(b - a) / (b + a));
+                }
+            }
+
+            return cap;
+        }
+
+        /// <summary>
+        /// Eccentricity, inclination and periapsis angle from the planet's own <c>elements</c> stream, so they move nothing
+        /// else. Eccentricity and inclination are Rayleigh draws (sigma 0.05 and 1.5 degrees in a system of several planets,
+        /// 0.25 and 10 degrees for a planet alone: Van Eylen 2019, Fabrycky 2014), damped inside 0.1 au where tides
+        /// circularise orbits, and capped by the neighbours.
+        /// </summary>
+        internal static (double Eccentricity, double Inclination, double Periapsis) Elements(Pcg32 rng, double orbit, OrbitShape shape)
+        {
+            var e = Rayleigh(rng, shape.Multi ? 0.05 : 0.25);
+            var i = Rayleigh(rng, shape.Multi ? 1.5 : 10);
+            var w = rng.NextInt(3600) / 10.0;
+            if (orbit < 0.1)
+            {
+                e *= orbit / 0.1 * 0.5;
+            }
+
+            e = DMath.Clamp(e, 0, shape.Cap);
+            return (DMath.Round(e, 3), DMath.Round(Math.Min(i, 90), 1), w);
+        }
+
+        // sigma * sqrt(-2 ln(1 - u)) with u from a 24-bit integer draw.
+        private static double Rayleigh(Pcg32 rng, double sigma)
+        {
+            var u = rng.NextInt(1 << 24) / 16777216.0;
+            return sigma * Math.Sqrt(-2 * DMath.Log(1 - u));
+        }
+
         /// <summary>
         /// A planet from its draft: rings and moons from its <c>moons</c> stream, then the planet level's detail from its
         /// other streams (<see cref="PlanetDetail"/>), then each moon's detail from the moon's own seed
         /// (<see cref="MoonDetail"/>). <paramref name="planetSeed"/> is the seed of <paramref name="planetAddress"/>.
         /// </summary>
-        internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness)
+        internal static Planet BuildPlanet(Draft d, int index, ulong planetSeed, Address planetAddress, string planetName, PlanetHost host, int weirdness, OrbitShape shape)
         {
+            var (eccentricity, inclination, periapsis) = Elements(Seeds.Stream(planetSeed, "elements"), d.Orbit, shape);
             var moons = Seeds.Stream(planetSeed, "moons");
             var rings = moons.Chance(RingPercent(d.Kind), 100);
             var planet = new Planet
@@ -123,6 +187,9 @@ namespace UniverseGeneration
                 Zone = d.Zone,
                 Orbit = DMath.Round(d.Orbit, 4),
                 Period = DMath.Round(d.Period, 2),
+                Eccentricity = eccentricity,
+                Inclination = inclination,
+                PeriapsisAngle = periapsis,
                 Mass = DMath.Round(d.Mass, 3),
                 Radius = DMath.Round(d.Radius, 3),
                 Rings = rings,

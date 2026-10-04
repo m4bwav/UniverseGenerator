@@ -46,7 +46,7 @@ namespace UniverseGeneration
     /// <c>Universe.Generate("my-seed")</c> makes one; <see cref="At"/> regenerates any object of any level from its address.
     /// Positions are in universe units (100,000 light-years) within about <see cref="Radius"/> of the centre.
     /// </summary>
-    public sealed record Universe
+    public sealed partial record Universe
     {
         /// <summary>Where it is, such as <c>v1-my-seed/universe</c>.</summary>
         public string Address { get; init; } = "";
@@ -354,7 +354,7 @@ namespace UniverseGeneration
     }
 
     /// <summary>A void in the cosmic web: a wide empty space holding a few lone systems far from any galaxy.</summary>
-    public sealed record CosmicVoid
+    public sealed partial record CosmicVoid
     {
         /// <summary>Its index in the universe.</summary>
         public int Index { get; init; }

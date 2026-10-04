@@ -40,7 +40,14 @@ var same = (Planet)Universe.At(planet.Address, options);   // any object regener
 Console.WriteLine(same.Summary == planet.Summary);         // True
 ```
 
-The presets are `Default`, `SpaceOpera` (more outliers) and `Plausible` (real star shares, few outliers). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind` and `Epoch`. Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws.
+The presets are `Default`, `SpaceOpera` (more outliers), `Plausible` (real star shares, few outliers), `Pocket` (20 systems for a short game), `Roguelike` (30 systems, more chokepoints, more danger), `Cozy` (40 well-connected, safer systems) and `Epic` (300 systems). The options are `Systems` (1 to 2000), `Shape` (Auto, Spiral, Barred, Elliptical, Ring, Irregular, and by name only Colliding, Starburst and Clustered), `Arms` (2 to 4 for spirals and bars), `ExtraLanes` (the chance of a lane beyond the connected network, 0 to 100), `DangerShift` (-5 to 5 on every system's danger), `Names` (`Catalogue` star names, or `Invented` names such as Olmex or Zertron), `StarMix`, `Weirdness` (the share of systems that break the rules on purpose), `MaxPlanetsPerSystem`, `ClusterKind` and `Epoch`. Systems are generated when you first open them, so a 2,000-system map costs little until you look. Invalid options are refused before anything is generated, with a message that says what to change; generation itself never throws. Settings that are valid but change nothing or read badly (arms on a ring galaxy, a spiral of 40 systems) are listed by `options.Check()`, and `galaxy.Warnings` says what generation had to change; both are `GeneratorWarning` values with a `WarningCode` and a message.
+
+```csharp
+var run = Galaxy.Generate("my-seed", Preset.Roguelike);
+var cozy = Galaxy.Generate("my-seed", Preset.Cozy);
+Console.WriteLine($"{run.Map.Count(m => m.Danger >= 8)} of {run.Map.Count} systems at danger 8 or more");    // 15 of 30 systems at danger 8 or more
+Console.WriteLine($"{cozy.Map.Count(m => m.Danger >= 8)} of {cozy.Map.Count} systems at danger 8 or more");  // 6 of 40 systems at danger 8 or more
+```
 
 ```csharp
 try
@@ -59,9 +66,9 @@ catch (ArgumentException e)
 |---|---|
 | Universe | 4 to 7 groups and clusters joined by filaments, named voids with lone systems, a home spiral, a dying giant, a ring galaxy, a distant quasar in every galaxy's sky, a merging pair with a lawless frontier and a story hook, an epoch |
 | Galaxy cluster | a small group (two big spirals, satellites, dwarfs) or a rich cluster (a giant elliptical at the centre); Hubble type codes, ages, richness, active cores; gates, a wormhole ring and tethers |
-| Galaxy | five shapes, spaced systems, hyperlanes (always connected), chokepoints and bridges, named regions with age and theme, danger 1 to 10, factions, points of interest, hazards, monuments and beacons |
+| Galaxy | eight shapes (a colliding pair, a starburst and a clustered galaxy by name only), spaced systems, hyperlanes (always connected), chokepoints and bridges, named regions with age and theme, danger 1 to 10, factions, points of interest, hazards, monuments and beacons |
 | Star system | real spectral classes with consistent mass, luminosity, radius, temperature and colour; giants, remnants and companions; habitable zone and frost line; catalogue names (IAU proper names, Bayer, HD, HIP, GJ, Kepler, TOI); landmarks; story tags; a one-line descriptor |
-| Planet | orbits from exoplanet statistics, 13 kinds, gravity, density, day and night temperature, air by escape velocity, water and ice, rotation, tilt and tidal lock, climate bands, biomes, life from none to sentient, traits, resources, hazards, Earth similarity, habitability per species |
+| Planet | orbits from exoplanet statistics with eccentricity, inclination and periapsis (never crossing a neighbour's), 13 kinds, gravity, density, day and night temperature, air by escape velocity, water and ice, rotation, tilt and tidal lock, climate bands, biomes, life from none to sentient, traits, resources, hazards, Earth similarity, habitability per species |
 | Moons, rings, belts | moons inside the Hill sphere with their own physics, tidal heat, hidden oceans and life; rings; belts in the gaps with composition and resources; stations that orbit real bodies |
 
 Later, in 1.x and without changing any seed: travel routes, generated paragraphs, populations and trade, exports (Markdown, image, CSV, tabletop formats), map rendering and more. The full list, checked against 176 other generators, is the [feature matrix](kb/features/feature-matrix.md).
@@ -122,6 +129,32 @@ var link = Universe.Link(system.Address, options);   // the address, ? and optio
 Console.WriteLine(link);                              // v1-my-seed/galaxy/system/31?systems=120
 var again = (StarSystem)Universe.At(link);            // the link carries the options
 Console.WriteLine(again.Name == system.Name);         // True
+```
+
+## Export to JSON
+
+`ToJson()` on a universe, cluster, void, galaxy, system, planet, moon, belt or station writes every field as JSON, with `"schema": "universe-generator/1"` and the object's type first, enum values as names and numbers as stored. The text is the same on every runtime, written by hand with no reflection. Lists that are generated when first read (a galaxy's systems, a cluster's galaxies, a void's systems) are null unless you pass `children: true`, which generates everything below; each map entry carries the address of what it leaves out.
+
+```csharp
+var planet = Planet.Generate("my-seed");
+var json = planet.ToJson(indented: true);   // every field, after "schema" and "type"
+Console.WriteLine(json.Split('\n')[3]);       //   "address": "v1-my-seed/planet",
+var galaxy = Galaxy.Generate("my-seed", Preset.Pocket);
+var map = galaxy.ToJson();                  // the map and extras; "systems" is null
+var all = galaxy.ToJson(children: true);    // every system in full as well
+Console.WriteLine(all.Length > map.Length); // True
+```
+
+## Units
+
+Values are plain doubles in the unit each field's documentation names: orbits in au, planet radii and masses in Earths, stars in Suns, moons and belts in kilometres, temperatures in kelvin, rotation in hours and orbital periods in days; maps in their own units (`Distances`). `Units.Convert` turns any of them into another unit (`LengthUnit`, `MassUnit`, `TemperatureUnit`, `TimeUnit`), and `Units.Map` turns map units into a length. No units library, so nothing to install and nothing added to a WebGL build.
+
+```csharp
+var world = Planet.Generate("my-seed");
+var km = Units.Convert(world.Orbit, LengthUnit.AstronomicalUnits, LengthUnit.Kilometres);
+var celsius = Units.Convert(world.Temperature, TemperatureUnit.Kelvin, TemperatureUnit.Celsius);
+Console.WriteLine($"{(int)Math.Round(km / 1e6)} million km out, {(int)Math.Round(celsius)} C");   // 229 million km out, -37 C
+var across = Units.Map(MapLevel.Galaxy, 2000, LengthUnit.Parsecs);   // a galaxy map edge to edge: about 30,660
 ```
 
 ## The seed promise

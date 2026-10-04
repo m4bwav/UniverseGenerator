@@ -33,6 +33,16 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Presets()
+        {
+            #region readme
+            var run = Galaxy.Generate("my-seed", Preset.Roguelike);
+            var cozy = Galaxy.Generate("my-seed", Preset.Cozy);
+            Console.WriteLine($"{run.Map.Count(m => m.Danger >= 8)} of {run.Map.Count} systems at danger 8 or more");    // 15 of 30 systems at danger 8 or more
+            Console.WriteLine($"{cozy.Map.Count(m => m.Danger >= 8)} of {cozy.Map.Count} systems at danger 8 or more");  // 6 of 40 systems at danger 8 or more
+            #endregion
+        }
+
         public static void Validation()
         {
             #region readme
@@ -105,17 +115,45 @@ namespace ConsoleSample
             #endregion
         }
 
+        public static void Export()
+        {
+            #region readme
+            var planet = Planet.Generate("my-seed");
+            var json = planet.ToJson(indented: true);   // every field, after "schema" and "type"
+            Console.WriteLine(json.Split('\n')[3]);       //   "address": "v1-my-seed/planet",
+            var galaxy = Galaxy.Generate("my-seed", Preset.Pocket);
+            var map = galaxy.ToJson();                  // the map and extras; "systems" is null
+            var all = galaxy.ToJson(children: true);    // every system in full as well
+            Console.WriteLine(all.Length > map.Length); // True
+            #endregion
+        }
+
+        public static void UnitConversions()
+        {
+            #region readme
+            var world = Planet.Generate("my-seed");
+            var km = Units.Convert(world.Orbit, LengthUnit.AstronomicalUnits, LengthUnit.Kilometres);
+            var celsius = Units.Convert(world.Temperature, TemperatureUnit.Kelvin, TemperatureUnit.Celsius);
+            Console.WriteLine($"{(int)Math.Round(km / 1e6)} million km out, {(int)Math.Round(celsius)} C");   // 229 million km out, -37 C
+            var across = Units.Map(MapLevel.Galaxy, 2000, LengthUnit.Parsecs);   // a galaxy map edge to edge: about 30,660
+            #endregion
+            Console.WriteLine((int)across);
+        }
+
         /// <summary>Runs every example in README order.</summary>
         public static void All()
         {
             FirstExample();
             PresetsAndAddresses();
+            Presets();
             Validation();
             ClustersAndUniverses();
             GalaxyExtras();
             StarNames();
             LoneObjects();
             Links();
+            Export();
+            UnitConversions();
         }
     }
 }
