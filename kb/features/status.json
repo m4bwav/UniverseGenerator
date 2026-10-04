@@ -492,7 +492,7 @@
   "seeds": "yes",
   "package": "core",
   "size": "1 KB",
-  "why": "on the planet's own stream; the game has Circular or Elliptical labels only"
+  "why": "built for 1.0.0: Planet.Eccentricity, Inclination and PeriapsisAngle on the planet's own elements stream, capped so orbits never cross; planned as: on the planet's own stream; the game has Circular or Elliptical labels only"
  },
  "planet-physics": {
   "group": "Planets and moons",

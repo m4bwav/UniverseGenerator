@@ -31,6 +31,19 @@ namespace UniverseGeneration
         /// <summary>Orbital period in days.</summary>
         public double Period { get; init; }
 
+        /// <summary>
+        /// Orbital eccentricity, 0 (a circle) to 0.6: small in systems of several planets (about 0.05, as Kepler's
+        /// multi-planet systems show), larger for a planet alone, near 0 for hot planets, and never enough to cross a
+        /// neighbour's orbit. <see cref="Orbit"/> is the semi-major axis.
+        /// </summary>
+        public double Eccentricity { get; init; }
+
+        /// <summary>Inclination in degrees to the system's mean plane (to the star's equator for a planet alone).</summary>
+        public double Inclination { get; init; }
+
+        /// <summary>Where the orbit comes closest to the star, as an angle in degrees (0 to 360) on the map, for drawing the ellipse.</summary>
+        public double PeriapsisAngle { get; init; }
+
         /// <summary>Mass in Earths.</summary>
         public double Mass { get; init; }
 

@@ -45,7 +45,7 @@ namespace UniverseGeneration
             var draft = StarSystemGenerator.Draw(body, orbit, star.Mass, zone, giantWeight, false, pod, StarSystemGenerator.NoGarden(star.Class));
 
             var host = new PlanetHost(star, star.Mass, light, age);
-            return StarSystemGenerator.BuildPlanet(draft, 0, seed, address, starName + " b", host, options.Weirdness);
+            return StarSystemGenerator.BuildPlanet(draft, 0, seed, address, starName + " b", host, options.Weirdness, new StarSystemGenerator.OrbitShape(false, 0.6));
         }
     }
 }
