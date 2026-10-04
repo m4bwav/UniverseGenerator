@@ -15,6 +15,7 @@ The seed promise: from 1.0.0, a seed and a generator version give the same outpu
 - `GeneratorOptions.Names`: `NameStyle.Catalogue` (the default, real catalogue names) or `NameStyle.Invented` (two- or three-syllable names such as Olmex, Zertron or Bethor, at most ten letters, unique in a galaxy). Drawn from each system's own names stream, so only names change; planets and moons take the system's name. Option code `names=invented`; in the new golden file `names.json`.
 - `Units.Convert` between `LengthUnit` (km, Earth, Jupiter and solar radii, au, light-years, parsecs), `MassUnit`, `TemperatureUnit` and `TimeUnit`, and `Units.Map` from galaxy, cluster or universe map units to any length. Conversions on plain doubles (IAU nominal values, no units library); the generated values keep the units their documentation names.
 - `GeneratorOptions.Check()` and `Galaxy.Warnings`: soft problems as `GeneratorWarning` values (`WarningCode` `SystemsTrimmed`, `ArmsIgnored`, `ShapeTooSmall`, `NameNumbered`, and a message), reported and never thrown. In the new golden file `diagnostics.json`; `export.json` filters the new `warnings` key.
+- `GalaxyShape.Colliding` (two discs, a tidal bridge and tails), `GalaxyShape.Starburst` (a dense core with knots) and `GalaxyShape.Clustered` (tight knots over a faint oval), with type codes Pec, Burst and Clumpy. Asked for by name only: `Auto` never draws them (Stop 2, S1), and they use only parameters already drawn, so no seed moves. In the new golden file `shapes.json`.
 
 ## [1.0.0-beta.1] - 2026-10-03
 

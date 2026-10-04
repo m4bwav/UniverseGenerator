@@ -138,6 +138,12 @@ namespace UniverseGeneration
                     return "Ring";
                 case GalaxyShape.Irregular:
                     return "Irr";
+                case GalaxyShape.Colliding:
+                    return "Pec";
+                case GalaxyShape.Starburst:
+                    return "Burst";
+                case GalaxyShape.Clustered:
+                    return "Clumpy";
                 default:
                     // En has an axis ratio of 1 - n / 10; worked in whole thousandths so no last bit decides it.
                     var thousandths = (int)(DMath.Round(ellipse, 3) * 1000 + 0.5);
@@ -157,6 +163,9 @@ namespace UniverseGeneration
                 case "dE": return "dwarf elliptical galaxy";
                 case "dSph": return "dwarf spheroidal galaxy";
                 case "dIrr": return "dwarf irregular galaxy";
+                case "Pec": return "colliding pair of galaxies";
+                case "Burst": return "starburst galaxy";
+                case "Clumpy": return "clumpy galaxy";
             }
 
             if (type.StartsWith("SB", StringComparison.Ordinal))

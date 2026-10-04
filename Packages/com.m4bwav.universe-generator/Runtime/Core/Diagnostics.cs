@@ -50,7 +50,7 @@ namespace UniverseGeneration
                 });
             }
 
-            if (arms.HasValue && (requested == GalaxyShape.Elliptical || requested == GalaxyShape.Ring || requested == GalaxyShape.Irregular))
+            if (arms.HasValue && requested != GalaxyShape.Auto && !spiral)
             {
                 warnings.Add(new GeneratorWarning
                 {
@@ -75,6 +75,9 @@ namespace UniverseGeneration
             GalaxyShape.Elliptical => "elliptical",
             GalaxyShape.Ring => "ring",
             GalaxyShape.Irregular => "irregular",
+            GalaxyShape.Colliding => "colliding",
+            GalaxyShape.Starburst => "starburst",
+            GalaxyShape.Clustered => "clustered",
             _ => "auto",
         };
     }

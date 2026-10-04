@@ -195,7 +195,7 @@
   "seeds": "yes",
   "package": "core",
   "size": "6 KB",
-  "why": "prototyped: spiral, barred, elliptical, ring, irregular; add cluster, colliding pair, starburst"
+  "why": "built for 1.0.0: GalaxyShape.Colliding, Starburst and Clustered by name (type codes Pec, Burst, Clumpy); Auto unchanged (S1); planned as: prototyped: spiral, barred, elliptical, ring, irregular; add cluster, colliding pair, starburst"
  },
  "custom-shape-map": {
   "group": "Universe, cluster and galaxy",

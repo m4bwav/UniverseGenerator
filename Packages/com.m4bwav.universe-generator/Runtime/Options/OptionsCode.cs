@@ -194,6 +194,9 @@ namespace UniverseGeneration
             GalaxyShape.Elliptical => "elliptical",
             GalaxyShape.Ring => "ring",
             GalaxyShape.Irregular => "irregular",
+            GalaxyShape.Colliding => "colliding",
+            GalaxyShape.Starburst => "starburst",
+            GalaxyShape.Clustered => "clustered",
             _ => "auto",
         };
 
@@ -205,7 +208,10 @@ namespace UniverseGeneration
             "elliptical" => GalaxyShape.Elliptical,
             "ring" => GalaxyShape.Ring,
             "irregular" => GalaxyShape.Irregular,
-            _ => throw Choice("shape", value, "auto, spiral, barred, elliptical, ring, irregular"),
+            "colliding" => GalaxyShape.Colliding,
+            "starburst" => GalaxyShape.Starburst,
+            "clustered" => GalaxyShape.Clustered,
+            _ => throw Choice("shape", value, "auto, spiral, barred, elliptical, ring, irregular, colliding, starburst, clustered"),
         };
 
         private static string EpochName(Epoch epoch) => epoch switch

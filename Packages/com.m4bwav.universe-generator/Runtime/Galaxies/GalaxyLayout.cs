@@ -479,6 +479,30 @@ namespace UniverseGeneration
                     case GalaxyShape.Ring:
                         var d = (r - 0.68) / 0.09;
                         return Math.Min(1, DMath.Exp(-d * d) + 0.6 * bulge);
+                    case GalaxyShape.Colliding:
+                        return Colliding(x, y);
+                    case GalaxyShape.Starburst:
+                        // A bright core and small knots (the blobs at three tenths of their size); the drawn blobs place the knots.
+                        var burst = DMath.Exp(-r * r / 0.1);
+                        foreach (var b in _blobs)
+                        {
+                            double dx = x - b.X * 0.8, dy = y - b.Y * 0.8, s = b.S * 0.3;
+                            burst += 0.6 * DMath.Exp(-(dx * dx + dy * dy) / (2 * s * s));
+                        }
+
+                        return Math.Min(1, burst + 0.005);
+                    case GalaxyShape.Clustered:
+                        // Tight knots (a third of the blobs' size, mirrored to double their number) over a faint oval.
+                        var knots = 0.0;
+                        foreach (var b in _blobs)
+                        {
+                            var s2 = b.S * b.S / 9;
+                            double ax = x - b.X, ay = y - b.Y, bx = x + b.Y, by = y - b.X;
+                            knots += DMath.Exp(-(ax * ax + ay * ay) / (2 * s2)) + DMath.Exp(-(bx * bx + by * by) / (2 * s2));
+                        }
+
+                        var oval = DMath.Exp(-(x * x / (_ellipse * _ellipse) + y * y) * 2.5);
+                        return Math.Min(1, knots + 0.04 * oval);
                     case GalaxyShape.Irregular:
                         var sum = 0.0;
                         foreach (var b in _blobs)
@@ -491,6 +515,20 @@ namespace UniverseGeneration
                     default:
                         return Spiral(x, y, r, bulge);
                 }
+            }
+
+            // Two discs on the line at the drawn twist angle, a bridge between them and a tail beyond each.
+            private double Colliding(double x, double y)
+            {
+                var u = x * _cosTwist + y * _sinTwist;
+                var v = -x * _sinTwist + y * _cosTwist;
+                double ua = u - 0.42, ub = u + 0.42;
+                var discA = DMath.Exp(-(ua * ua + v * v) / (2 * 0.16 * 0.16));
+                var discB = DMath.Exp(-(ub * ub + v * v * _ellipse) / (2 * 0.13 * 0.13));
+                var bend = 0.25 * u * u;
+                var bridge = Math.Abs(u) < 0.42 ? 0.45 * DMath.Exp(-((v - bend) * (v - bend)) / 0.004) : 0;
+                var tail = Math.Abs(u) >= 0.42 ? 0.35 * DMath.Exp(-((v + bend) * (v + bend)) / 0.006) * (1 - (Math.Abs(u) - 0.42) / 0.55) : 0;
+                return Math.Min(1, discA + discB + bridge + Math.Max(0, tail) + 0.01);
             }
 
             private double Spiral(double x, double y, double r, double bulge)
