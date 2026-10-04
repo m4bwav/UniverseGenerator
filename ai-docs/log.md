@@ -154,3 +154,6 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-03] learn | Package validation is silent in the CI log when it passes; to prove it used the baseline, pack with -v diag and look for _packageValidationBaselinePath
 ## [2026-10-03] handoff | rewritten: Stage 4 done; Mark picks the next track (Stage 5, real stars, wiki doc corrections, Trusted Publishing scope); next-session-prompt.md rewritten
 ## [2026-10-03] index | rebuilt (19 entries)
+## [2026-10-03] decision | Mark picked Stage 5 (Unity and OpenUPM) after Stage 4: scratch project by git URL, golden tests in Mono and IL2CPP, WebGL size delta, OpenUPM submission prepared for him; machine had no IL2CPP module and WebGL only on 6000.5.8f1
+## [2026-10-03] handoff | rewritten: Stage 5 next; next-session-prompt.md rewritten around Stage 5
+## [2026-10-03] index | rebuilt (19 entries)
