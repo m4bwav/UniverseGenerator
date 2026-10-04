@@ -78,7 +78,7 @@ OpenUPM packages (compressed / unpacked / .cs files / lines):
 | Default galaxy cold start (desktop .NET) | under 50 ms and under 10 MB allocated | 50 to 200 ms / 10 to 30 MB | over 200 ms or 30 MB, or any data parsed in a static constructor |
 
 Notes on the budget:
-- **WebGL:** a minimal Unity 6 URP web build is about 3.3 MiB (forum report by CodeSmile, 2024-12-18), so 1 MB added would be about 30% more. Unity recommends stripping High, "optimize for code size" and Brotli.
+- **WebGL:** a minimal Unity 6 URP web build is about 3.3 MiB (forum report by CodeSmile, 2024-12-18), so 1 MB added would be about 30% more. Unity recommends stripping High, "optimize for code size" and Brotli. **Measured for UniverseGenerator 1.0.0 on 2026-10-03:** +116.0 KB Brotli (wasm +70.2 KB, data +45.8 KB) over a 3.43 MiB empty-scene Unity 6000.5.8f1 Web build, which is green ([Stage 5 Unity checks](2026-10-03-stage-5-unity-checks.md)).
 - **Mobile:** cold start there is 3 to 5 times slower than on desktop.
 - **Compile and reload cost:** no published per-line measurement was found. Since Unity 2020.2, assemblies that depend on a package are not recompiled when its public metadata is unchanged, so a package in its own asmdef costs mostly at import and upgrade. Domain reload grows with type count, static constructors and `[InitializeOnLoad]`. The line limits are judgment; the real number comes from the Editor's compilation and reload profiler markers.
 
