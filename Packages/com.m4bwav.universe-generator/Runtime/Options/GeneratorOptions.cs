@@ -93,7 +93,7 @@ namespace UniverseGeneration
 
             CheckRange(nameof(ExtraLanes), ExtraLanes, 0, 100);
             CheckRange(nameof(DangerShift), DangerShift, -5, 5);
-            if (Shape < GalaxyShape.Auto || Shape > GalaxyShape.Irregular)
+            if (Shape < GalaxyShape.Auto || Shape > GalaxyShape.Clustered)
             {
                 throw new ArgumentException($"{nameof(Shape)} must be a GalaxyShape such as Auto or Spiral; you asked for {(int)Shape}.", nameof(Shape));
             }

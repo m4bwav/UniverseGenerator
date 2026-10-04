@@ -80,7 +80,7 @@ namespace UniverseGeneration.Tests
         [TestCase("systems=012", "systems must be a whole number such as 12; got \"012\".")]
         [TestCase("systems=1x", "systems must be a whole number such as 12; got \"1x\".")]
         [TestCase("systems=0", "Systems must be 1 to 2000; you asked for 0.")]
-        [TestCase("shape=Spiral", "shape must be one of auto, spiral, barred, elliptical, ring, irregular; got \"Spiral\".")]
+        [TestCase("shape=Spiral", "shape must be one of auto, spiral, barred, elliptical, ring, irregular, colliding, starburst, clustered; got \"Spiral\".")]
         [TestCase("epoch=ancient", "epoch must be one of auto, young, mature, old; got \"ancient\".")]
         public void A_bad_code_is_refused_with_a_readable_message(string code, string message)
         {

@@ -24,6 +24,18 @@ namespace UniverseGeneration
 
         /// <summary>A few uneven clumps.</summary>
         Irregular,
+
+        /// <summary>
+        /// Two discs pulling each other apart, joined by a tidal bridge and trailing tails. Never drawn by
+        /// <see cref="Auto"/>; ask for it by name (Stop 2, S1).
+        /// </summary>
+        Colliding,
+
+        /// <summary>A dense, bright core with knots of new stars around it. Never drawn by <see cref="Auto"/>.</summary>
+        Starburst,
+
+        /// <summary>Tight knots of systems scattered over a faint oval, with empty space between them. Never drawn by <see cref="Auto"/>.</summary>
+        Clustered,
     }
 
     /// <summary>
