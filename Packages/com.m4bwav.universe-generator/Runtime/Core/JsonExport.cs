@@ -1011,6 +1011,12 @@ namespace UniverseGeneration
             Real(w, v.Orbit);
             w.Name("period");
             Real(w, v.Period);
+            w.Name("eccentricity");
+            Real(w, v.Eccentricity);
+            w.Name("inclination");
+            Real(w, v.Inclination);
+            w.Name("periapsisAngle");
+            Real(w, v.PeriapsisAngle);
             w.Name("mass");
             Real(w, v.Mass);
             w.Name("radius");
