@@ -82,7 +82,7 @@ namespace UniverseGeneration.Tests
         public void Planets_and_moons_take_the_invented_system_name()
         {
             var system = StarSystem.Generate("my-seed", Invented);
-            Assert.That(system.Planets, Has.All.Matches<Planet>(p => p.Name.StartsWith(system.Name + " ", System.StringComparison.Ordinal)));
+            Assert.That(system.Planets, Has.All.Matches<Planet>(p => p != null && p.Name.StartsWith(system.Name + " ", System.StringComparison.Ordinal)));
             var again = (StarSystem)Universe.At(Universe.Link(system.Address, Invented));
             Assert.That(again.Name, Is.EqualTo(system.Name));
         }
