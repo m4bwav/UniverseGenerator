@@ -213,6 +213,10 @@ From 1.0, a seed and a generator version (the `v1` in every address) give the sa
 - [samples/ConsoleSample](samples/ConsoleSample): every example on this page, run by the tests.
 - Unity: Package Manager, Universe Generator, Samples, "Galaxy printer": a MonoBehaviour that writes a seed's galaxy to the console.
 
+## Package page
+
+- NuGet: [UniverseGenerator](https://www.nuget.org/packages/UniverseGenerator)
+
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
