@@ -4,12 +4,14 @@
 
 A seeded universe, galaxy cluster, galaxy, star system, planet and moon generator for games and fiction, for .NET and Unity. One seed gives the same galaxy on every platform and runtime: names, star types, planets, moons, lanes, regions, factions, danger and story tags, as plain C# records with no dependencies.
 
-**Status: 1.0.0, the first stable release, on nuget.org. The OpenUPM listing comes next; until then, install in Unity by git URL.**
+**Status: 1.0.0, the first stable release, on nuget.org and OpenUPM.**
 
 ## Install
 
 - NuGet: `dotnet add package UniverseGenerator` (netstandard2.0 and net10.0; trimmable and AOT-compatible).
-- Unity 6: Package Manager, +, "Install package from git URL", then `https://github.com/m4bwav/UniverseGenerator.git?path=Packages/com.m4bwav.universe-generator#v1.0.0` (the `#v1.0.0` pins the release; leave it off to follow `master`). OpenUPM (`com.m4bwav.universe-generator`) comes next. No engine references, so it also runs on servers and in tools.
+- Unity 6, from OpenUPM: `openupm add com.m4bwav.universe-generator` (with [openupm-cli](https://openupm.com/docs/getting-started-cli.html)), or by hand in `Packages/manifest.json`: a scoped registry with url `https://package.openupm.com` and scope `com.m4bwav`, then `"com.m4bwav.universe-generator": "1.0.0"` in `dependencies`.
+- Unity 6, by git URL: Package Manager, +, "Install package from git URL", then `https://github.com/m4bwav/UniverseGenerator.git?path=Packages/com.m4bwav.universe-generator#v1.0.0` (the `#v1.0.0` pins the release; leave it off to follow `master`).
+- No engine references, so it also runs on servers and in tools.
 
 ## First example
 
