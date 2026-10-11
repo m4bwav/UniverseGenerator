@@ -177,3 +177,12 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-04] verify | OpenUPM published 1.0.0 (build 76656 from 3505547, only version, latest); tarball shasum matches the registry and its 116 files equal the tag's package folder except OpenUPM's added repository and publishConfig fields in package.json; openupm.com page still 404 right after
 ## [2026-10-04] index | rebuilt (22 entries)
 ## [2026-10-04] add | PR: README shows the cover image (absolute raw.githubusercontent.com URL pinned to 6e87ad4, on nuget.org's allowed image domains per its readme docs, updated 2026-07-07), so it renders on GitHub, nuget.org (next release) and OpenUPM; waits for Mark
+
+## [2026-10-11] check | OpenUPM downloads
+
+OpenUPM stats for com.m4bwav.universe-generator: 4 downloads total, all on 2026-10-04 (the publish day), none 2026-10-05 to 10-11; dl30d 4, 0 stars (median dl30d across 4,073 OpenUPM packages is 3). Endpoints: `https://package.openupm.com/downloads/range/last-month/<pkg>` (npm-style; `point` works too) and `https://api.openupm.com/packages/extra` (dl30d and stars for every package). api.openupm.com/downloads/... is 404. repo-traffic does not collect OpenUPM yet (m4bwav/repo-traffic PR #3 adds it).
+
+## [2026-10-11] verify | OpenUPM install verified in the game
+
+Mark had his game session install com.m4bwav.universe-generator 1.0.0 from package.openupm.com (SpaceDeckBuilder2.1 branch try/openupm-universe-generator, f211ff7, not merged): Unity 6000.6.4f1 batchmode resolved it from the registry, compiled with no errors, exit 0; unsigned-package warning only; Play mode and the game CI not tested. HANDOFF, next-session prompt (step 2 done), plan (Stage 5 OpenUPM line ticked) and the submission note updated; README and AGENTS.md switch to OpenUPM in a separate pull request for Mark.
+## [2026-10-11] index | rebuilt (22 entries)

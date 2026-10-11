@@ -55,4 +55,8 @@ The build runs `npm pack` inside the package folder, so the repository-root LICE
 
 The README's Unity line (PR #45) and the wiki's Unity page (Stage 7) switch to OpenUPM once the page is live.
 
+## Install verified (2026-10-11)
+
+Verified by Mark's session in the game (SpaceDeckBuilder2.1, branch `try/openupm-universe-generator`, f211ff7, not merged): the manifest pins `"com.m4bwav.universe-generator": "1.0.0"` with a scoped registry `https://package.openupm.com` (scope `com.m4bwav`); Unity 6000.6.4f1 in batchmode resolved 1.0.0 from package.openupm.com (lock entry `"source": "registry"`), compiled both package assemblies and both game assemblies with no `error CS`, and exited 0. Unity warns the package is unsigned (normal for OpenUPM). Not tested there: Play mode and the game's CI build. The game's `main` still uses the git URL; merging the branch is Mark's call (the game's switch, Stop 3). The game's scoped registry uses the wider scope `com.m4bwav` instead of the full package name shown above; either matches the package. The listing went live on openupm.com by 2026-10-09; the README switch is a pull request for Mark (2026-10-11).
+
 Related: builds on [Stage 5 Unity checks](2026-10-03-stage-5-unity-checks.md) and [the 1.0 plan](../plans/2026-10-02-universegenerator-1.0-plan.md) (Stage 5).
