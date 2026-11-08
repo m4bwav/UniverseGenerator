@@ -12,6 +12,7 @@ A seeded universe, galaxy cluster, galaxy, star system, planet and moon generato
 - Unity 6, from OpenUPM: `openupm add com.m4bwav.universe-generator` (with [openupm-cli](https://openupm.com/docs/getting-started-cli.html)), or by hand in `Packages/manifest.json`: a scoped registry with url `https://package.openupm.com` and scope `com.m4bwav`, then `"com.m4bwav.universe-generator": "1.0.0"` in `dependencies`.
 - Unity 6, by git URL: Package Manager, +, "Install package from git URL", then `https://github.com/m4bwav/UniverseGenerator.git?path=Packages/com.m4bwav.universe-generator#v1.0.0` (the `#v1.0.0` pins the release; leave it off to follow `master`).
 - No engine references, so it also runs on servers and in tools.
+- TypeScript and JavaScript: [universe-generator-ts](https://github.com/m4bwav/universe-generator-ts) is a port that gives the same output for the same seed, checked against this project's golden files. See it in the browser in the [galaxy demo](https://m4bwav.github.io/universe-generator-ts/).
 
 ## First example
 
