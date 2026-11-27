@@ -169,6 +169,19 @@ namespace UniverseGeneration
         Ideal,
     }
 
+    /// <summary>How much radiation reaches the surface (cloud tops for giants): star activity, less what a magnetic field and the air stop.</summary>
+    public enum Radiation
+    {
+        /// <summary>No more than people take on Earth.</summary>
+        Low,
+
+        /// <summary>Safe for visits; living there needs shelter or shielding.</summary>
+        Moderate,
+
+        /// <summary>Harmful in the open: suits and buried shelters.</summary>
+        High,
+    }
+
     /// <summary>A planet's air (plan P11). Pressure in bar.</summary>
     public sealed record Atmosphere
     {

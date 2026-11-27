@@ -16,7 +16,11 @@ namespace UniverseGeneration.Tests
             "eccentricity", "inclination", "periapsisAngle", // orbital-elements.json
             "warnings", // diagnostics.json
             "custom", // hooks.json
+            "magnetosphere", "radiation", // radiation.json
         };
+
+        /// <summary>Keys added after hooks.json was written.</summary>
+        public static readonly HashSet<string> AddedAfterHooks = new HashSet<string> { "magnetosphere", "radiation" };
 
         public static string Without(string json, ISet<string> keys)
         {

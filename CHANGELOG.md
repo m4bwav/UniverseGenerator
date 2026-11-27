@@ -4,6 +4,12 @@ All notable changes to this package are documented here. The format follows [Kee
 
 The seed promise: from 1.0.0, a seed and a generator version give the same output on every supported runtime for the whole major version. A change that would alter any seed's output adds a generator version and keeps the old one selectable.
 
+## [Unreleased]
+
+### Added
+
+- `Planet.Magnetosphere`, `Planet.Radiation`, `Moon.Magnetosphere` (always false: moons have no dynamo of their own) and `Moon.Radiation`, with the `Radiation` enum (Low, Moderate, High). A field needs a giant, or a rocky planet of at least 0.3 Earth masses and density 4 g/cm3 turning freely in under 100 hours. Radiation is star activity (M, O and B stars 2, young stars +1) plus 1 without a field, less 2 for air of 0.5 bar or more (1 from 0.05 bar). Derived from values already drawn, so no seed moves; in the new golden file `radiation.json`, filtered out of `export.json` and `hooks.json`.
+
 ## [1.0.0] - 2026-10-03
 
 The first stable release. Everything in 1.0.0-beta.1, plus the features below; no seed that 1.0.0-beta.1 generated changes, and every golden file of 1.0.0-beta.1 is unchanged. From here the seed promise holds for the whole 1.x line.
