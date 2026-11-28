@@ -972,6 +972,10 @@ namespace UniverseGeneration
             Real(w, v.Water);
             w.Name("ice");
             Real(w, v.Ice);
+            w.Name("magnetosphere");
+            w.Bool(v.Magnetosphere);
+            w.Name("radiation");
+            w.String(v.Radiation.ToString());
             w.Name("subsurfaceOcean");
             w.Bool(v.SubsurfaceOcean);
             w.Name("rotation");
@@ -1129,6 +1133,10 @@ namespace UniverseGeneration
             w.Int(v.Flora);
             w.Name("fauna");
             w.Int(v.Fauna);
+            w.Name("magnetosphere");
+            w.Bool(v.Magnetosphere);
+            w.Name("radiation");
+            w.String(v.Radiation.ToString());
             w.Name("traits");
             w.BeginArray();
             foreach (var item in v.Traits)

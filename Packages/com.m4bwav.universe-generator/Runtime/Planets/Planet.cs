@@ -119,6 +119,12 @@ namespace UniverseGeneration
         /// <summary>How much animal life, 0 to 5.</summary>
         public int Fauna { get; init; }
 
+        /// <summary>True when it has a magnetic field strong enough to turn its star's wind aside.</summary>
+        public bool Magnetosphere { get; init; }
+
+        /// <summary>How much radiation reaches the surface; see <see cref="Radiation"/>.</summary>
+        public Radiation Radiation { get; init; }
+
         /// <summary>One or two things that make it memorable, such as "global dust storms", true to its data (plan P1).</summary>
         public IReadOnlyList<string> Traits { get; init; } = System.Array.Empty<string>();
 

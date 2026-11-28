@@ -259,6 +259,12 @@ namespace UniverseGeneration
         /// <summary>The share of the surface under ice, 0 to 1.</summary>
         public double Ice { get; init; }
 
+        /// <summary>True when it has a magnetic field strong enough to turn its star's wind aside.</summary>
+        public bool Magnetosphere { get; init; }
+
+        /// <summary>How much radiation reaches the surface; see <see cref="Radiation"/>.</summary>
+        public Radiation Radiation { get; init; }
+
         /// <summary>True when an ocean lies under its ice, like Europa's.</summary>
         public bool SubsurfaceOcean { get; init; }
 

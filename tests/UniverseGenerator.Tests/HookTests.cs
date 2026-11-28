@@ -32,7 +32,7 @@ namespace UniverseGeneration.Tests
             w.BeginObject().Name("generatorVersion").Int(GeneratorVersion.Current).Name("exports").BeginArray();
             foreach (var json in exports)
             {
-                w.String(json);
+                w.String(JsonKeyFilter.Without(json, JsonKeyFilter.AddedAfterHooks));
             }
 
             w.EndArray().EndObject();

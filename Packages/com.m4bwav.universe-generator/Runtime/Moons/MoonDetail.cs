@@ -108,6 +108,7 @@ namespace UniverseGeneration
                 Water = water,
                 Ice = ice,
                 SubsurfaceOcean = ocean,
+                Radiation = PlanetDetail.SurfaceRadiation(host, false, pressure),
                 Rotation = rotation,
                 Tilt = planet.Tilt,
                 Bands = bands,

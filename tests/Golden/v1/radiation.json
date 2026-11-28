@@ -1,0 +1,317 @@
+{
+  "generatorVersion": 1,
+  "systems": [
+    {
+      "address": "v1-my-seed/system",
+      "planets": [
+        {
+          "address": "v1-my-seed/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-my-seed/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": []
+        },
+        {
+          "address": "v1-my-seed/system/planet/2",
+          "magnetosphere": true,
+          "radiation": "High",
+          "moons": [
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-42/system",
+      "planets": [
+        {
+          "address": "v1-42/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-42/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": []
+        },
+        {
+          "address": "v1-42/system/planet/2",
+          "magnetosphere": false,
+          "radiation": "Moderate",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-42/system/planet/3",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-42/system/planet/4",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-s1/system",
+      "planets": [
+        {
+          "address": "v1-s1/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s1/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s1/system/planet/2",
+          "magnetosphere": true,
+          "radiation": "Moderate",
+          "moons": [
+            "High",
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-s2/system",
+      "planets": [
+        {
+          "address": "v1-s2/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": []
+        },
+        {
+          "address": "v1-s2/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s2/system/planet/2",
+          "magnetosphere": false,
+          "radiation": "Low",
+          "moons": []
+        },
+        {
+          "address": "v1-s2/system/planet/3",
+          "magnetosphere": false,
+          "radiation": "Moderate",
+          "moons": [
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s2/system/planet/4",
+          "magnetosphere": false,
+          "radiation": "Low",
+          "moons": []
+        },
+        {
+          "address": "v1-s2/system/planet/5",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High",
+            "High",
+            "High",
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s2/system/planet/6",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High",
+            "High",
+            "Low",
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-s3/system",
+      "planets": [
+        {
+          "address": "v1-s3/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": []
+        },
+        {
+          "address": "v1-s3/system/planet/2",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/3",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/4",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/5",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/6",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High",
+            "High",
+            "High",
+            "High",
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s3/system/planet/7",
+          "magnetosphere": true,
+          "radiation": "Low",
+          "moons": [
+            "High",
+            "High",
+            "High",
+            "High",
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-s4/system",
+      "planets": [
+        {
+          "address": "v1-s4/system/planet/0",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s4/system/planet/1",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": []
+        },
+        {
+          "address": "v1-s4/system/planet/2",
+          "magnetosphere": true,
+          "radiation": "Moderate",
+          "moons": []
+        },
+        {
+          "address": "v1-s4/system/planet/3",
+          "magnetosphere": false,
+          "radiation": "High",
+          "moons": [
+            "High",
+            "High"
+          ]
+        },
+        {
+          "address": "v1-s4/system/planet/4",
+          "magnetosphere": true,
+          "radiation": "Moderate",
+          "moons": [
+            "High",
+            "High",
+            "High",
+            "High",
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-k0/system",
+      "planets": [
+        {
+          "address": "v1-k0/system/planet/0",
+          "magnetosphere": true,
+          "radiation": "Moderate",
+          "moons": [
+            "High",
+            "High"
+          ]
+        }
+      ]
+    },
+    {
+      "address": "v1-k1/system",
+      "planets": []
+    }
+  ]
+}

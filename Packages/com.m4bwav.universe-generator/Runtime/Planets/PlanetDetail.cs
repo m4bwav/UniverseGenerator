@@ -167,6 +167,7 @@ namespace UniverseGeneration
 
             var day = DMath.Round(temperature * (1 + 0.3 * swing), 0);
             var night = DMath.Round(temperature * (1 - 0.7 * swing), 0);
+            var magnetosphere = HasMagnetosphere(giant, p.Mass, density, spin, rotation);
 
             // 7. Life (P3); it decides whether plants cover the land below.
             var (life, flora, fauna) = Life(Seeds.Stream(seed, "life"), p.Kind, (int)temperature, host.Age);
@@ -197,6 +198,8 @@ namespace UniverseGeneration
                 Rotation = rotation,
                 Spin = spin,
                 Tilt = tilt,
+                Magnetosphere = magnetosphere,
+                Radiation = SurfaceRadiation(host, magnetosphere, giant ? 1 : pressure),
                 Bands = bands,
                 Biomes = biomes,
                 Life = life,
@@ -384,6 +387,31 @@ namespace UniverseGeneration
                 Why = why,
             };
             return (atmosphere, DMath.Round(temperature, 0));
+        }
+
+        /// <summary>
+        /// A dynamo needs a molten iron core and a fast enough turn: every giant has one; a rocky planet of at least a
+        /// third of Earth's mass and density 4 g/cm³ or more, turning freely in under 100 hours. Derived only, no draws.
+        /// </summary>
+        internal static bool HasMagnetosphere(bool giant, double mass, double density, Spin spin, double rotation) =>
+            giant || (mass >= 0.3 && density >= 4 && spin == Spin.Free && rotation <= 100);
+
+        /// <summary>
+        /// Star activity (red dwarfs flare, blue stars and young stars glare) plus 1 without a magnetic field, less 2
+        /// for air of 0.5 bar or more (1 for 0.05 bar or more). Earth is Low, Mars High, Venus Low under its thick air.
+        /// </summary>
+        internal static Radiation SurfaceRadiation(PlanetHost host, bool magnetosphere, double pressure)
+        {
+            var c = host.Star.Class;
+            var activity = c == StarClass.M || c == StarClass.O || c == StarClass.B ? 2 : 0;
+            if (host.Age == StellarAge.Young)
+            {
+                activity++;
+            }
+
+            var shield = pressure >= 0.5 ? 2 : pressure >= 0.05 ? 1 : 0;
+            var dose = activity + (magnetosphere ? 0 : 1) + 1 - shield;
+            return dose <= 0 ? Radiation.Low : dose == 1 ? Radiation.Moderate : Radiation.High;
         }
 
         /// <summary>The pressure whose greenhouse (τ = k P^1.1) warms <paramref name="teq"/> to <paramref name="target"/>, within the kind's range.</summary>
